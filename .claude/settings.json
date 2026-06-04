@@ -1,0 +1,149 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "powershell",
+            "statusMessage": "AI-DLC 산출물 저장 경로 확인 중...",
+            "command": "$raw = [Console]::In.ReadToEnd(); $d = $raw | ConvertFrom-Json; $fp = $d.tool_input.file_path; if ($fp) { $norm = $fp -replace '\\\\', '/'; $fname = [System.IO.Path]::GetFileName($fp); if ($fname -like '*_DAP_*' -and $norm -notmatch 'docs/ai-dlc/') { Write-Host ''; Write-Host '============================================================'; Write-Host '[AI-DLC RULE] ai-dlc 산출물은 반드시 docs/ai-dlc/ 에 저장!'; Write-Host \"  현재 경로: $norm\"; Write-Host '  올바른 위치: docs/ai-dlc/{문서유형}_DAP_Master_YYYYMMDD.md'; Write-Host '============================================================'; Write-Host ''; exit 2 } }"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "powershell",
+            "statusMessage": "플랜 파일 확인 중...",
+            "command": "$raw = [Console]::In.ReadToEnd(); $d = $raw | ConvertFrom-Json; $fp = if ($d.tool_input.file_path) { $d.tool_input.file_path -replace '\\\\', '/' } else { '' }; if ($fp -match '/pages/|/components/|/lib/|/types/|/context/') { if (-not (Test-Path '.claude/.active-plan')) { Write-Host ''; Write-Host '============================================================'; Write-Host '[PLAN REQUIRED] 소스코드 수정 전 플랜 파일 작성 필수!'; Write-Host '  1. docs/plans/NNN_slug.md 에 작업 계획 작성 (채번 규칙 준수)'; Write-Host '  2. 파일 저장 시 .claude/.active-plan 자동 설정됨'; Write-Host '  3. 이후 소스코드 수정 가능'; Write-Host '============================================================'; Write-Host ''; exit 2 } }"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Write(docs/plans/**)",
+            "shell": "powershell",
+            "statusMessage": "플랜 파일 등록 중...",
+            "command": "$raw = [Console]::In.ReadToEnd(); $d = $raw | ConvertFrom-Json; $fp = $d.tool_input.file_path; if ($fp) { $norm = $fp -replace '\\\\', '/'; if ($norm -like '*docs/plans/*.md' -and $norm -notlike '*README*') { $norm | Set-Content '.claude/.active-plan' -Encoding utf8; $fname = [System.IO.Path]::GetFileName($fp); Write-Host \"[활성 플랜 등록] $fname — 소스코드 수정 가능 상태\"; $ts = Get-Date -Format 'yyyy-MM-dd HH:mm'; if (Test-Path 'docs/journal/JOURNAL.md') { $entry = \"`n### [$ts] [플랜 생성] $fname`n\"; Add-Content 'docs/journal/JOURNAL.md' $entry } } }"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Write(data/questions/**)",
+            "shell": "powershell",
+            "statusMessage": "JSON 스키마 검증 중...",
+            "command": "$raw = [Console]::In.ReadToEnd(); $d = $raw | ConvertFrom-Json; $fp = $d.tool_input.file_path; if ($fp -and (Test-Path $fp)) { try { $qs = Get-Content $fp -Raw | ConvertFrom-Json; Write-Host \"[JSON 검증] $fp — $($qs.Count)문항 유효\" } catch { Write-Host \"[JSON 오류] $fp — 파싱 실패\"; exit 2 } }"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Write(data/theory/**)",
+            "shell": "powershell",
+            "statusMessage": "이론 파일 확인 중...",
+            "command": "$raw = [Console]::In.ReadToEnd(); $d = $raw | ConvertFrom-Json; $fp = $d.tool_input.file_path; if ($fp -and (Test-Path $fp)) { $lines = (Get-Content $fp).Count; $sections = (Select-String -Path $fp -Pattern '^## ').Count; Write-Host \"[이론 파일] $fp — ${lines}줄, ${sections}개 섹션\" }"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Write(context/ProgressContext.tsx)",
+            "shell": "powershell",
+            "statusMessage": "마일스톤 확인 중...",
+            "command": "$marker = '[Phase 1] [foundation-builder] — ProgressContext'; $journal = 'docs/journal/JOURNAL.md'; if (Test-Path $journal) { $content = Get-Content $journal -Raw; if ($content -notmatch [regex]::Escape($marker)) { $ts = Get-Date -Format 'yyyy-MM-dd HH:mm'; $entry = \"`n### [$ts] [Phase 1] [foundation-builder] — ProgressContext 구현 완료`n`n**작업**: 전역 진도 상태(ProgressContext)와 localStorage 유틸 구현`n**교훈**: SSR 환경에서 localStorage 접근 시 typeof window 가드 필수`n**바이브**: 완성`n\"; Add-Content -Path $journal -Value $entry; Write-Host '[저널] Foundation 마일스톤 기록됨' } else { Write-Host '[저널] 이미 기록됨 — 스킵' } }"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Write(components/layout/Layout.tsx)",
+            "shell": "powershell",
+            "statusMessage": "마일스톤 확인 중...",
+            "command": "$marker = '[Phase 2] [layout-builder] — 공통 레이아웃'; $journal = 'docs/journal/JOURNAL.md'; if (Test-Path $journal) { $content = Get-Content $journal -Raw; if ($content -notmatch [regex]::Escape($marker)) { $ts = Get-Date -Format 'yyyy-MM-dd HH:mm'; $entry = \"`n### [$ts] [Phase 2] [layout-builder] — 공통 레이아웃 완성`n`n**작업**: 헤더, 사이드바, 반응형 레이아웃 쉘 구현`n**교훈**: 모든 페이지가 공유하는 레이아웃을 먼저 확정해야 이후 에이전트 작업이 독립적으로 가능`n**바이브**: 완성`n\"; Add-Content -Path $journal -Value $entry; Write-Host '[저널] Layout 마일스톤 기록됨' } else { Write-Host '[저널] 이미 기록됨 — 스킵' } }"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Write(pages/quiz/exam.tsx)",
+            "shell": "powershell",
+            "statusMessage": "마일스톤 확인 중...",
+            "command": "$marker = '[Phase 3] [quiz-builder] — 모의고사'; $journal = 'docs/journal/JOURNAL.md'; if (Test-Path $journal) { $content = Get-Content $journal -Raw; if ($content -notmatch [regex]::Escape($marker)) { $ts = Get-Date -Format 'yyyy-MM-dd HH:mm'; $entry = \"`n### [$ts] [Phase 3] [quiz-builder] — 모의고사 페이지 완성`n`n**작업**: 180분 타이머 + 70문항 모의고사 구현`n**교훈**: 클라이언트 사이드 랜덤 샘플링은 hydration mismatch 주의 필요`n**바이브**: 완성`n\"; Add-Content -Path $journal -Value $entry; Write-Host '[저널] Quiz 마일스톤 기록됨' } else { Write-Host '[저널] 이미 기록됨 — 스킵' } }"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Write(pages/theory/[chapterId].tsx)",
+            "shell": "powershell",
+            "statusMessage": "마일스톤 확인 중...",
+            "command": "$marker = '[Phase 3] [theory-builder] — 이론 챕터'; $journal = 'docs/journal/JOURNAL.md'; if (Test-Path $journal) { $content = Get-Content $journal -Raw; if ($content -notmatch [regex]::Escape($marker)) { $ts = Get-Date -Format 'yyyy-MM-dd HH:mm'; $entry = \"`n### [$ts] [Phase 3] [theory-builder] — 이론 챕터 페이지 완성`n`n**작업**: SSG 기반 이론 본문 페이지 + 마크다운 렌더러 구현`n**교훈**: getStaticPaths + getStaticProps 패턴으로 빌드 시 모든 챕터 경로 사전 생성`n**바이브**: 완성`n\"; Add-Content -Path $journal -Value $entry; Write-Host '[저널] Theory 마일스톤 기록됨' } else { Write-Host '[저널] 이미 기록됨 — 스킵' } }"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Write(pages/index.tsx)",
+            "shell": "powershell",
+            "statusMessage": "마일스톤 확인 중...",
+            "command": "$marker = '[Phase 4] [dashboard-builder] — 대시보드'; $journal = 'docs/journal/JOURNAL.md'; if (Test-Path $journal) { $content = Get-Content $journal -Raw; if ($content -notmatch [regex]::Escape($marker)) { $ts = Get-Date -Format 'yyyy-MM-dd HH:mm'; $entry = \"`n### [$ts] [Phase 4] [dashboard-builder] — 대시보드 메인 페이지 완성`n`n**작업**: 진도율 차트, 취약 챕터, 최근 오답 대시보드 구현`n**교훈**: 외부 차트 라이브러리 없이 CSS/SVG로 구현하면 번들 크기 절약`n**바이브**: 완성`n\"; Add-Content -Path $journal -Value $entry; Write-Host '[저널] Dashboard 마일스톤 기록됨' } else { Write-Host '[저널] 이미 기록됨 — 스킵' } }"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "powershell",
+            "statusMessage": "TypeScript 타입 검사 중...",
+            "command": "if (Test-Path tsconfig.json) { $out = npx tsc --noEmit 2>&1; if ($LASTEXITCODE -eq 0) { Write-Host '[타입 검사] 통과 — 오류 없음' } else { $errCount = ($out | Measure-Object).Count; Write-Host \"[타입 검사] $errCount 개 오류 발견 — /build-check 실행 권장\" } }"
+          },
+          {
+            "type": "command",
+            "shell": "powershell",
+            "async": true,
+            "command": "$ts = Get-Date -Format 'yyyy-MM-dd HH:mm'; $sessionFile = 'docs/journal/.sessions'; if (Test-Path 'docs/journal') { \"[$ts] session-end\" | Add-Content -Path $sessionFile }"
+          },
+          {
+            "type": "command",
+            "shell": "powershell",
+            "command": "if (Test-Path '.claude/.active-plan') { $plan = (Get-Content '.claude/.active-plan' -Raw).Trim(); $fname = [System.IO.Path]::GetFileName($plan); Write-Host ''; Write-Host \"[LESSONS] 작업 완료 후 플랜에 배운점을 기록하세요:\"; Write-Host \"  -> $fname\" }"
+          }
+        ]
+      }
+    ]
+  }
+}
