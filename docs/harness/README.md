@@ -11,7 +11,6 @@ SQLP 개편 작업 전 이 문서들을 읽고 시작하라.
 4. PRD.md          → 제품 요구사항·기능 범위
 5. ARCHITECTURE.md → 설계 결정·데이터 모델·컴포넌트 구조
 6. SKILLS.md       → ai-dlc 스킬 매핑·Phase별 사용법
-7. MCP_SKILLS.md   → 슬래시 명령·MCP 서버 가이드
 ```
 
 ## 문서 목록
@@ -24,9 +23,6 @@ SQLP 개편 작업 전 이 문서들을 읽고 시작하라.
 | [PRD.md](PRD.md) | ✅ | SQLP 3과목 요구사항, 기능 범위, 페이지 구조 |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | ✅ | 기술 스택, 데이터 모델, 컴포넌트 구조 |
 | [SKILLS.md](SKILLS.md) | ✅ | ai-dlc 스킬 Phase 매핑, 선택 가이드 |
-| [MCP_SKILLS.md](MCP_SKILLS.md) | ✅ | 슬래시 명령, MCP 서버, ai-dlc 산출물 규칙 |
-| [MCP.md](MCP.md) | ✅ | MCP 서버 설정, Vercel 배포 |
-| [PROJECT_JOURNEY.md](PROJECT_JOURNEY.md) | ✅ | v1.0 SQLD 완료 + v2.0 SQLP 로드맵 |
 
 ## [필수] 2가지 프로세스 규칙
 
