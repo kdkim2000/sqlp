@@ -38,15 +38,18 @@ describe('questions library', () => {
     expect(subset.map((q) => q.id).sort()).toEqual([...ids].sort())
   })
 
-  it('sampleExamQuestions returns 10 part-1 + 40 part-2 (or all available)', () => {
+  it('sampleExamQuestions returns 10 part-1 + 20 part-2 + 40 part-3 (SQLP 70문항)', () => {
     const sample = sampleExamQuestions()
     const part1 = sample.filter((q) => q.part === 1)
     const part2 = sample.filter((q) => q.part === 2)
+    const part3 = sample.filter((q) => q.part === 3)
 
     const allP1 = getAllQuestions().filter((q) => q.part === 1).length
     const allP2 = getAllQuestions().filter((q) => q.part === 2).length
+    const allP3 = getAllQuestions().filter((q) => q.part === 3).length
 
     expect(part1.length).toBe(Math.min(10, allP1))
-    expect(part2.length).toBe(Math.min(40, allP2))
+    expect(part2.length).toBe(Math.min(20, allP2))
+    expect(part3.length).toBe(Math.min(40, allP3))
   })
 })

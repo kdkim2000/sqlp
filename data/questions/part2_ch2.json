@@ -2,7 +2,7 @@
   {
     "id": "p2c2_001",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "concept",
     "content": "다음 중 조인(JOIN)에 대한 설명으로 올바르지 않은 것은?",
     "options": [
@@ -19,7 +19,7 @@
   {
     "id": "p2c2_002",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "result",
     "content": "아래 테이블에서 SQL을 실행한 결과 행 수로 올바른 것은?\n\n**EMP 테이블**\n\n| EMPNO | ENAME | DEPTNO |\n|-------|-------|--------|\n| 1001  | 홍길동 | 10     |\n| 1002  | 이순신 | 20     |\n| 1003  | 장보고 | 30     |\n| 1004  | 강감찬 | NULL   |\n\n**DEPT 테이블**\n\n| DEPTNO | DNAME    |\n|--------|----------|\n| 10     | 영업팀   |\n| 20     | 개발팀   |\n| 40     | 기획팀   |\n\n```sql\nSELECT E.ENAME, D.DNAME\n  FROM EMP E, DEPT D\n WHERE E.DEPTNO = D.DEPTNO(+);\n```",
     "options": [
@@ -36,7 +36,7 @@
   {
     "id": "p2c2_003",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "concept",
     "content": "다음 집합 연산자 중 순수 관계 연산자의 PROJECT와 대응되는 SQL 절은?",
     "options": [
@@ -53,7 +53,7 @@
   {
     "id": "p2c2_004",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "concept",
     "content": "다음 중 집합 연산자 사용 시 규칙으로 올바른 것은?",
     "options": [
@@ -70,7 +70,7 @@
   {
     "id": "p2c2_005",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "result",
     "content": "아래 테이블에서 SQL을 실행한 결과의 행 수로 올바른 것은?\n\n**T1 테이블**: A, B, C, D (4행)\n\n**T2 테이블**: C, D, E, F (4행)\n\n```sql\nSELECT VAL FROM T1\nUNION ALL\nSELECT VAL FROM T2\nUNION\nSELECT VAL FROM T1;\n```",
     "options": [
@@ -87,7 +87,7 @@
   {
     "id": "p2c2_006",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "concept",
     "content": "Oracle 계층형 쿼리에서 ORDER SIBLINGS BY에 대한 설명으로 올바른 것은?",
     "options": [
@@ -104,7 +104,7 @@
   {
     "id": "p2c2_007",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "completion",
     "content": "다음 SQL의 빈칸에 들어갈 내용으로 올바른 것은?\n\n```sql\nSELECT EMPNO, ENAME, DEPTNO,\n       ______(DEPTNO || '/' || ENAME, '/') AS PATH\n  FROM EMP\nSTART WITH MGR IS NULL\nCONNECT BY PRIOR EMPNO = MGR;\n```\n\n(단, 루트부터 현재 노드까지의 경로를 '/'로 구분하여 표시)",
     "options": [
@@ -121,7 +121,7 @@
   {
     "id": "p2c2_008",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "concept",
     "content": "다음 중 서브쿼리를 사용할 수 없는 위치는?",
     "options": [
@@ -138,7 +138,7 @@
   {
     "id": "p2c2_009",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "result",
     "content": "아래 테이블에서 SQL을 실행한 결과로 올바른 것은?\n\n**EMP 테이블**\n\n| EMPNO | ENAME  | DEPTNO | BIRTHDAY   |\n|-------|--------|--------|------------|\n| 1001  | 홍길동 | 10     | 1990-05-01 |\n| 1002  | 이순신 | 10     | 1985-03-15 |\n| 1003  | 장보고 | 20     | 1992-07-20 |\n| 1004  | 강감찬 | 20     | 1988-11-30 |\n\n```sql\nSELECT DEPTNO, MIN(BIRTHDAY) AS OLDEST\n  FROM EMP\n GROUP BY DEPTNO\n ORDER BY DEPTNO;\n```",
     "options": [
@@ -155,7 +155,7 @@
   {
     "id": "p2c2_010",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "result",
     "content": "아래 테이블에서 SQL을 실행한 결과 행 수로 올바른 것은?\n\n**SALES 테이블**\n\n| REGION | PRODUCT | AMOUNT |\n|--------|---------|--------|\n| 서울   | A       | 1000   |\n| 서울   | B       | 2000   |\n| 부산   | A       | 1500   |\n| 부산   | B       | 2500   |\n| 인천   | A       | 800    |\n\n```sql\nSELECT REGION, PRODUCT, SUM(AMOUNT)\n  FROM SALES\n GROUP BY ROLLUP(REGION, PRODUCT);\n```",
     "options": [
@@ -172,7 +172,7 @@
   {
     "id": "p2c2_011",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "concept",
     "content": "다음 중 ROLLUP(A, B)와 동일한 결과를 반환하는 GROUPING SETS 표현으로 올바른 것은?",
     "options": [
@@ -189,7 +189,7 @@
   {
     "id": "p2c2_012",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "completion",
     "content": "다음 SQL의 빈칸에 들어갈 내용으로 올바른 것은?\n\n```sql\nSELECT REGION, PRODUCT, SUM(AMOUNT),\n       GROUPING(REGION) AS GRP_REGION,\n       ______(PRODUCT) AS GRP_PRODUCT\n  FROM SALES\n GROUP BY CUBE(REGION, PRODUCT)\n ORDER BY REGION, PRODUCT;\n```",
     "options": [
@@ -206,7 +206,7 @@
   {
     "id": "p2c2_013",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "concept",
     "content": "Oracle에서 ROWNUM에 대한 설명으로 올바른 것은?",
     "options": [
@@ -223,7 +223,7 @@
   {
     "id": "p2c2_014",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "result",
     "content": "아래 테이블에서 SQL을 실행한 결과로 올바른 것은?\n\n**EMP 테이블**\n\n| EMPNO | DEPTNO |\n|-------|--------|\n| 1001  | A      |\n| 1002  | A      |\n| 1003  | B      |\n| 1004  | B      |\n| 1005  | B      |\n| 1006  | C      |\n\n```sql\nSELECT COUNT(DISTINCT DEPTNO) + COUNT(DISTINCT EMPNO) AS TOTAL\n  FROM EMP;\n```",
     "options": [
@@ -240,7 +240,7 @@
   {
     "id": "p2c2_015",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "concept",
     "content": "다음 중 조인과 SQL 성능에 관한 설명으로 올바른 것은?",
     "options": [
@@ -257,7 +257,7 @@
   {
     "id": "p2c2_016",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "result",
     "content": "아래 테이블에서 SQL을 실행한 결과 행 수로 올바른 것은?\n\n**EMP 테이블**\n\n| EMPNO | ENAME  | DEPTNO |\n|-------|--------|--------|\n| 1001  | 홍길동 | 10     |\n| 1002  | 이순신 | 20     |\n| 1003  | 장보고 | 10     |\n| 1004  | 강감찬 | NULL   |\n\n**DEPT 테이블**\n\n| DEPTNO | DNAME  |\n|--------|--------|\n| 10     | 영업팀 |\n| 20     | 개발팀 |\n| 30     | 기획팀 |\n\n```sql\nSELECT E.EMPNO, D.DNAME\n  FROM EMP E LEFT OUTER JOIN DEPT D\n    ON E.DEPTNO = D.DEPTNO;\n```",
     "options": [
@@ -274,7 +274,7 @@
   {
     "id": "p2c2_017",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "concept",
     "content": "다음 중 UNION과 UNION ALL의 차이에 대한 설명으로 올바른 것은?",
     "options": [
@@ -291,7 +291,7 @@
   {
     "id": "p2c2_018",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "result",
     "content": "아래 테이블에서 SQL을 실행한 결과로 올바른 것은?\n\n**T1 테이블**: D00001, D00002, D00003 (3행)\n\n**T2 테이블**: D00002, D00003, D00004 (3행)\n\n```sql\nSELECT DEPT_CD FROM T1\nMINUS\nSELECT DEPT_CD FROM T2;\n```",
     "options": [
@@ -308,7 +308,7 @@
   {
     "id": "p2c2_019",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "result",
     "content": "아래 테이블에서 SQL을 실행한 결과로 올바른 것은?\n\n**DEPT 테이블**\n\n| DEPT_CD | PARENT_CD | DEPT_NM  |\n|---------|-----------|----------|\n| D001    | NULL      | 본사     |\n| D002    | D001      | 영업본부 |\n| D003    | D001      | 개발본부 |\n| D004    | D002      | 영업1팀  |\n| D005    | D002      | 영업2팀  |\n| D006    | D003      | 개발1팀  |\n\n```sql\nSELECT LEVEL, DEPT_NM\n  FROM DEPT\nSTART WITH PARENT_CD IS NULL\nCONNECT BY PRIOR DEPT_CD = PARENT_CD\n       AND DEPT_CD != 'D003';\n```",
     "options": [
@@ -325,7 +325,7 @@
   {
     "id": "p2c2_020",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "completion",
     "content": "다음 SQL의 빈칸에 들어갈 내용으로 올바른 것은?\n\n```sql\nSELECT E.EMPNO, E.ENAME, D.DNAME\n  FROM EMP E ______ DEPT D\n    ON E.DEPTNO = D.DEPTNO;\n```\n\n(단, DEPT 테이블에 없는 부서의 직원도 결과에 포함하고, EMP에 없는 부서는 제외)",
     "options": [
@@ -342,7 +342,7 @@
   {
     "id": "p2c2_021",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "error",
     "content": "다음 SQL 중 실행 시 오류가 발생하는 것은?",
     "options": [
@@ -359,7 +359,7 @@
   {
     "id": "p2c2_022",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "concept",
     "content": "다음 중 다중 행 서브쿼리(Multi-Row Subquery)에서 사용하는 연산자가 아닌 것은?",
     "options": [
@@ -376,7 +376,7 @@
   {
     "id": "p2c2_023",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "result",
     "content": "아래 테이블에서 SQL을 실행한 결과로 올바른 것은?\n\n**EMP 테이블**\n\n| EMPNO | ENAME  | DEPTNO |\n|-------|--------|--------|\n| 1001  | 홍길동 | 10     |\n| 1002  | 이순신 | 20     |\n| 1003  | 장보고 | NULL   |\n| 1004  | 강감찬 | 30     |\n\n**DEPT 테이블**\n\n| DEPTNO | DNAME  |\n|--------|--------|\n| 10     | 영업팀 |\n| 20     | 개발팀 |\n\n```sql\nSELECT ENAME FROM EMP\n WHERE NOT EXISTS (\n     SELECT 1 FROM DEPT\n      WHERE DEPT.DEPTNO = EMP.DEPTNO\n );\n```",
     "options": [
@@ -393,7 +393,7 @@
   {
     "id": "p2c2_024",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "result",
     "content": "아래 테이블에서 SQL을 실행한 결과로 올바른 것은?\n\n**EMP 테이블**\n\n| EMPNO | ENAME  | DEPTNO | SAL  |\n|-------|--------|--------|------|\n| 1001  | 홍길동 | 10     | 3000 |\n| 1002  | 이순신 | 20     | 4000 |\n| 1003  | 장보고 | 10     | 3000 |\n| 1004  | 강감찬 | 20     | 5000 |\n\n```sql\nSELECT DEPTNO, SAL,\n       MAX(SAL) OVER(PARTITION BY DEPTNO) AS MAX_SAL\n  FROM EMP\n GROUP BY DEPTNO, SAL;\n```",
     "options": [
@@ -410,7 +410,7 @@
   {
     "id": "p2c2_025",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "result",
     "content": "아래 테이블에서 SQL을 실행한 결과 행 수로 올바른 것은?\n\n**SALES 테이블**\n\n| JOB_NM    | DEPT_NM | AMOUNT |\n|-----------|---------|--------|\n| 영업사원  | 서울팀  | 1000   |\n| 영업사원  | 부산팀  | 2000   |\n| 관리자    | 서울팀  | 5000   |\n| 관리자    | 부산팀  | 3000   |\n| 개발자    | 서울팀  | 4000   |\n\n```sql\nSELECT JOB_NM, DEPT_NM, SUM(AMOUNT)\n  FROM SALES\n GROUP BY ROLLUP(JOB_NM, DEPT_NM);\n```",
     "options": [
@@ -427,7 +427,7 @@
   {
     "id": "p2c2_026",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "concept",
     "content": "다음 중 GROUPING SETS에서 빈 괄호 '()'의 의미로 올바른 것은?",
     "options": [
@@ -444,7 +444,7 @@
   {
     "id": "p2c2_027",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "completion",
     "content": "다음 SQL의 빈칸에 들어갈 내용으로 올바른 것은?\n\n```sql\nSELECT JOB_NM, DEPT_NM, SUM(AMOUNT),\n       GROUPING(JOB_NM) AS GRP_JOB,\n       GROUPING(DEPT_NM) AS GRP_DEPT\n  FROM SALES\n GROUP BY ______(JOB_NM, DEPT_NM);\n```\n\n(단, JOB_NM과 DEPT_NM의 모든 가능한 조합의 소계를 생성)",
     "options": [
@@ -461,7 +461,7 @@
   {
     "id": "p2c2_028",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "result",
     "content": "아래 테이블에서 SQL을 실행한 결과로 올바른 것은?\n\n**EMP 테이블**\n\n| EMPNO | ENAME  | DEPTNO | SAL  |\n|-------|--------|--------|------|\n| 1001  | 가나다 | 10     | 3000 |\n| 1002  | 나다라 | 10     | 4000 |\n| 1003  | 다라마 | 20     | 2000 |\n| 1004  | 라마바 | 20     | 5000 |\n| 1005  | 마바사 | 10     | 3000 |\n\n```sql\nSELECT EMPNO, ENAME, DEPTNO, SAL,\n       DENSE_RANK() OVER(ORDER BY SAL DESC) AS RANK_VAL\n  FROM EMP;\n```\n\n(결과에서 RANK_VAL이 3인 행의 EMPNO는?)",
     "options": [
@@ -478,7 +478,7 @@
   {
     "id": "p2c2_029",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "completion",
     "content": "다음 SQL의 빈칸에 들어갈 내용으로 올바른 것은?\n\n```sql\nSELECT EMPNO, ENAME, SAL, DEPTNO,\n       NTILE(______) OVER(ORDER BY SAL DESC) AS GRADE\n  FROM EMP;\n```\n\n(단, 직원을 급여 순으로 4등분하여 1~4 등급으로 구분)",
     "options": [
@@ -495,7 +495,7 @@
   {
     "id": "p2c2_030",
     "part": 2,
-    "chapter": "2",
+    "chapter": "part2_ch2",
     "questionType": "error",
     "content": "다음 SQL 중 실행 시 오류가 발생하는 것은?",
     "options": [
@@ -508,5 +508,90 @@
     "explanation": "= 연산자는 단일 행 서브쿼리에만 사용할 수 있다. 'SELECT AVG(SAL) FROM EMP GROUP BY DEPTNO'는 부서별 평균 급여를 반환하므로 여러 행이 반환될 수 있다. 단일 행 비교 연산자(>, =, < 등)에 다중 행 서브쿼리를 사용하면 'ORA-01427: single-row subquery returns more than one row' 오류가 발생한다. 다중 행과 비교할 때는 IN, ANY, ALL을 사용해야 한다.",
     "tags": ["서브쿼리", "단일행서브쿼리", "오류"],
     "difficulty": "중"
+  },
+  {
+    "id": "p2c2_031",
+    "part": 2,
+    "chapter": "part2_ch2",
+    "questionType": "concept",
+    "content": "PIVOT 연산에 관한 설명으로 옳은 것은?",
+    "options": [
+      "PIVOT은 행(Row) 데이터를 더 많은 행으로 분리·변환한다",
+      "PIVOT은 행 데이터를 열(Column)로 변환하여 크로스탭(교차표) 형태로 출력한다",
+      "PIVOT과 UNPIVOT은 동일한 변환 방향을 가지므로 서로 같은 결과를 반환한다",
+      "PIVOT의 FOR 절은 집계 기준 컬럼을 지정하고 IN 절은 집계 함수를 지정한다"
+    ],
+    "answer": 2,
+    "explanation": "PIVOT 연산:\n\n① 오답: 행을 더 많은 행으로 분리하는 것은 UNPIVOT의 특징. PIVOT은 반대로 행을 줄이고 열을 늘림\n\n② 정답: PIVOT은 행을 열로 변환. 예를 들어 (부서별, 연도별) 각각 1행씩 있던 데이터를 부서별 1행에 각 연도가 컬럼으로 변환\n\n③ 오답: PIVOT(행→열)과 UNPIVOT(열→행)은 반대 방향의 변환. UNPIVOT은 PIVOT의 역연산\n\n④ 오답: PIVOT에서 집계 함수는 집계 함수(SUM 등)에 지정하고, FOR는 열로 변환할 컬럼(값이 새 컬럼명이 될 컬럼), IN은 열로 변환할 값 목록 지정\n\n```sql\nSELECT * FROM (\n  SELECT JOB, DEPTNO, SAL FROM EMP\n)\nPIVOT (\n  SUM(SAL)           -- 집계 함수\n  FOR DEPTNO         -- 열로 변환할 컬럼\n  IN (10 AS D10, 20 AS D20, 30 AS D30)  -- 값 목록\n);\n```",
+    "tags": ["PIVOT", "행열변환"],
+    "difficulty": "중"
+  },
+  {
+    "id": "p2c2_032",
+    "part": 2,
+    "chapter": "part2_ch2",
+    "questionType": "result",
+    "content": "다음 SQL의 실행 결과로 옳은 것은?\n\n```sql\nSELECT *\nFROM (\n  SELECT JOB, SAL FROM EMP\n  WHERE JOB IN ('영업', '개발')\n)\nPIVOT (\n  SUM(SAL)\n  FOR JOB IN ('영업' AS 영업합계, '개발' AS 개발합계)\n);\n```\n\n단, EMP 데이터:\n| JOB | SAL |\n|-----|-----|\n| 영업 | 1000 |\n| 영업 | 2000 |\n| 개발 | 3000 |\n| 개발 | 4000 |",
+    "options": [
+      "1행: 영업합계=3000, 개발합계=7000",
+      "2행: (영업, 3000), (개발, 7000)",
+      "4행: 원본 데이터 그대로 출력",
+      "오류 발생 (PIVOT 구문 오류)"
+    ],
+    "answer": 1,
+    "explanation": "PIVOT 실행 결과 분석:\n\nINNER 쿼리: JOB IN ('영업', '개발') 전체 4행 데이터\n\nPIVOT 적용:\n- SUM(SAL) FOR JOB IN ('영업', '개발')\n- JOB='영업'의 SAL 합계: 1000+2000 = 3000 (영업합계 컬럼)\n- JOB='개발'의 SAL 합계: 3000+4000 = 7000 (개발합계 컬럼)\n- GROUP BY할 다른 컬럼이 없으므로 전체를 하나의 그룹으로 집계\n\n결과: 1행 (영업합계=3000, 개발합계=7000)\n\n① 정답: PIVOT이 JOB 컬럼을 열로 변환하고 SAL을 집계하여 1행으로 출력\n\n② 오답: PIVOT은 행을 줄이는 방향. JOB별로 행이 생기는 게 아니라 JOB이 컬럼이 됨\n\n③ 오답: PIVOT은 변환 연산이므로 원본 4행이 그대로 나오지 않음\n\n④ 오답: 올바른 PIVOT 구문이므로 오류 없음",
+    "tags": ["PIVOT", "결과예측", "행열변환"],
+    "difficulty": "상"
+  },
+  {
+    "id": "p2c2_033",
+    "part": 2,
+    "chapter": "part2_ch2",
+    "questionType": "concept",
+    "content": "UNPIVOT 연산에 관한 설명으로 옳은 것은?\n\n```sql\nSELECT DEPTNO, QUARTER, SALES\nFROM QUARTERLY_SALES\nUNPIVOT (\n  SALES\n  FOR QUARTER IN (Q1, Q2, Q3, Q4)\n);\n```\n\n단, QUARTERLY_SALES: DEPTNO, Q1, Q2, Q3, Q4 컬럼 (부서별 분기 매출 1행씩)",
+    "options": [
+      "UNPIVOT은 행 데이터를 열로 변환하여 PIVOT과 동일한 방향이다",
+      "UNPIVOT 결과에서 NULL 값을 가진 컬럼도 항상 행으로 변환하여 포함된다",
+      "UNPIVOT은 열 데이터를 행으로 변환하여, Q1~Q4 4개 컬럼이 각각 별도 행이 된다",
+      "UNPIVOT에서 SALES는 열로 변환될 컬럼명 목록이고 QUARTER는 집계 기준이다"
+    ],
+    "answer": 3,
+    "explanation": "UNPIVOT 동작:\n\nUNPIVOT은 PIVOT의 역연산: 열(Column) → 행(Row) 변환\n\n위 SQL 실행 시:\n- QUARTERLY_SALES의 각 행(DEPTNO별 1행)이 4행으로 변환됨\n- Q1 → (DEPTNO, QUARTER='Q1', SALES=Q1값)\n- Q2 → (DEPTNO, QUARTER='Q2', SALES=Q2값)\n- Q3, Q4도 동일하게 변환\n- 부서가 n개이면 n×4행이 결과로 출력됨\n\n① 오답: PIVOT이 행→열, UNPIVOT이 열→행. 방향이 반대이므로 '동일한 방향'이 아님\n\n② 오답: 기본적으로 UNPIVOT은 NULL 값을 가진 항목을 결과에서 제외. INCLUDE NULLS 옵션을 사용해야 NULL 행이 포함됨\n\n③ 정답: 열(Q1~Q4)이 행으로 변환. 각 분기 컬럼이 QUARTER 컬럼의 값(행)이 되고 해당 분기 매출이 SALES 값이 됨\n\n④ 오답: SALES는 변환 후 집계값이 담길 컬럼명(Value Column), QUARTER는 변환 후 원래 컬럼명이 담길 컬럼명(Name Column), IN 절이 변환할 컬럼 목록",
+    "tags": ["UNPIVOT", "열행변환"],
+    "difficulty": "상"
+  },
+  {
+    "id": "p2c2_034",
+    "part": 2,
+    "chapter": "part2_ch2",
+    "questionType": "concept",
+    "content": "다음 중 REGEXP_LIKE 함수에 관한 설명으로 옳은 것은?",
+    "options": [
+      "REGEXP_LIKE는 LIKE 연산자와 동일하게 %, _ 와일드카드만 지원한다",
+      "REGEXP_LIKE(COL, '^[0-9]+$')는 숫자가 아닌 문자가 포함된 행을 반환한다",
+      "REGEXP_LIKE는 SELECT 절에서만 사용 가능하며 WHERE 절에는 사용할 수 없다",
+      "REGEXP_LIKE(COL, '^[0-9]+$')는 컬럼 값이 하나 이상의 숫자로만 구성된 행을 반환한다"
+    ],
+    "answer": 4,
+    "explanation": "REGEXP_LIKE 정규 표현식:\n\n패턴 '^[0-9]+$' 분석:\n- ^: 문자열의 시작\n- [0-9]: 0~9 사이의 숫자 하나\n- +: 앞 패턴이 1회 이상 반복\n- $: 문자열의 끝\n→ '처음부터 끝까지 모두 숫자인 값'\n\n① 오답: REGEXP_LIKE는 정규 표현식(Regular Expression) 문법 사용. %, _는 LIKE 전용 와일드카드. 정규식에서는 .*(임의 문자 0개 이상), .(임의 문자 1개), [패턴] 등을 사용\n\n② 오답: '^[0-9]+$'는 숫자로만 이루어진 값을 반환. 숫자가 아닌 문자가 포함된 행은 패턴 불일치로 제외됨\n\n③ 오답: REGEXP_LIKE는 주로 WHERE 절에서 조건으로 사용. SELECT 절에 직접 사용하는 것이 아님\n\n④ 정답: '^[0-9]+$' = 시작~끝이 모두 숫자([0-9]) 1개 이상(+)인 값만 매칭\n   예: '12345' → 매칭, 'ABC' → 불일치, '123A' → 불일치\n\n주요 정규식 패턴:\n- '^[가-힣]+$': 한글만으로 구성\n- '^[a-zA-Z0-9]+$': 영문자+숫자만\n- '.{5}': 정확히 5글자",
+    "tags": ["정규식", "REGEXP_LIKE"],
+    "difficulty": "상"
+  },
+  {
+    "id": "p2c2_035",
+    "part": 2,
+    "chapter": "part2_ch2",
+    "questionType": "result",
+    "content": "다음 SQL의 실행 결과로 옳은 것은?\n\n```sql\nSELECT REGEXP_SUBSTR('2026-06-15', '[0-9]+', 1, 2)  AS R1,\n       REGEXP_REPLACE('Hello World', ' ', '_')       AS R2,\n       REGEXP_INSTR('ABC123DEF', '[0-9]', 1, 1)      AS R3\nFROM DUAL;\n```",
+    "options": [
+      "R1='2026', R2='Hello_World', R3=4",
+      "R1='06', R2='Hello_World', R3=4",
+      "R1='06', R2='Hello World', R3=1",
+      "R1='15', R2='Hello_World', R3=4"
+    ],
+    "answer": 2,
+    "explanation": "정규 표현식 함수 결과:\n\n**REGEXP_SUBSTR('2026-06-15', '[0-9]+', 1, 2)**\n- 패턴 [0-9]+: 하나 이상의 연속 숫자\n- position=1: 1번째 문자부터 검색\n- occurrence=2: 두 번째 발생\n- '2026-06-15'에서 숫자 그룹: 1번째='2026', 2번째='06', 3번째='15'\n→ 결과: '06'\n\n**REGEXP_REPLACE('Hello World', ' ', '_')**\n- 공백(' ')을 '_'로 교체\n→ 결과: 'Hello_World'\n\n**REGEXP_INSTR('ABC123DEF', '[0-9]', 1, 1)**\n- [0-9]: 숫자 하나\n- 첫 번째 숫자의 시작 위치\n- A=1, B=2, C=3, 1=4 → 첫 숫자 '1'의 위치=4\n→ 결과: 4\n\n① 오답: REGEXP_SUBSTR의 두 번째 발생은 '2026'이 아닌 '06'\n② 정답: R1='06', R2='Hello_World', R3=4\n③ 오답: REGEXP_REPLACE는 공백을 '_'로 바꾸므로 원본 그대로가 아닌 'Hello_World'\n④ 오답: R1의 세 번째 발생은 '15'이지만 occurrence=2이므로 두 번째인 '06'",
+    "tags": ["정규식", "REGEXP_SUBSTR", "REGEXP_REPLACE", "REGEXP_INSTR"],
+    "difficulty": "상"
   }
 ]

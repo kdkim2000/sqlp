@@ -19,7 +19,7 @@ const THEORY_GROUPS: { part: string; items: NavItem[] }[] = [
     part: '1과목 데이터모델링',
     items: [
       { label: '1장 데이터모델링의 이해', href: '/theory/part1_ch1', chapterId: 'part1_ch1' },
-      { label: '2장 데이터 모델과 성능', href: '/theory/part1_ch2', chapterId: 'part1_ch2' },
+      { label: '2장 데이터 모델과 SQL', href: '/theory/part1_ch2', chapterId: 'part1_ch2' },
     ],
   },
   {

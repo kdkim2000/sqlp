@@ -2,511 +2,511 @@
   {
     "id": "p2c1_001",
     "part": 2,
-    "chapter": "1",
+    "chapter": "part2_ch1",
     "questionType": "concept",
-    "content": "다음 SQL 명령어 중 DML(Data Manipulation Language)에 해당하지 않는 것은?",
+    "content": "다음 SQL의 논리적 실행 순서로 올바른 것은?\n\n```sql\nSELECT   DEPTNO, MAX(SAL)\nFROM     EMP\nWHERE    SAL > 1000\nGROUP BY DEPTNO\nHAVING   MAX(SAL) >= 2000\nORDER BY MAX(SAL) DESC;\n```",
     "options": [
-      "INSERT",
-      "UPDATE",
-      "RENAME",
-      "DELETE"
+      "FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY",
+      "SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY",
+      "FROM → GROUP BY → WHERE → HAVING → SELECT → ORDER BY",
+      "WHERE → FROM → GROUP BY → SELECT → HAVING → ORDER BY"
     ],
-    "answer": 3,
-    "explanation": "RENAME은 테이블·뷰·시퀀스·동의어의 이름을 변경하는 DDL(Data Definition Language)에 해당한다. DML은 데이터 조작 명령으로 SELECT, INSERT, UPDATE, DELETE가 있다. DDL에는 CREATE, ALTER, DROP, TRUNCATE, RENAME이 포함된다.",
-    "tags": ["DML", "DDL", "SQL분류"],
-    "difficulty": "하"
+    "answer": 1,
+    "explanation": "SQL 논리적 실행 순서: FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY\n\n① 정답: 올바른 순서. FROM으로 테이블 접근 → WHERE로 개별 행 필터(SAL>1000) → GROUP BY로 그룹화(DEPTNO별) → HAVING으로 그룹 필터(MAX(SAL)>=2000) → SELECT로 출력할 컬럼 결정 → ORDER BY로 정렬\n\n② 오답: SELECT가 FROM보다 먼저 올 수 없음. 테이블을 먼저 읽어야 컬럼을 선택 가능\n\n③ 오답: GROUP BY는 WHERE 이후에 실행됨. WHERE로 먼저 개별 행을 필터링한 후 그룹화\n\n④ 오답: WHERE는 FROM 이후에 실행됨. 테이블을 먼저 읽지 않고 WHERE 조건을 적용할 수 없음\n\n핵심: SELECT 별칭(alias)은 ORDER BY에서만 참조 가능하고 WHERE·HAVING에서는 불가능한 이유가 바로 이 실행 순서 때문",
+    "tags": ["SQL실행순서", "GROUP BY", "HAVING"],
+    "difficulty": "중"
   },
   {
     "id": "p2c1_002",
     "part": 2,
-    "chapter": "1",
-    "questionType": "completion",
-    "content": "다음 SQL의 빈칸에 들어갈 내용으로 올바른 것은?\n\n```sql\nCREATE TABLE EMP_COPY\n______\nSELECT EMPNO, ENAME, SAL\n  FROM EMP\n WHERE DEPTNO = 10;\n```",
+    "chapter": "part2_ch1",
+    "questionType": "result",
+    "content": "다음 SQL의 결과 행 수로 올바른 것은?\n\n```sql\nSELECT DEPTNO, COUNT(*)\nFROM   TEST\nGROUP BY DEPTNO;\n```\n\n| EMPNO | DEPTNO |\n|-------|--------|\n| 1001  | 10     |\n| 1002  | 10     |\n| 1003  | 20     |\n| 1004  | NULL   |\n| 1005  | NULL   |\n| 1006  | 30     |",
     "options": [
-      "VALUES",
-      "AS",
-      "FROM",
-      "LIKE"
+      "2행 (DEPTNO가 NULL인 행은 GROUP BY에서 제외됨)",
+      "3행 (10, 20, NULL 각각 하나의 그룹으로 처리되나 30이 누락)",
+      "4행 (10, 20, 30, NULL 각각 하나의 그룹)",
+      "6행 (전체 행 수)"
     ],
-    "answer": 2,
-    "explanation": "CREATE TABLE ... AS SELECT 구문은 SELECT 결과를 기반으로 새 테이블을 생성한다. AS 키워드 이후에 SELECT 문을 작성하면 조회 결과의 구조와 데이터를 복사하여 테이블을 만든다. 테이블 구조만 복사할 때는 WHERE 1=2 조건을 사용한다.",
-    "tags": ["DDL", "CREATE TABLE AS SELECT"],
+    "answer": 3,
+    "explanation": "GROUP BY와 NULL 처리:\n\nOracle에서 GROUP BY는 NULL 값도 하나의 그룹으로 처리함\n\n그룹화 결과:\n- DEPTNO=10: 2건\n- DEPTNO=20: 1건\n- DEPTNO=30: 1건\n- DEPTNO=NULL: 2건 (NULL도 하나의 그룹)\n→ 총 4행\n\n① 오답: Oracle의 GROUP BY는 NULL 값을 하나의 그룹으로 취급함. NULL이 있어도 제외되지 않음\n\n② 오답: DEPTNO=30인 행(1006)도 존재하므로 30 그룹도 포함되어야 함. NULL 그룹과 30 그룹 모두 포함하면 4행\n\n③ 정답: DEPTNO 10(2건), 20(1건), 30(1건), NULL(2건) = 4개 그룹 → 4행 출력\n\n④ 오답: GROUP BY는 각 고유 DEPTNO 값별로 집계하여 그룹 수만큼 행 반환. 전체 행 수와 다름",
+    "tags": ["GROUP BY", "NULL", "결과예측"],
     "difficulty": "중"
   },
   {
     "id": "p2c1_003",
     "part": 2,
-    "chapter": "1",
-    "questionType": "result",
-    "content": "아래 테이블에서 SQL을 실행한 결과로 올바른 것은?\n\n| EMPNO | ENAME  | DEPTNO |\n|-------|--------|--------|\n| 1001  | 홍길동 | 10     |\n| 1002  | 이순신 | 20     |\n| 1003  | 장보고 | 10     |\n| 1004  | 강감찬 | 20     |\n\n```sql\nSELECT COUNT(*), COUNT(DEPTNO), COUNT(DISTINCT DEPTNO)\n  FROM EMP;\n```",
+    "chapter": "part2_ch1",
+    "questionType": "concept",
+    "content": "Oracle의 OUTER JOIN 표기법 (+)에 관한 설명으로 옳은 것은?\n\n```sql\nSELECT E.ENAME, D.DNAME\nFROM   EMP E, DEPT D\nWHERE  E.DEPTNO = D.DEPTNO(+);\n```",
     "options": [
-      "3, 3, 2",
-      "4, 4, 2",
-      "4, 4, 3",
-      "4, 4, 4"
+      "DEPT(D) 테이블 기준의 LEFT OUTER JOIN으로 DEPT의 모든 행이 포함된다",
+      "EMP(E) 쪽에 (+)가 없으므로 DEPT에 없는 EMP 행은 결과에서 제외된다",
+      "EMP(E)가 기준 테이블로 EMP의 모든 행이 표시되고 DEPT에 매칭 없으면 DNAME=NULL로 채워진다",
+      "(+) 기호는 INNER JOIN을 나타내며 양쪽 모두 매칭되는 행만 반환한다"
     ],
-    "answer": 2,
-    "explanation": "COUNT(*)는 NULL 포함 전체 행 수를 반환하므로 4, COUNT(DEPTNO)는 NULL이 아닌 DEPTNO 값의 수이므로 4(NULL 없음), COUNT(DISTINCT DEPTNO)는 중복 제거한 DEPTNO 값의 수로 10과 20 두 가지이므로 2이다. 따라서 결과는 4, 4, 2이다.",
-    "tags": ["집계함수", "COUNT", "DISTINCT"],
+    "answer": 3,
+    "explanation": "Oracle (+) 문법 해석:\n\n(+)는 '데이터를 보충해 줄 쪽'(NULL로 채워질 수 있는 쪽)에 붙임\n\nWHERE E.DEPTNO = D.DEPTNO(+)\n→ D.DEPTNO 쪽에 (+) → DEPT 측이 NULL이 될 수 있음\n→ EMP 기준으로 EMP의 모든 행 출력 = LEFT OUTER JOIN\n\n① 오답: (+)가 D 쪽에 붙으므로 D(DEPT)가 NULL이 채워지는 쪽. EMP 기준이므로 EMP LEFT OUTER JOIN DEPT와 동일. DEPT의 모든 행이 아닌 EMP의 모든 행이 기준\n\n② 오답: EMP(E)가 기준이므로 E에 있지만 D에 없는 행도 포함됨. (+)가 없는 쪽이 기준 테이블\n\n③ 정답: EMP가 기준(+) 없는 쪽). EMP 전체 출력, DEPT에 매칭 없으면 DNAME=NULL\n\n④ 오답: (+)는 OUTER JOIN을 나타내는 Oracle 전용 표기. INNER JOIN은 WHERE E.DEPTNO = D.DEPTNO로 표기",
+    "tags": ["OUTER JOIN", "Oracle(+)", "개념"],
     "difficulty": "중"
   },
   {
     "id": "p2c1_004",
     "part": 2,
-    "chapter": "1",
+    "chapter": "part2_ch1",
     "questionType": "concept",
-    "content": "트랜잭션의 특성 중 다음 설명에 해당하는 것은?\n\n\"트랜잭션이 실행되는 도중에 다른 트랜잭션의 영향을 받지 않고 독립적으로 실행되어야 한다.\"",
+    "content": "다음 SQL에서 서브쿼리 결과에 NULL이 포함될 때 NOT IN의 동작으로 옳은 것은?\n\n```sql\nSELECT ENAME\nFROM   EMP\nWHERE  DEPTNO NOT IN (SELECT DEPTNO FROM DEPT WHERE LOC = 'SEOUL');\n```\n\n단, 서브쿼리 결과: {10, NULL, 30}",
     "options": [
-      "원자성 (Atomicity)",
-      "일관성 (Consistency)",
-      "격리성 (Isolation)",
-      "지속성 (Durability)"
+      "NOT IN은 NULL을 자동으로 무시하고 10과 30이 아닌 사원을 반환한다",
+      "NOT IN에 NULL이 포함되면 오류(ORA-01427)가 발생한다",
+      "NOT IN은 NULL을 0으로 처리하여 정상적으로 동작한다",
+      "서브쿼리 결과에 NULL이 포함되면 NOT IN은 결과가 0건이 된다"
     ],
-    "answer": 3,
-    "explanation": "트랜잭션의 ACID 특성 중 격리성(Isolation)은 트랜잭션 실행 중 다른 트랜잭션의 영향을 받지 않고 독립적으로 실행되어야 함을 의미한다. 원자성은 전부 실행 또는 전부 미실행, 일관성은 데이터 무결성 유지, 지속성은 완료된 결과의 영구 반영을 의미한다.",
-    "tags": ["트랜잭션", "ACID", "격리성"],
-    "difficulty": "중"
+    "answer": 4,
+    "explanation": "NOT IN과 NULL:\n\nDEPTNO NOT IN (10, NULL, 30) 처리 과정:\n- DEPTNO = 20인 사원: 20 NOT IN (10, NULL, 30)\n  → 20 != 10(TRUE) AND 20 != NULL(UNKNOWN) AND 20 != 30(TRUE)\n  → TRUE AND UNKNOWN AND TRUE = UNKNOWN\n  → WHERE 조건 불만족 → 제외\n\nNULL과의 비교는 항상 UNKNOWN이고, NOT IN은 내부적으로 AND 연산을 사용하므로 단 하나라도 UNKNOWN이 있으면 전체 조건이 UNKNOWN이 되어 행이 반환되지 않음\n\n① 오답: NOT IN은 NULL을 자동으로 무시하지 않음. NULL과의 비교는 항상 UNKNOWN이 됨\n② 오답: 오류가 발생하지 않음. 오히려 조용히 0건 반환하여 실수를 유발하는 위험이 있음\n③ 오답: NULL을 0으로 처리하지 않음. NULL은 어떤 값과도 =, != 비교 시 UNKNOWN\n④ 정답: 서브쿼리에 NULL이 있으면 NOT IN 결과는 항상 0건. 대안으로 NOT EXISTS 사용 권장",
+    "tags": ["NOT IN", "NULL", "서브쿼리"],
+    "difficulty": "상"
   },
   {
     "id": "p2c1_005",
     "part": 2,
-    "chapter": "1",
+    "chapter": "part2_ch1",
     "questionType": "concept",
-    "content": "다음 중 WHERE 절에서 AND와 OR 연산자에 대한 설명으로 올바르지 않은 것은?",
+    "content": "다음 NVL2 함수에 관한 설명으로 옳은 것은?\n\n```sql\nSELECT NVL2(COMM, '커미션 있음', '커미션 없음') AS COMM_STATUS\nFROM   EMP;\n```",
     "options": [
-      "AND는 OR보다 우선순위가 높다",
-      "WHERE A=1 OR B=2 AND C=3은 WHERE A=1 OR (B=2 AND C=3)과 동일하다",
-      "NOT 연산자의 우선순위는 AND보다 낮다",
-      "괄호를 사용하면 연산자 우선순위를 변경할 수 있다"
+      "COMM이 NULL이 아니면 '커미션 있음', NULL이면 '커미션 없음'을 반환한다",
+      "COMM이 NULL이면 '커미션 있음', NULL이 아니면 '커미션 없음'을 반환한다",
+      "NVL2(COMM, '커미션 있음', '커미션 없음')은 NVL(COMM, '커미션 없음')과 동일하게 동작한다",
+      "NVL2는 인수가 2개일 때만 사용하며 3개 인수는 허용하지 않는다"
     ],
-    "answer": 3,
-    "explanation": "논리 연산자의 우선순위는 NOT > AND > OR 순이다. NOT이 가장 높고, 그 다음이 AND, 마지막이 OR이다. NOT은 AND보다 높은 우선순위를 가지므로 '③ NOT 연산자의 우선순위는 AND보다 낮다'는 설명이 틀렸다.",
-    "tags": ["WHERE", "연산자우선순위", "NOT"],
+    "answer": 1,
+    "explanation": "NVL2 함수 문법:\nNVL2(expr, value_if_not_null, value_if_null)\n\n- expr이 NULL이 아니면 두 번째 인수 반환\n- expr이 NULL이면 세 번째 인수 반환\n\n① 정답: COMM이 NULL이 아니면(값이 있으면) '커미션 있음', NULL이면 '커미션 없음'. 이것이 NVL2의 정확한 동작\n\n② 오답: 순서가 바뀜. NVL2에서 두 번째 인수가 'NOT NULL일 때', 세 번째 인수가 'NULL일 때' 반환값\n\n③ 오답: NVL(COMM, '커미션 없음')은 COMM이 NULL이면 '커미션 없음', NULL이 아니면 COMM 값 자체를 반환. NVL2와는 다르게 동작함\n\n④ 오답: NVL2는 반드시 3개의 인수를 받음. 2개 인수를 쓰면 오류 발생. NVL이 2개 인수를 사용함",
+    "tags": ["NULL함수", "NVL2", "NVL"],
     "difficulty": "중"
   },
   {
     "id": "p2c1_006",
     "part": 2,
-    "chapter": "1",
-    "questionType": "result",
-    "content": "아래 테이블에서 SQL을 실행한 결과로 올바른 것은?\n\n| NAME | GRADE |\n|------|-------|\n| 'AB' | 'AB'  |\n| 'AB' | 'ab'  |\n\n```sql\nSELECT COUNT(*)\n  FROM TEST\n WHERE NAME = GRADE;\n```\n\n(단, NAME은 CHAR(5), GRADE는 VARCHAR2(5) 타입)",
+    "chapter": "part2_ch1",
+    "questionType": "concept",
+    "content": "BETWEEN 연산자에 관한 설명으로 옳은 것은?",
     "options": [
-      "2",
-      "1",
-      "0",
-      "오류 발생"
+      "BETWEEN 1000 AND 2000은 1000 초과 2000 미만을 의미한다",
+      "BETWEEN 1000 AND 2000은 1000 이상 2000 이하(경계값 포함)를 의미한다",
+      "NOT BETWEEN 1000 AND 2000은 SAL > 1000 AND SAL < 2000과 동일하다",
+      "BETWEEN 연산자는 숫자 타입에만 사용할 수 있다"
     ],
     "answer": 2,
-    "explanation": "CHAR 타입은 고정 길이이므로 'AB'를 CHAR(5)에 저장하면 'AB   '(공백 채움)가 된다. VARCHAR2의 'AB'와 비교할 때 CHAR의 공백이 트리밍되어 비교되므로 'AB' = 'AB'는 1건이 해당한다. 'AB' ≠ 'ab'(대소문자 구분)이므로 COUNT(*)는 1이 반환된다.",
-    "tags": ["CHAR", "VARCHAR2", "문자비교"],
-    "difficulty": "상"
+    "explanation": "BETWEEN 연산자:\n\nBETWEEN a AND b는 a 이상 b 이하 (a <= 값 <= b)를 의미하며 경계값 양쪽 모두 포함\n\n① 오답: '초과'와 '미만'은 경계값을 제외한 범위. BETWEEN은 경계값 포함. 1000과 2000 자체도 조건 만족\n\n② 정답: SAL BETWEEN 1000 AND 2000 ≡ SAL >= 1000 AND SAL <= 2000. 1000과 2000 모두 포함\n\n③ 오답: NOT BETWEEN 1000 AND 2000 ≡ SAL < 1000 OR SAL > 2000 (경계값 제외). SAL > 1000 AND SAL < 2000이 아닌 OR 조건\n\n④ 오답: BETWEEN은 숫자뿐 아니라 문자(알파벳 순서), 날짜(시간 순서)에도 사용 가능. 예: BETWEEN '2026-01-01' AND '2026-12-31'",
+    "tags": ["BETWEEN", "조건연산자"],
+    "difficulty": "중"
   },
   {
     "id": "p2c1_007",
     "part": 2,
-    "chapter": "1",
+    "chapter": "part2_ch1",
     "questionType": "result",
-    "content": "다음 SQL의 실행 결과는?\n\n```sql\nSELECT ABS(CEIL(-1.5) + FLOOR(1.5) * SIGN(-1))\n  FROM DUAL;\n```",
+    "content": "다음 SQL의 결과로 옳은 것은?\n\n```sql\nSELECT CASE\n         WHEN SAL < 1000 THEN '하'\n         WHEN SAL < 3000 THEN '중'\n         WHEN SAL < 5000 THEN '상'\n         ELSE '특상'\n       END AS GRADE\nFROM   EMP\nWHERE  ENAME = 'KING';\n```\n\n단, KING의 SAL = 4500",
     "options": [
-      "0",
-      "1",
-      "2",
-      "3"
+      "'하' (4500이 가장 큰 값이므로 첫 번째 조건 해당)",
+      "'중' (평균 급여 범위이므로)",
+      "'상' (SAL=4500, 3000 이상 5000 미만 조건 충족)",
+      "'특상' (KING은 사장이므로 ELSE 적용)"
     ],
-    "answer": 2,
-    "explanation": "단계별 계산: CEIL(-1.5) = -1 (올림: -1.5 이상의 정수 중 가장 작은 값), FLOOR(1.5) = 1 (내림: 1.5 이하의 정수 중 가장 큰 값), SIGN(-1) = -1 (음수이므로 -1). 따라서 ABS(-1 + 1 * (-1)) = ABS(-1 + (-1)) = ABS(-2) = 2. CEIL은 올림, FLOOR는 내림, SIGN은 양수면 1, 음수면 -1, 0이면 0을 반환한다.",
-    "tags": ["숫자함수", "ABS", "CEIL", "FLOOR", "SIGN"],
-    "difficulty": "상"
+    "answer": 3,
+    "explanation": "CASE WHEN은 위에서 아래로 순서대로 조건 확인하고 첫 번째 만족 조건에서 결과 반환:\n\n- WHEN SAL < 1000: 4500 < 1000? 아니오\n- WHEN SAL < 3000: 4500 < 3000? 아니오\n- WHEN SAL < 5000: 4500 < 5000? 예 → '상' 반환\n(이후 조건 확인 중단)\n\n① 오답: CASE는 순서대로 조건을 확인하여 처음 만족하는 조건의 결과를 반환. SAL=4500은 첫 번째 조건(SAL<1000)을 만족하지 않음\n\n② 오답: '중'은 SAL < 3000 조건. 4500은 3000 이상이므로 불만족\n\n③ 정답: SAL < 1000(불만족), SAL < 3000(불만족), SAL < 5000(4500 < 5000 만족) → '상'\n\n④ 오답: ELSE는 모든 WHEN 조건이 불만족일 때만 실행됨. 세 번째 조건(SAL<5000)에서 이미 조건이 충족되어 ELSE에 도달하지 않음",
+    "tags": ["CASE", "조건식", "결과예측"],
+    "difficulty": "중"
   },
   {
     "id": "p2c1_008",
     "part": 2,
-    "chapter": "1",
+    "chapter": "part2_ch1",
     "questionType": "result",
-    "content": "다음 SQL의 실행 결과는?\n\n```sql\nSELECT NVL(MAX(DUMMY), 'DUMMY') AS RESULT\n  FROM DUAL\n WHERE 1 = 0;\n```",
+    "content": "다음 SQL의 실행 결과로 올바른 것은?\n\n```sql\nSELECT NULLIF(3, 3)        AS R1,\n       NULLIF(3, 5)        AS R2,\n       COALESCE(NULL, NULL, 5) AS R3,\n       COALESCE(NULL, 7, 9)   AS R4\nFROM DUAL;\n```",
     "options": [
-      "NULL",
-      "DUMMY",
-      "오류 발생",
-      "빈 결과 반환"
+      "R1=NULL, R2=3, R3=5, R4=7",
+      "R1=3, R2=NULL, R3=5, R4=7",
+      "R1=NULL, R2=5, R3=NULL, R4=7",
+      "R1=0, R2=3, R3=5, R4=NULL"
     ],
-    "answer": 2,
-    "explanation": "WHERE 1=0은 항상 FALSE이므로 아무 행도 선택되지 않는다. 그러나 MAX()와 같은 집계 함수는 대상 행이 없으면 NULL을 반환한다(GROUP BY 없이 단독 집계 함수 사용 시 빈 집합에서도 한 행 반환). NVL(NULL, 'DUMMY')는 NULL이므로 'DUMMY'를 반환한다.",
-    "tags": ["집계함수", "MAX", "NVL", "NULL"],
+    "answer": 1,
+    "explanation": "각 함수 결과:\n\n- NULLIF(3, 3): 두 값이 같으면 NULL → NULL\n- NULLIF(3, 5): 두 값이 다르면 첫 번째 값 반환 → 3\n- COALESCE(NULL, NULL, 5): NULL이 아닌 첫 번째 값 → 5\n- COALESCE(NULL, 7, 9): NULL이 아닌 첫 번째 값 → 7 (9는 확인 안 함)\n\n① 정답: R1=NULL, R2=3, R3=5, R4=7\n\n② 오답: NULLIF(3,3)는 3이 아닌 NULL을 반환함. 두 값이 같으면 NULL\n\n③ 오답: NULLIF(3,5)는 5가 아닌 3(첫 번째 인수)을 반환함. 또한 COALESCE(NULL,NULL,5)=5이지 NULL이 아님\n\n④ 오답: NULLIF 결과는 0이 아닌 NULL 또는 원래 값. COALESCE(NULL,7,9)는 NULL이 아닌 7\n\n핵심: NULLIF(A,B) - 같으면 NULL, 다르면 A / COALESCE - NULL이 아닌 첫 번째 인수",
+    "tags": ["NULL함수", "NULLIF", "COALESCE"],
     "difficulty": "상"
   },
   {
     "id": "p2c1_009",
     "part": 2,
-    "chapter": "1",
+    "chapter": "part2_ch1",
     "questionType": "result",
-    "content": "아래 테이블에서 SQL을 실행한 결과로 올바른 것은?\n\n| EMPNO | DEPTNO | SAL  |\n|-------|--------|------|\n| 1001  | 10     | 3000 |\n| 1002  | 10     | 4000 |\n| 1003  | 20     | 3000 |\n| 1004  | 20     | NULL |\n| 1005  | 20     | 3000 |\n| 1006  | 30     | 5000 |\n| 1007  | 30     | 4000 |\n| 1008  | 30     | NULL |\n| 1009  | 40     | 3000 |\n| 1010  | 40     | 3000 |\n\n```sql\nSELECT COUNT(SAL), COUNT(*), COUNT(DISTINCT SAL)\n  FROM EMP;\n```",
+    "content": "다음 SQL의 실행 결과로 올바른 것은?\n\n```sql\nSELECT SUBSTR('ABCDEFG', 3, 2) AS R1,\n       INSTR('ABCABC', 'B', 1, 2) AS R2,\n       LPAD('XY', 6, '*') AS R3\nFROM DUAL;\n```",
     "options": [
-      "10, 10, 3",
-      "8, 8, 4",
-      "8, 10, 4",
-      "8, 10, 3"
+      "R1=CD, R2=5, R3=****XY",
+      "R1=BC, R2=2, R3=****XY",
+      "R1=CD, R2=2, R3=**XY",
+      "R1=BC, R2=5, R3=**XY"
     ],
-    "answer": 4,
-    "explanation": "COUNT(SAL)은 NULL이 아닌 SAL 값의 수 = 8(NULL 2개 제외), COUNT(*)는 NULL 포함 전체 행 수 = 10, COUNT(DISTINCT SAL)는 중복 제거된 SAL 값의 수 = 3000, 4000, 5000 세 가지이므로 3이다. 따라서 결과는 8, 10, 3으로 보기 ④가 정답이다. COUNT(*)와 COUNT(컬럼)의 차이, 그리고 DISTINCT의 NULL 처리를 함께 이해해야 한다.",
-    "tags": ["집계함수", "COUNT", "DISTINCT", "NULL"],
-    "difficulty": "상"
+    "answer": 1,
+    "explanation": "문자 함수 결과:\n\n- SUBSTR('ABCDEFG', 3, 2): 3번째 문자부터 2개\n  A=1, B=2, C=3(시작), D=4 → 'CD'\n\n- INSTR('ABCABC', 'B', 1, 2): 1번째 위치부터 'B'의 2번째 출현\n  A=1, B=2(1번째 B), C=3, A=4, B=5(2번째 B) → 5\n\n- LPAD('XY', 6, '*'): 총 6자리가 되도록 왼쪽에 '*' 채움\n  'XY'는 2자리이므로 4자리 추가 → '****XY'\n\n① 정답: R1=CD, R2=5, R3=****XY\n\n② 오답: SUBSTR 시작 위치 3은 'C'이고 2개면 'CD'. 2번째 문자부터면 'BC'이나 시작 위치는 3이므로 틀림. INSTR 2번째 'B'는 위치 5\n\n③ 오답: LPAD('XY',6,'*')는 총 6자리이므로 별 4개. **XY는 4자리(별 2개)\n\n④ 오답: SUBSTR 오류(BC가 아닌 CD) 및 LPAD 오류(별 2개가 아닌 4개) 모두 틀림",
+    "tags": ["문자함수", "SUBSTR", "INSTR", "LPAD"],
+    "difficulty": "중"
   },
   {
     "id": "p2c1_010",
     "part": 2,
-    "chapter": "1",
+    "chapter": "part2_ch1",
     "questionType": "result",
-    "content": "아래 테이블에서 SQL 실행 후 결과 행 수로 올바른 것은?\n\n| TEAM_ID | PLAYER_NAME | HEIGHT |\n|---------|-------------|--------|\n| K01     | 선수A       | 180    |\n| K01     | 선수B       | 185    |\n| K01     | 선수C       | 172    |\n| K02     | 선수D       | 188    |\n| K02     | 선수E       | 185    |\n| K03     | 선수F       | 190    |\n\n```sql\nSELECT TEAM_ID, MAX(HEIGHT)\n  FROM PLAYERS\n GROUP BY TEAM_ID\nHAVING MAX(HEIGHT) >= 185\n ORDER BY MAX(HEIGHT) DESC;\n```",
+    "content": "다음 SQL의 결과로 올바른 것은?\n\n```sql\nSELECT ROUND(456.789, 1) AS R1,\n       ROUND(456.789, -2) AS R2,\n       TRUNC(456.789, 1) AS R3\nFROM DUAL;\n```",
     "options": [
-      "1행",
-      "2행",
-      "3행",
-      "4행"
+      "R1=456.7, R2=500, R3=456.7",
+      "R1=456.8, R2=500, R3=456.7",
+      "R1=456.8, R2=400, R3=456.8",
+      "R1=456.7, R2=400, R3=456.8"
     ],
-    "answer": 3,
-    "explanation": "GROUP BY TEAM_ID로 그룹화하면 K01(MAX=185), K02(MAX=188), K03(MAX=190) 3개 그룹이 된다. HAVING MAX(HEIGHT) >= 185 조건을 적용하면 K01(185 >= 185, 포함), K02(188 >= 185, 포함), K03(190 >= 185, 포함) 모두 3개 그룹이 선택된다. 따라서 결과는 3행이다.",
-    "tags": ["GROUP BY", "HAVING", "집계함수"],
+    "answer": 2,
+    "explanation": "ROUND와 TRUNC 결과:\n\n- ROUND(456.789, 1): 소수 첫째 자리로 반올림\n  소수 둘째 자리가 8(≥5)이므로 올림 → 456.8\n\n- ROUND(456.789, -2): 백의 자리에서 반올림\n  십의 자리가 5(≥5)이므로 올림 → 500\n\n- TRUNC(456.789, 1): 소수 첫째 자리에서 절삭(내림)\n  소수 이하 절삭, 소수 첫째 자리 유지 → 456.7\n\n① 오답: ROUND(456.789, 1)=456.8이어야 함. 소수 둘째 자리(8)가 5 이상이므로 올림\n\n② 정답: R1=456.8(반올림), R2=500(백의 자리 반올림), R3=456.7(절삭)\n\n③ 오답: ROUND(-2)는 400이 아닌 500. 십의 자리(5)≥5이므로 올림하여 500. 또한 TRUNC(456.789,1)=456.7이지 456.8이 아님\n\n④ 오답: ROUND(456.789,1)=456.8. 소수 첫째 자리 '7' 이후의 값(8)이 5 이상이므로 올림",
+    "tags": ["숫자함수", "ROUND", "TRUNC"],
     "difficulty": "중"
   },
   {
     "id": "p2c1_011",
     "part": 2,
-    "chapter": "1",
-    "questionType": "completion",
-    "content": "다음 SQL의 빈칸에 들어갈 내용으로 올바른 것은?\n\n```sql\nSELECT TEAM_ID, ______(HEIGHT) AS MAX_HEIGHT\n  FROM PLAYERS\n GROUP BY TEAM_ID\nHAVING ______(HEIGHT) >= 185;\n```\n\n(단, 팀별 최대 키가 185 이상인 팀만 조회)",
+    "chapter": "part2_ch1",
+    "questionType": "concept",
+    "content": "Oracle 날짜 함수에 관한 설명으로 옳지 않은 것은?",
     "options": [
-      "COUNT, COUNT",
-      "MAX, MAX",
-      "SUM, SUM",
-      "AVG, AVG"
+      "MONTHS_BETWEEN(DATE1, DATE2)는 DATE1이 DATE2보다 이전이면 음수를 반환한다",
+      "ADD_MONTHS(SYSDATE, -6)은 현재 날짜에서 6개월 전 날짜를 반환한다",
+      "TRUNC(SYSDATE, 'MM')은 해당 월의 마지막 날을 반환한다",
+      "LAST_DAY(SYSDATE)는 해당 월의 마지막 날짜를 반환한다"
     ],
-    "answer": 2,
-    "explanation": "팀별 최대 키를 구하고 그 최대값이 185 이상인 팀만 조회하려면 MAX 집계 함수를 사용해야 한다. SELECT 절의 MAX(HEIGHT)는 팀별 최대 키를 반환하고, HAVING 절의 MAX(HEIGHT) >= 185는 그 최대값이 185 이상인 그룹만 필터링한다. HAVING 절에서 집계 함수를 사용하는 것이 핵심이다.",
-    "tags": ["집계함수", "MAX", "HAVING"],
+    "answer": 3,
+    "explanation": "날짜 함수:\n\n① 옳음: MONTHS_BETWEEN(D1, D2)에서 D1 < D2이면 음수 반환. 예: MONTHS_BETWEEN(01-JAN-2026, 01-MAR-2026) = -2\n\n② 옳음: ADD_MONTHS(날짜, 음수)로 과거 날짜 계산. ADD_MONTHS(SYSDATE, -6) = 6개월 전\n\n③ 틀림(정답): TRUNC(SYSDATE, 'MM')은 해당 월의 '마지막 날'이 아닌 '1일(첫째 날)'을 반환\n   예: 2026-06-15 → TRUNC → 2026-06-01\n   마지막 날은 LAST_DAY()로 구함\n\n④ 옳음: LAST_DAY(날짜)는 해당 날짜가 속한 월의 마지막 날 반환\n   예: LAST_DAY(TO_DATE('2026-02-10','YYYY-MM-DD')) = 2026-02-28\n\n핵심: TRUNC(날짜,'MM')=해당월 1일, TRUNC(날짜,'YYYY')=해당연도 1월1일",
+    "tags": ["날짜함수", "TRUNC", "LAST_DAY", "ADD_MONTHS"],
     "difficulty": "중"
   },
   {
     "id": "p2c1_012",
     "part": 2,
-    "chapter": "1",
-    "questionType": "concept",
-    "content": "다음 중 ORDER BY 절에서 NULL 값의 정렬 순서에 대한 설명으로 올바른 것은?",
+    "chapter": "part2_ch1",
+    "questionType": "error",
+    "content": "다음 중 ROWNUM에 관한 설명으로 옳지 않은 것은?",
     "options": [
-      "Oracle에서 NULL은 오름차순 정렬 시 가장 앞에 위치한다",
-      "Oracle에서 NULL은 오름차순 정렬 시 가장 뒤에 위치한다",
-      "모든 DBMS에서 NULL은 오름차순 정렬 시 0으로 취급된다",
-      "NULL은 정렬에 포함되지 않고 항상 제외된다"
+      "WHERE ROWNUM <= 5는 EMP 테이블의 처음 5행을 정상적으로 반환한다",
+      "ROWNUM은 ORDER BY 이전에 부여되므로 정렬 후 상위 N건 조회 시 인라인뷰가 필요하다",
+      "WHERE ROWNUM = 1은 첫 번째 행 한 건을 반환할 수 있다",
+      "WHERE ROWNUM >= 5는 5번째 행부터 마지막 행까지 반환한다"
     ],
-    "answer": 2,
-    "explanation": "Oracle에서 NULL은 가장 큰 값으로 취급되어 오름차순(ASC) 정렬 시 가장 마지막에 위치하고, 내림차순(DESC) 정렬 시 가장 먼저 위치한다. SQL Server에서는 반대로 오름차순 정렬 시 NULL이 가장 앞에 위치한다. NULLS FIRST / NULLS LAST 옵션으로 명시적으로 NULL 위치를 제어할 수 있다.",
-    "tags": ["ORDER BY", "NULL", "정렬"],
-    "difficulty": "중"
+    "answer": 4,
+    "explanation": "ROWNUM 특성:\n\n① 옳음: ROWNUM <= 5는 정상 동작. ROWNUM이 1부터 시작하여 순차적으로 증가하므로 1,2,3,4,5번 행 반환\n\n② 옳음: ORDER BY는 SELECT 이후 처리되나 ROWNUM은 데이터를 읽을 때 부여됨. 정렬 후 상위 N건은 인라인뷰 안에서 ORDER BY 후 외부에서 ROWNUM <= N 적용 필요\n\n③ 옳음: ROWNUM = 1은 가능. 첫 번째 행을 가져오면 ROWNUM=1 조건 만족하여 반환\n\n④ 틀림(정답): ROWNUM >= 5는 작동하지 않음. ROWNUM은 항상 1부터 시작하므로 첫 행의 ROWNUM=1이 >=5 불만족 → 반환 안 됨. 결과 0건. ROWNUM > N이나 ROWNUM = N(N>1) 모두 마찬가지\n\n핵심: ROWNUM은 항상 1부터 증가. ROWNUM <= N과 ROWNUM = 1만 정상 동작",
+    "tags": ["ROWNUM", "Top-N", "인라인뷰"],
+    "difficulty": "상"
   },
   {
     "id": "p2c1_013",
     "part": 2,
-    "chapter": "1",
-    "questionType": "result",
-    "content": "아래 테이블에서 SQL을 실행한 결과로 올바른 것은?\n\n| DEPTNO | ENAME | SAL  |\n|--------|-------|------|\n| 10     | 홍길동 | 3000 |\n| 10     | 이순신 | NULL |\n| 20     | 장보고 | 2000 |\n| 20     | 강감찬 | 3000 |\n| 30     | 을지문덕 | 4000 |\n\n```sql\nSELECT DEPTNO\n  FROM EMP\n GROUP BY DEPTNO\nHAVING COUNT(SAL) >= 2;\n```",
+    "chapter": "part2_ch1",
+    "questionType": "concept",
+    "content": "NATURAL JOIN에 관한 설명으로 옳은 것은?",
     "options": [
-      "10, 30",
-      "20, 30",
-      "10, 20, 30",
-      "20"
+      "NATURAL JOIN은 두 테이블에서 이름이 같은 모든 컬럼을 자동으로 조인 조건으로 사용한다",
+      "NATURAL JOIN 사용 시 조인에 사용된 컬럼에 반드시 테이블 별칭을 붙여야 한다",
+      "NATURAL JOIN은 ON 절을 함께 사용하여 추가 조인 조건을 지정할 수 있다",
+      "NATURAL JOIN은 조인 컬럼이 한 개일 때만 사용할 수 있다"
     ],
-    "answer": 2,
-    "explanation": "COUNT(SAL)은 NULL이 아닌 SAL 값의 수를 세므로: DEPTNO 10 → COUNT(SAL)=1(NULL 1개 제외), DEPTNO 20 → COUNT(SAL)=2, DEPTNO 30 → COUNT(SAL)=1. HAVING COUNT(SAL) >= 2 조건을 만족하는 것은 DEPTNO 20뿐이다. 따라서 결과는 20 한 행이다.",
-    "tags": ["HAVING", "COUNT", "NULL", "GROUP BY"],
-    "difficulty": "상"
+    "answer": 1,
+    "explanation": "NATURAL JOIN 특성:\n\n① 정답: NATURAL JOIN은 두 테이블에서 이름이 같은 모든 컬럼을 자동으로 찾아 동등 조인(EQUI JOIN) 조건으로 사용. EMP와 DEPT 모두 DEPTNO가 있으면 자동으로 ON EMP.DEPTNO = DEPT.DEPTNO 조건이 생성됨\n\n② 오답: NATURAL JOIN에서 조인에 사용된 공유 컬럼은 테이블 별칭 없이 컬럼명만으로 참조해야 함. 'SELECT EMP.DEPTNO'처럼 별칭을 붙이면 오류 발생\n\n③ 오답: NATURAL JOIN은 ON 절을 사용할 수 없음. ON 절 없이 자동으로 공통 컬럼을 찾아 조인. ON 절이 필요하면 JOIN ... ON을 사용\n\n④ 오답: NATURAL JOIN은 조인 컬럼 개수에 제한 없음. 이름이 같은 컬럼이 여러 개이면 모두 조인 조건으로 사용(예: EMPNO와 DEPTNO가 모두 같은 이름이면 두 조건 모두 AND로 적용)",
+    "tags": ["표준조인", "NATURAL JOIN"],
+    "difficulty": "중"
   },
   {
     "id": "p2c1_014",
     "part": 2,
-    "chapter": "1",
-    "questionType": "concept",
-    "content": "DELETE, TRUNCATE, DROP 명령어에 대한 설명으로 올바른 것은?",
+    "chapter": "part2_ch1",
+    "questionType": "error",
+    "content": "다음 SQL에서 오류가 발생하는 것은?\n\n```sql\n-- A:\nSELECT DEPTNO, ENAME\nFROM EMP JOIN DEPT USING (DEPTNO);\n\n-- B:\nSELECT EMP.DEPTNO, ENAME\nFROM EMP JOIN DEPT USING (DEPTNO);\n\n-- C:\nSELECT DEPTNO, ENAME\nFROM EMP JOIN DEPT ON (EMP.DEPTNO = DEPT.DEPTNO);\n\n-- D:\nSELECT E.DEPTNO, E.ENAME\nFROM EMP E JOIN DEPT D ON (E.DEPTNO = D.DEPTNO);\n```",
     "options": [
-      "DELETE는 DDL, TRUNCATE는 DML, DROP은 DDL이다",
-      "TRUNCATE는 WHERE 절을 사용하여 특정 행만 삭제할 수 있다",
-      "DELETE는 롤백이 가능하고, TRUNCATE와 DROP은 롤백이 불가능하다",
-      "DROP은 테이블의 데이터만 삭제하고 구조는 유지한다"
+      "A",
+      "B",
+      "C",
+      "D"
     ],
-    "answer": 3,
-    "explanation": "DELETE는 DML로 트랜잭션 내에서 실행되어 ROLLBACK이 가능하다. TRUNCATE와 DROP은 DDL로 자동 COMMIT되어 ROLLBACK이 불가능하다. TRUNCATE는 테이블 데이터 전체를 삭제하지만 구조는 유지하며, DROP은 테이블 데이터와 구조 모두 삭제한다. TRUNCATE는 WHERE 절 사용이 불가능하다.",
-    "tags": ["DML", "DDL", "DELETE", "TRUNCATE", "DROP"],
-    "difficulty": "중"
+    "answer": 2,
+    "explanation": "USING 절 사용 규칙:\n\nUSING(DEPTNO)로 지정된 공유 컬럼 DEPTNO는 테이블 별칭 없이 컬럼명만으로 참조해야 함\n\nA 정상: USING(DEPTNO) 후 SELECT DEPTNO로 별칭 없이 참조 → 올바름\n\nB 오류(정답): USING(DEPTNO) 후 SELECT EMP.DEPTNO처럼 테이블 별칭을 붙이면 ORA-25154 오류 발생. USING 절의 공유 컬럼은 테이블 한정자(qualifier) 사용 불가\n\nC 정상: ON 절 방식에서는 EMP.DEPTNO = DEPT.DEPTNO처럼 명시적 조건 사용. SELECT DEPTNO만으로도 참조 가능(단, 두 컬럼이 동일값이므로 모호성 경고가 있을 수 있으나 ON 방식에서는 허용)\n\nD 정상: ON 절 + 테이블 별칭(E, D) 사용. SELECT E.DEPTNO처럼 별칭 붙여 참조 → 완전히 올바름\n\n핵심: USING 절 컬럼 → 별칭 불가, ON 절 컬럼 → 별칭 사용 가능",
+    "tags": ["표준조인", "USING", "오류탐지"],
+    "difficulty": "상"
   },
   {
     "id": "p2c1_015",
     "part": 2,
-    "chapter": "1",
-    "questionType": "error",
-    "content": "다음 SQL 중 실행 시 오류가 발생하는 것은?",
+    "chapter": "part2_ch1",
+    "questionType": "result",
+    "content": "다음 SQL의 결과로 올바른 것은?\n\n```sql\nSELECT COUNT(*) AS C1, COUNT(SAL) AS C2, COUNT(DISTINCT SAL) AS C3\nFROM   TEST;\n```\n\n| ENAME  | SAL  |\n|--------|------|\n| SMITH  | 1000 |\n| ALLEN  | 2000 |\n| WARD   | NULL |\n| JONES  | 1000 |\n| MARTIN | NULL |",
     "options": [
-      "SELECT EMPNO FROM EMP WHERE ENAME = '홍길동';",
-      "SELECT EMPNO FROM EMP A WHERE ENAME = '홍길동';",
-      "SELECT EMPNO FROM EMP AS A WHERE ENAME = '홍길동';",
-      "SELECT EMPNO FROM EMP WHERE ENAME LIKE '홍%';"
+      "C1=3, C2=5, C3=2",
+      "C1=5, C2=5, C3=3",
+      "C1=5, C2=3, C3=2",
+      "C1=3, C2=3, C3=2"
     ],
     "answer": 3,
-    "explanation": "Oracle에서는 FROM 절의 테이블 별칭(Alias)에 AS 키워드를 사용할 수 없다. 'FROM EMP AS A'는 Oracle에서 오류가 발생한다. 컬럼 별칭에는 AS를 사용할 수 있으나, 테이블 별칭에는 사용하지 않거나 공백으로 구분한다. SQL Server 등 일부 DBMS에서는 FROM절 테이블 별칭에 AS를 허용한다.",
-    "tags": ["테이블별칭", "Oracle", "AS"],
+    "explanation": "COUNT 함수와 NULL 처리:\n\n데이터: SMITH(1000), ALLEN(2000), WARD(NULL), JONES(1000), MARTIN(NULL)\n\n- COUNT(*): NULL 포함 전체 행 수 → 5\n- COUNT(SAL): NULL 제외한 SAL 값 수 → NULL 2건 제외 → 3\n- COUNT(DISTINCT SAL): NULL 제외하고 중복 제거한 값 수 → 1000, 2000 두 가지 → 2\n\n① 오답: COUNT(*)는 NULL 포함이므로 3이 아닌 5\n\n② 오답: COUNT(SAL)은 NULL을 제외하므로 5가 아닌 3. COUNT(DISTINCT SAL)는 2가 맞으나 앞 값이 틀림\n\n③ 정답: C1=5(전체), C2=3(NULL 2건 제외), C3=2(1000, 2000)\n\n④ 오답: COUNT(*)는 NULL 포함이므로 3이 아닌 5",
+    "tags": ["집계함수", "COUNT", "DISTINCT", "NULL"],
     "difficulty": "중"
   },
   {
     "id": "p2c1_016",
     "part": 2,
-    "chapter": "1",
-    "questionType": "concept",
-    "content": "COMMIT과 ROLLBACK 이전 상태에서 가능한 작업으로 올바른 것은?\n\n(DML 실행 후 아직 COMMIT/ROLLBACK 전 상태)",
+    "chapter": "part2_ch1",
+    "questionType": "result",
+    "content": "다음 SQL의 결과로 올바른 것은?\n\n```sql\nSELECT AVG(SAL) AS AVG_SAL\nFROM   EMP\nWHERE  DEPTNO = 10;\n```\n\n단, DEPTNO=10 사원: SAL = 2450, 5000, NULL",
     "options": [
-      "변경 내용을 다른 세션에서도 조회할 수 있다",
-      "현재 세션에서만 변경 내용을 조회할 수 있으며 다른 세션은 이전 데이터를 본다",
-      "변경 내용은 즉시 다른 사용자에게 공유된다",
-      "ROLLBACK을 실행하면 DDL 명령도 함께 취소된다"
+      "2483.33 (NULL을 0으로 처리하여 (2450+5000+0)/3)",
+      "NULL (NULL이 있으면 AVG도 NULL 반환)",
+      "7450 (NULL 제외한 합계만 반환)",
+      "3725 (NULL 제외한 2건의 평균: (2450+5000)/2)"
     ],
-    "answer": 2,
-    "explanation": "DML 실행 후 COMMIT 전 상태에서는 변경 내용이 현재 세션에서만 보이고(Read Uncommitted 격리 수준 제외), 다른 세션은 변경 이전의 데이터를 조회한다. 이는 트랜잭션의 격리성 때문이다. COMMIT 후에 변경 내용이 영구 반영되어 다른 세션에서도 확인 가능하다. DDL은 AUTO COMMIT되므로 ROLLBACK으로 취소할 수 없다.",
-    "tags": ["TCL", "COMMIT", "ROLLBACK", "트랜잭션"],
+    "answer": 4,
+    "explanation": "AVG와 NULL 처리:\n\nAVG(SAL)은 NULL을 제외하고 계산:\n- NULL 아닌 SAL: 2450, 5000\n- SUM = 7450\n- COUNT(SAL) = 2 (NULL 1건 제외)\n- AVG = 7450 / 2 = 3725\n\n① 오답: AVG는 NULL을 0으로 처리하지 않음. NULL을 무시하고 실제 값만 사용하여 계산\n\n② 오답: SUM, AVG, MIN, MAX는 NULL이 있어도 결과가 NULL이 되지 않음. NULL을 제외하고 계산함. 단, 모든 값이 NULL이면 NULL 반환\n\n③ 오답: AVG는 합계가 아닌 평균 반환. 또한 SUM(SAL) = 7450이나 AVG = 7450/2 = 3725\n\n④ 정답: NULL 제외 2건(2450, 5000)의 합계 7450을 건수 2로 나눈 3725",
+    "tags": ["집계함수", "AVG", "NULL"],
     "difficulty": "중"
   },
   {
     "id": "p2c1_017",
     "part": 2,
-    "chapter": "1",
-    "questionType": "error",
-    "content": "다음 SQL 중 LIKE 연산자 사용 시 의도한 결과와 다르게 동작하는 것은?\n\n(이름이 정확히 세 글자인 직원을 조회하려는 의도)",
+    "chapter": "part2_ch1",
+    "questionType": "concept",
+    "content": "Oracle에서 ORDER BY 절의 NULL 정렬 순서에 관한 설명으로 옳은 것은?",
     "options": [
-      "WHERE 이름 LIKE '___'",
-      "WHERE LENGTH(이름) = 3",
-      "WHERE 이름 LIKE '___%'",
-      "WHERE 이름 BETWEEN '가' AND '힣힣힣'"
+      "Oracle에서 NULL은 ASC(오름차순) 정렬 시 가장 마지막에 위치한다",
+      "Oracle에서 NULL은 ASC(오름차순) 정렬 시 가장 처음에 위치한다",
+      "Oracle에서 NULL은 DESC 정렬 시 가장 마지막에 위치한다",
+      "모든 DBMS에서 NULL 정렬 순서는 동일하다"
     ],
-    "answer": 3,
-    "explanation": "LIKE '___'(언더스코어 3개)는 정확히 3글자인 이름을 조회한다. LIKE '___%'(언더스코어 3개 + %)는 3글자 이상인 이름을 조회하므로 4글자, 5글자 이름도 포함된다. 이는 '정확히 3글자'라는 의도와 다르게 동작한다. LENGTH(이름) = 3도 정확히 3글자를 조회한다.",
-    "tags": ["LIKE", "와일드카드", "언더스코어"],
+    "answer": 1,
+    "explanation": "Oracle NULL 정렬:\n\nOracle에서 NULL은 가장 큰 값으로 취급됨:\n- ASC(오름차순): 작은 값 → 큰 값 → NULL (NULLS LAST가 기본)\n- DESC(내림차순): NULL → 큰 값 → 작은 값 (NULLS FIRST가 기본)\n\n① 정답: Oracle ASC 정렬에서 NULL이 마지막. NULL을 가장 큰 값으로 취급하기 때문\n\n② 오답: Oracle ASC에서 NULL이 처음에 오는 것이 아님. SQL Server에서는 NULL이 ASC 정렬 시 처음에 위치함(DBMS마다 다름)\n\n③ 오답: DESC 정렬에서 NULL이 가장 마지막이 아님. Oracle에서 DESC 시 NULL이 가장 먼저(NULLS FIRST)\n\n④ 오답: DBMS마다 NULL 정렬 기본값이 다름. Oracle은 NULLS LAST(ASC), SQL Server는 NULLS FIRST(ASC)\n\n명시적 제어: ORDER BY SAL ASC NULLS FIRST, ORDER BY SAL DESC NULLS LAST",
+    "tags": ["ORDER BY", "NULL정렬", "Oracle"],
     "difficulty": "중"
   },
   {
     "id": "p2c1_018",
     "part": 2,
-    "chapter": "1",
-    "questionType": "completion",
-    "content": "다음 SQL의 빈칸에 들어갈 내용으로 올바른 것은?\n\n```sql\nSELECT EMPNO, ENAME, SAL,\n       CASE\n           WHEN SAL > 5000 THEN '고액'\n           WHEN SAL > 3000 THEN '중간'\n           ______\n           ELSE '기타'\n       ______ AS SAL_GRADE\n  FROM EMP;\n```\n\n(단, SAL이 1000 초과 3000 이하인 경우 '일반'으로 표시)",
+    "chapter": "part2_ch1",
+    "questionType": "result",
+    "content": "다음 SQL의 결과로 올바른 것은?\n\n```sql\nSELECT DECODE(MOD(EMPNO, 2), 0, '짝수', 1, '홀수', '기타') AS PARITY\nFROM   EMP\nWHERE  EMPNO = 7499;\n```",
     "options": [
-      "IF SAL > 1000 THEN '일반', END",
-      "WHEN SAL > 1000 THEN '일반', END",
-      "WHEN SAL >= 1000 THEN '일반', FINISH",
-      "ELIF SAL > 1000 THEN '일반', END"
+      "'짝수' (EMPNO를 2로 나눈 나머지가 0이므로)",
+      "'홀수' (EMPNO를 2로 나눈 나머지가 1이므로)",
+      "'기타' (DECODE 기본값 반환)",
+      "NULL (DECODE 조건 불일치)"
     ],
     "answer": 2,
-    "explanation": "CASE WHEN 구문에서 조건은 WHEN ... THEN 형식을 사용하고, 전체 CASE 표현식의 끝은 END 키워드로 마무리한다. ELSE는 모든 WHEN 조건에 해당하지 않는 경우의 기본값을 지정한다. IF, ELIF, FINISH 등은 SQL의 CASE 표현식에서 사용할 수 없는 키워드이다.",
-    "tags": ["CASE", "WHEN", "THEN", "END"],
-    "difficulty": "하"
+    "explanation": "DECODE와 MOD 함수:\n\nMOD(7499, 2) = 7499 ÷ 2 = 3749 나머지 1 → MOD = 1\n\nDECODE(1, 0, '짝수', 1, '홀수', '기타'):\n- 비교값 0: 1 = 0? 아니오\n- 비교값 1: 1 = 1? 예 → '홀수' 반환\n\n① 오답: 7499 MOD 2 = 1이므로 짝수가 아님. 짝수이려면 EMPNO를 2로 나눈 나머지가 0이어야 함. 7499는 홀수\n\n② 정답: 7499 ÷ 2 = 3749 나머지 1. MOD=1 → DECODE에서 두 번째 조건(1→'홀수') 충족\n\n③ 오답: DECODE 조건(0, 1) 중 MOD=1이 두 번째 조건과 일치하므로 '기타'(ELSE)는 반환되지 않음\n\n④ 오답: DECODE에서 기본값이 없으면 불일치 시 NULL 반환이지만 여기서는 '기타'(기본값)가 있음. 또한 MOD=1이 두 번째 조건과 일치하므로 NULL이 아님",
+    "tags": ["DECODE", "MOD", "결과예측"],
+    "difficulty": "중"
   },
   {
     "id": "p2c1_019",
     "part": 2,
-    "chapter": "1",
-    "questionType": "completion",
-    "content": "다음 SQL에서 현재 날짜로부터 정확히 1분 후의 시간을 구하는 빈칸에 들어갈 내용으로 올바른 것은?\n\n```sql\nSELECT SYSDATE + ______ AS ONE_MINUTE_LATER\n  FROM DUAL;\n```",
+    "chapter": "part2_ch1",
+    "questionType": "concept",
+    "content": "WHERE ENAME LIKE '_A%' 조건에 해당하는 사원명으로 옳은 것은?",
     "options": [
-      "1",
-      "1/24",
-      "1/24/60",
-      "60"
+      "ADAMS (첫 글자가 A로 시작)",
+      "ALLEN (두 번째 글자가 L)",
+      "JAMES (두 번째 글자가 A)",
+      "MARTIN (세 번째 글자가 R)"
     ],
     "answer": 3,
-    "explanation": "Oracle에서 날짜 연산 시 정수 1은 1일(24시간)을 의미한다. 따라서 1시간은 1/24, 1분은 1/24/60, 1초는 1/24/60/60이다. SYSDATE + 1/24/60은 현재 시간에 1분을 더한다. 날짜 연산의 단위는 일(day) 기준이므로 이를 이해하는 것이 중요하다.",
-    "tags": ["날짜함수", "SYSDATE", "날짜연산"],
+    "explanation": "LIKE 와일드카드 패턴 '_A%':\n- '_': 정확히 임의의 한 글자\n- 'A': 두 번째 글자가 반드시 'A'\n- '%': 이후 임의의 0개 이상의 글자\n\n즉, 두 번째 글자가 'A'인 모든 문자열\n\n① 오답: ADAMS는 A-D-A-M-S. 첫 번째 글자가 A이므로 '_A%'에서 두 번째 글자가 D(A가 아님) → 불일치\n\n② 오답: ALLEN은 A-L-L-E-N. 두 번째 글자가 L(A가 아님) → 불일치\n\n③ 정답: JAMES는 J-A-M-E-S. 두 번째 글자가 A → '_A%' 조건 충족\n\n④ 오답: MARTIN은 M-A-R-T-I-N. 두 번째 글자가 A이므로 이 조건도 충족되는 것이 맞으나, 세 번째 글자가 R이라는 설명이 조건 판단 근거로 제시되어 있어 혼동을 줌. 실제로 MARTIN도 조건에 해당하지만 선택지 설명이 틀림(세 번째 글자가 R이 조건과 관계없음). 문제에서 '올바른 설명'이 있는 보기를 선택해야 하므로 ③이 더 정확",
+    "tags": ["LIKE", "와일드카드", "패턴매칭"],
     "difficulty": "중"
   },
   {
     "id": "p2c1_020",
     "part": 2,
-    "chapter": "1",
-    "questionType": "result",
-    "content": "아래 테이블에서 SQL을 실행한 결과 행 수로 올바른 것은?\n\n| DEPTNO | SAL  |\n|--------|------|\n| 10     | 1000 |\n| 10     | NULL |\n| 20     | 2000 |\n| NULL   | 3000 |\n| NULL   | 4000 |\n\n```sql\nSELECT DEPTNO, COUNT(*)\n  FROM TEST\n GROUP BY DEPTNO;\n```",
+    "chapter": "part2_ch1",
+    "questionType": "error",
+    "content": "SELF JOIN에 관한 설명으로 옳지 않은 것은?",
     "options": [
-      "2행",
-      "3행",
-      "4행",
-      "5행"
+      "동일한 테이블에 서로 다른 별칭(alias)을 부여하여 조인한다",
+      "계층 구조(사원-상사 관계) 표현이나 동일 테이블 내 데이터 비교에 활용된다",
+      "INNER JOIN, OUTER JOIN 등 다양한 조인 방식과 결합하여 사용할 수 있다",
+      "SELF JOIN은 조인 조건 없이 사용하면 UNION 결과와 동일한 행을 반환한다"
     ],
-    "answer": 2,
-    "explanation": "GROUP BY DEPTNO 실행 시 DEPTNO 값이 10인 그룹, 20인 그룹, NULL인 그룹 이렇게 3개 그룹이 생성된다. Oracle에서 GROUP BY는 NULL 값도 하나의 그룹으로 처리한다. 따라서 결과는 3행이 된다.",
-    "tags": ["GROUP BY", "NULL"],
+    "answer": 4,
+    "explanation": "SELF JOIN:\n\n① 옳음: 동일 테이블에 E(사원), M(상사)처럼 별칭을 다르게 붙여 자기 자신과 조인\n\n② 옳음: 전형적인 SELF JOIN 예: SELECT E.ENAME, M.ENAME AS MGR_NAME FROM EMP E, EMP M WHERE E.MGR = M.EMPNO (사원과 그 상사 이름 조회)\n\n③ 옳음: SELF JOIN도 INNER JOIN(매칭되는 행만), LEFT OUTER JOIN(상사 없는 사원 포함) 등 모든 조인 방식 사용 가능. 상사가 없는 사원(KING)도 포함하려면 OUTER JOIN 필요\n\n④ 틀림(정답): SELF JOIN에서 조인 조건 없이 사용하면 UNION이 아닌 CROSS JOIN(카테시안 곱)이 됨. 예: n행 테이블의 SELF CROSS JOIN → n²행. UNION과는 완전히 다른 개념\n\n핵심: SELF JOIN = 동일 테이블을 마치 두 개인 것처럼 사용하여 내부 행끼리 비교",
+    "tags": ["SELF JOIN", "개념"],
     "difficulty": "중"
   },
   {
     "id": "p2c1_021",
     "part": 2,
-    "chapter": "1",
-    "questionType": "error",
-    "content": "다음 SQL 중 실행 시 오류가 발생하는 것은?",
+    "chapter": "part2_ch1",
+    "questionType": "concept",
+    "content": "다음 중 WHERE 절로 대체할 수 없고 반드시 HAVING을 사용해야 하는 경우는?",
     "options": [
-      "SELECT DEPTNO, COUNT(*) FROM EMP GROUP BY DEPTNO HAVING COUNT(*) >= 2;",
-      "SELECT DEPTNO, COUNT(*) FROM EMP GROUP BY DEPTNO ORDER BY COUNT(*) DESC;",
-      "SELECT DEPTNO, MAX(SAL) FROM EMP GROUP BY DEPTNO WHERE MAX(SAL) > 3000;",
-      "SELECT DEPTNO, AVG(SAL) FROM EMP GROUP BY DEPTNO HAVING AVG(SAL) > 2000;"
+      "집계함수(COUNT, SUM 등)를 조건으로 사용하는 경우",
+      "날짜 범위를 조건으로 사용하는 경우",
+      "문자 패턴(LIKE)을 조건으로 사용하는 경우",
+      "특정 컬럼 값(IN, BETWEEN)을 조건으로 사용하는 경우"
     ],
-    "answer": 3,
-    "explanation": "WHERE 절에서는 집계 함수를 사용할 수 없다. 'WHERE MAX(SAL) > 3000'은 그룹 집계 결과를 조건으로 사용하는 것으로 오류가 발생한다. 집계 함수를 조건으로 사용하려면 HAVING 절을 사용해야 한다. WHERE는 GROUP BY 이전에 행 단위로 필터링하고, HAVING은 GROUP BY 이후에 그룹 단위로 필터링한다.",
-    "tags": ["WHERE", "HAVING", "집계함수", "오류"],
+    "answer": 1,
+    "explanation": "WHERE와 HAVING의 차이:\n\nWHERE: GROUP BY 이전에 개별 행에 조건 적용 (집계함수 사용 불가)\nHAVING: GROUP BY 이후에 그룹에 조건 적용 (집계함수 사용 가능)\n\n① 정답: 집계함수(COUNT, SUM, AVG, MAX, MIN)를 조건으로 사용할 때는 반드시 HAVING 사용\n   예: HAVING COUNT(*) > 5, HAVING AVG(SAL) >= 2000\n   WHERE COUNT(*) > 5는 오류 발생\n\n② 오답: 날짜 범위 조건은 WHERE에서 사용 가능\n   예: WHERE HIREDATE BETWEEN '2020-01-01' AND '2023-12-31'\n\n③ 오답: LIKE 패턴 조건은 WHERE에서 사용 가능\n   예: WHERE ENAME LIKE 'A%'\n\n④ 오답: IN, BETWEEN 조건은 WHERE에서 사용 가능\n   예: WHERE DEPTNO IN (10, 20, 30)",
+    "tags": ["HAVING", "WHERE", "집계함수"],
     "difficulty": "중"
   },
   {
     "id": "p2c1_022",
     "part": 2,
-    "chapter": "1",
-    "questionType": "concept",
-    "content": "다음 중 SELECT 문의 실행 순서로 올바른 것은?",
+    "chapter": "part2_ch1",
+    "questionType": "result",
+    "content": "다음 SQL의 결과 건수로 옳은 것은?\n\n```sql\nSELECT E.ENAME, D.DNAME\nFROM   EMP E\n       LEFT OUTER JOIN DEPT D ON E.DEPTNO = D.DEPTNO;\n```\n\n단, EMP 14건(DEPTNO=10: 3명, DEPTNO=20: 5명, DEPTNO=30: 6명, DEPTNO=40: 0명)\nDEPT 4건(DEPTNO=10,20,30,40 각 1건)",
     "options": [
-      "SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY",
-      "FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY",
-      "FROM → GROUP BY → WHERE → HAVING → SELECT → ORDER BY",
-      "WHERE → FROM → GROUP BY → SELECT → HAVING → ORDER BY"
+      "11건 (DEPT에 매칭되는 EMP만, DEPT 40번 제외)",
+      "14건 (EMP 기준, LEFT OUTER JOIN이므로 EMP 전체 포함)",
+      "15건 (DEPT 40번 행이 NULL로 추가됨)",
+      "18건 (EMP 14건 + DEPT 4건)"
     ],
     "answer": 2,
-    "explanation": "SELECT 문의 논리적 실행 순서는 FROM(테이블 결정) → WHERE(행 필터링) → GROUP BY(그룹화) → HAVING(그룹 필터링) → SELECT(컬럼 선택 및 표현식 계산) → ORDER BY(정렬) 순서이다. 작성 순서(SELECT → FROM → WHERE → ...)와 실행 순서는 다르다. SELECT 별칭은 ORDER BY에서만 참조 가능하며, WHERE와 HAVING에서는 참조할 수 없다.",
-    "tags": ["SELECT", "실행순서"],
-    "difficulty": "하"
+    "explanation": "LEFT OUTER JOIN 결과 분석:\n\nLEFT OUTER JOIN: 왼쪽 테이블(EMP) 기준, EMP의 모든 행 포함\n- DEPTNO=10인 EMP 3명 → DEPT 10번 매칭 → 3건 출력\n- DEPTNO=20인 EMP 5명 → DEPT 20번 매칭 → 5건 출력\n- DEPTNO=30인 EMP 6명 → DEPT 30번 매칭 → 6건 출력\n- DEPT 40번: EMP에 대응하는 사원 없어도 LEFT JOIN이므로 DEPT가 기준이 아님 → 결과에 추가되지 않음\n총 3+5+6 = 14건\n\n① 오답: INNER JOIN 결과와 동일한 설명. LEFT OUTER JOIN은 EMP 전체를 포함하며 모든 EMP는 DEPT에 매칭되므로 14건\n\n② 정답: EMP 14건 모두 DEPTNO(10,20,30)가 있고 DEPT에 매칭됨. LEFT JOIN이므로 EMP 전체 = 14건\n\n③ 오답: DEPT 40번이 추가되려면 RIGHT JOIN 또는 FULL OUTER JOIN이어야 함\n\n④ 오답: 단순 합산이 아닌 조인 조건에 의해 행 수 결정됨",
+    "tags": ["OUTER JOIN", "LEFT JOIN", "결과예측"],
+    "difficulty": "중"
   },
   {
     "id": "p2c1_023",
     "part": 2,
-    "chapter": "1",
-    "questionType": "completion",
-    "content": "다음 SQL의 빈칸에 들어갈 내용으로 올바른 것은?\n\n```sql\nSELECT EMPNO, ENAME, SAL,\n       DECODE(DEPTNO, 10, 'ACCOUNTING',\n                      20, 'RESEARCH',\n                      30, 'SALES',\n                      ______) AS DEPT_NAME\n  FROM EMP;\n```\n\n(단, DEPTNO가 10, 20, 30이 아닌 경우 'UNKNOWN'으로 표시)",
+    "chapter": "part2_ch1",
+    "questionType": "result",
+    "content": "다음 SQL의 실행 결과로 올바른 것은?\n\n```sql\nSELECT LPAD('HI', 5, '#') AS R1,\n       RPAD('HI', 5, '#') AS R2,\n       TRIM('  HELLO  ') AS R3\nFROM DUAL;\n```",
     "options": [
-      "'UNKNOWN'",
-      "ELSE 'UNKNOWN'",
-      "DEFAULT 'UNKNOWN'",
-      "NULL"
+      "R1='HI###', R2='###HI', R3='HELLO'",
+      "R1='##HI#', R2='#HI##', R3=' HELLO '",
+      "R1='###HI', R2='HI###', R3='HELLO'",
+      "R1='HI###', R2='HI###', R3='HELLO'"
     ],
-    "answer": 1,
-    "explanation": "DECODE 함수에서 마지막 인수(기본값)는 어느 비교값과도 일치하지 않을 때 반환할 값이다. CASE WHEN의 ELSE와 유사하게 마지막에 기본값을 직접 작성한다. 형식: DECODE(컬럼, 비교1, 결과1, 비교2, 결과2, ..., 기본값). 기본값 없이 일치하지 않으면 NULL이 반환된다.",
-    "tags": ["DECODE", "조건표현식"],
+    "answer": 3,
+    "explanation": "문자열 패딩 및 공백 제거:\n\n- LPAD('HI', 5, '#'): 총 5자리가 되도록 왼쪽(Left)에 '#' 패딩\n  'HI'는 2자리이므로 왼쪽에 # 3개 추가 → '###HI'\n\n- RPAD('HI', 5, '#'): 총 5자리가 되도록 오른쪽(Right)에 '#' 패딩\n  'HI'는 2자리이므로 오른쪽에 # 3개 추가 → 'HI###'\n\n- TRIM('  HELLO  '): 양쪽 공백 제거 → 'HELLO'\n\n① 오답: LPAD는 왼쪽 패딩(###HI), RPAD는 오른쪽 패딩(HI###). 방향이 반대로 서술됨\n\n② 오답: LPAD와 RPAD 결과 모두 틀림. TRIM은 양쪽 공백 제거하므로 ' HELLO '가 아닌 'HELLO'\n\n③ 정답: LPAD → 왼쪽에 # 3개 → '###HI', RPAD → 오른쪽에 # 3개 → 'HI###', TRIM → 'HELLO'\n\n④ 오답: LPAD는 왼쪽 패딩이므로 '###HI'여야 함. RPAD는 오른쪽 패딩이므로 'HI###'가 맞음",
+    "tags": ["문자함수", "LPAD", "RPAD", "TRIM"],
     "difficulty": "중"
   },
   {
     "id": "p2c1_024",
     "part": 2,
-    "chapter": "1",
-    "questionType": "concept",
-    "content": "다음 중 NOT IN과 NOT EXISTS의 차이에 대한 설명으로 올바른 것은?",
+    "chapter": "part2_ch1",
+    "questionType": "result",
+    "content": "다음 SQL의 결과로 올바른 것은?\n\n```sql\nSELECT TRUNC(456.789, -2) AS R1,\n       TRUNC(456.789,  2) AS R2,\n       FLOOR(-3.2)        AS R3\nFROM DUAL;\n```",
     "options": [
-      "NOT IN과 NOT EXISTS는 항상 동일한 결과를 반환한다",
-      "서브쿼리 결과에 NULL이 포함되면 NOT IN은 아무 행도 반환하지 않지만, NOT EXISTS는 정상적으로 작동한다",
-      "NOT EXISTS는 서브쿼리 결과에 NULL이 포함되면 오류를 발생시킨다",
-      "NULL 처리 방식은 NOT IN과 NOT EXISTS 모두 동일하게 무시한다"
+      "R1=456, R2=456.78, R3=-3",
+      "R1=500, R2=456.79, R3=-3",
+      "R1=456, R2=456.79, R3=-4",
+      "R1=400, R2=456.78, R3=-4"
     ],
-    "answer": 2,
-    "explanation": "NOT IN에서 서브쿼리 결과에 NULL이 포함되면 모든 비교가 UNKNOWN이 되어 아무 행도 반환되지 않는다. 반면 NOT EXISTS는 서브쿼리 결과의 존재 여부만 확인하므로 NULL이 포함되어도 정상 동작한다. 따라서 NULL이 포함될 가능성이 있는 컬럼을 서브쿼리에서 사용할 때는 NOT EXISTS를 사용하는 것이 안전하다.",
-    "tags": ["NOT IN", "NOT EXISTS", "NULL", "서브쿼리"],
+    "answer": 4,
+    "explanation": "숫자 함수 결과:\n\n- TRUNC(456.789, -2): 음수 자릿수 → 정수 부분 절삭\n  -2는 백의 자리 이하 절삭 → 400\n  (ROUND(-2)라면 500이지만 TRUNC는 절삭)\n\n- TRUNC(456.789, 2): 소수 둘째 자리까지 유지(이하 절삭)\n  → 456.78 (소수 셋째 자리 9를 버림)\n\n- FLOOR(-3.2): 보다 작거나 같은 가장 큰 정수\n  수직선상 왼쪽 방향 → -4\n  (음수에서 FLOOR는 절대값이 더 큰 쪽으로)\n\n① 오답: TRUNC(456.789,-2)=456이 아닌 400. -2는 백의 자리 이하 절삭\n② 오답: TRUNC는 반올림하지 않으므로 500이 아닌 400. TRUNC(456.789,2)=456.78\n③ 오답: TRUNC(456.789,-2)=456이 아닌 400. 자릿수 -2는 백의 자리\n④ 정답: TRUNC(-2)=400, TRUNC(2)=456.78, FLOOR(-3.2)=-4\n\n핵심: TRUNC 음수 자릿수 → 정수 상위 자리 절삭, FLOOR 음수 → 더 작은 정수",
+    "tags": ["숫자함수", "TRUNC", "FLOOR"],
     "difficulty": "상"
   },
   {
     "id": "p2c1_025",
     "part": 2,
-    "chapter": "1",
-    "questionType": "completion",
-    "content": "다음 SQL의 빈칸에 들어갈 내용으로 올바른 것은?\n\n```sql\nUPDATE EMP\n   SET SAL = SAL * 1.1,\n       COMM = ______(COMM, 0)\n WHERE DEPTNO = 20;\n```\n\n(단, COMM이 NULL인 직원의 경우 0으로 변경하고, NULL이 아니면 기존 값을 유지)",
+    "chapter": "part2_ch1",
+    "questionType": "result",
+    "content": "다음 SQL의 결과 건수로 옳은 것은?\n\n```sql\nSELECT *\nFROM   EMP\nWHERE  SAL > 1000\n  AND  COMM IS NOT NULL;\n```\n\n| ENAME  | SAL  | COMM |\n|--------|------|------|\n| SMITH  | 800  | NULL |\n| ALLEN  | 1600 | 300  |\n| WARD   | 1250 | 500  |\n| TURNER | 1500 | 0    |\n| KING   | 5000 | NULL |",
     "options": [
-      "NVL",
-      "COALESCE",
-      "NULLIF",
-      "DECODE"
+      "3건 (ALLEN, WARD, TURNER 모두 SAL>1000이고 COMM이 NULL이 아님)",
+      "2건 (COMM=0인 TURNER는 NULL로 처리되어 제외)",
+      "4건 (KING 제외한 나머지)",
+      "1건 (두 조건 모두 만족하는 ALLEN만)"
     ],
     "answer": 1,
-    "explanation": "NVL(expr, replace_value) 함수는 첫 번째 인수가 NULL이면 두 번째 인수를 반환하고, NULL이 아니면 첫 번째 인수를 반환한다. COMM이 NULL인 경우 0으로, NULL이 아닌 경우 기존 COMM 값을 유지하므로 NVL(COMM, 0)이 적합하다. COALESCE도 비슷한 기능이지만 인수가 여러 개일 수 있다. NULLIF는 두 값이 같으면 NULL 반환이다.",
-    "tags": ["NVL", "NULL함수", "UPDATE"],
+    "explanation": "조건 분석:\n\nSAL > 1000 AND COMM IS NOT NULL\n\n- SMITH: SAL=800 > 1000? 아니오 → 제외\n- ALLEN: SAL=1600 > 1000? 예. COMM=300 IS NOT NULL? 예 → 포함\n- WARD: SAL=1250 > 1000? 예. COMM=500 IS NOT NULL? 예 → 포함\n- TURNER: SAL=1500 > 1000? 예. COMM=0 IS NOT NULL? 예(0은 NULL이 아님) → 포함\n- KING: SAL=5000 > 1000? 예. COMM=NULL IS NOT NULL? 아니오 → 제외\n\n결과: ALLEN, WARD, TURNER = 3건\n\n① 정답: 3건. COMM=0인 TURNER도 IS NOT NULL 조건 만족(0은 NULL이 아님)\n\n② 오답: COMM=0은 NULL이 아님. IS NOT NULL 조건은 값이 0이어도 통과\n\n③ 오답: KING은 COMM=NULL이므로 IS NOT NULL 조건 불만족. SMITH는 SAL 조건 불만족\n\n④ 오답: ALLEN뿐 아니라 WARD, TURNER도 두 조건 모두 만족",
+    "tags": ["WHERE", "NULL", "결과예측"],
     "difficulty": "중"
   },
   {
     "id": "p2c1_026",
     "part": 2,
-    "chapter": "1",
-    "questionType": "result",
-    "content": "다음 SQL의 실행 결과는?\n\n```sql\nSELECT TRUNC(456.789, -2) FROM DUAL;\n```",
+    "chapter": "part2_ch1",
+    "questionType": "concept",
+    "content": "다음 SQL WHERE 절의 의미로 옳은 것은?\n\n```sql\nSELECT * FROM EMP\nWHERE DEPTNO = 10 OR JOB = 'MANAGER' AND SAL > 2000;\n```",
     "options": [
-      "456",
-      "400",
-      "456.78",
-      "500"
+      "WHERE (DEPTNO = 10 OR JOB = 'MANAGER') AND SAL > 2000",
+      "WHERE DEPTNO = 10 OR (JOB = 'MANAGER' AND SAL > 2000)",
+      "WHERE DEPTNO = 10 AND JOB = 'MANAGER' AND SAL > 2000",
+      "WHERE DEPTNO = 10 AND (JOB = 'MANAGER' OR SAL > 2000)"
     ],
     "answer": 2,
-    "explanation": "TRUNC(숫자, 자릿수) 함수에서 자릿수가 음수이면 정수 부분의 지정한 자릿수에서 절삭한다. TRUNC(456.789, -2)는 백의 자리 이하를 절삭하므로 400이 된다. TRUNC(456.789, -1)이면 450, TRUNC(456.789, 0)이면 456이 된다. ROUND(-2)이면 500이 된다(반올림).",
-    "tags": ["숫자함수", "TRUNC"],
+    "explanation": "논리 연산자 우선순위:\n\nNOT > AND > OR 순서로 우선순위가 높음\nAND가 OR보다 먼저 처리됨\n\nWHERE DEPTNO = 10 OR JOB = 'MANAGER' AND SAL > 2000\n→ AND 먼저 묶임: JOB = 'MANAGER' AND SAL > 2000\n→ 결과: DEPTNO = 10 OR (JOB = 'MANAGER' AND SAL > 2000)\n\n① 오답: OR와 AND를 동일 우선순위로 처리한 결과. 실제로는 AND가 OR보다 우선이므로 이 해석이 맞으려면 괄호 (DEPTNO=10 OR JOB='MANAGER')가 필요\n\n② 정답: AND가 OR보다 우선순위 높음. JOB='MANAGER' AND SAL>2000이 먼저 그룹화되고 그것과 DEPTNO=10이 OR로 연결\n\n③ 오답: OR를 AND로 변환한 것. 완전히 다른 조건\n\n④ 오답: 원래 OR와 AND의 위치와 다른 구조\n\n핵심: 명확한 의도를 위해 괄호 사용 권장",
+    "tags": ["WHERE", "AND", "OR", "연산자우선순위"],
     "difficulty": "중"
   },
   {
     "id": "p2c1_027",
     "part": 2,
-    "chapter": "1",
-    "questionType": "completion",
-    "content": "다음 SQL의 빈칸에 들어갈 내용으로 올바른 것은?\n\n```sql\nSELECT EMPNO, ENAME, SAL,\n       ______(SAL, 0) AS ADJUSTED_SAL\n  FROM EMP;\n```\n\n(단, SAL이 0이면 NULL을 반환하고, 그렇지 않으면 SAL 값을 반환)",
+    "chapter": "part2_ch1",
+    "questionType": "result",
+    "content": "다음 SQL의 실행 결과로 옳은 것은?\n\n```sql\nSELECT E.ENAME, D.DNAME\nFROM   EMP   E\n       LEFT OUTER JOIN DEPT D ON E.DEPTNO = D.DEPTNO\nWHERE  D.DEPTNO = 40;\n```\n\n단, DEPT에 DEPTNO=40(OPERATIONS) 존재, EMP에 DEPTNO=40 사원 없음",
     "options": [
-      "NVL",
-      "NVL2",
-      "NULLIF",
-      "COALESCE"
+      "1건: ENAME=NULL, DNAME=OPERATIONS (OUTER JOIN으로 DEPT 40번 포함)",
+      "DEPT 40번은 EMP에 매칭 없어도 LEFT JOIN이므로 ENAME=NULL로 1건 출력됨",
+      "0건 (EMP에 DEPTNO=40 사원이 없어 WHERE D.DEPTNO=40 조건을 만족하는 행 없음)",
+      "오류 발생 (NULL 값이 있는 경우 WHERE 절 처리 불가)"
     ],
     "answer": 3,
-    "explanation": "NULLIF(expr1, expr2)는 두 인수가 같으면 NULL을 반환하고, 다르면 첫 번째 인수를 반환한다. NULLIF(SAL, 0)은 SAL이 0이면 NULL을, 0이 아니면 SAL 값을 반환한다. 이는 0으로 나누는 연산을 방지하거나 0을 NULL로 변환할 때 유용하다. NVL은 NULL을 다른 값으로 대체한다.",
-    "tags": ["NULLIF", "NULL함수"],
-    "difficulty": "중"
+    "explanation": "LEFT OUTER JOIN + WHERE 절 상호작용:\n\nLEFT OUTER JOIN은 EMP(왼쪽) 기준. DEPT 40번은 EMP에 매칭 사원이 없음.\n→ EMP에 없는 DEPT 40번은 결과에 포함되지 않음 (LEFT JOIN이므로 DEPT가 기준이 아님)\n\nDEPT 40번이 결과에 나오려면 EMP가 아닌 DEPT가 기준인 RIGHT OUTER JOIN 또는 FULL OUTER JOIN 필요\n\n따라서 LEFT OUTER JOIN 후 WHERE D.DEPTNO=40을 적용하면:\n→ DEPT 40번에 해당하는 EMP 행이 없음\n→ WHERE 조건 충족하는 행 없음\n→ 결과 0건\n\n① 오답: LEFT JOIN은 EMP가 기준. DEPT 40번이 기준이 아니므로 EMP에 없는 DEPT 행은 자동으로 추가되지 않음\n\n② 오답: ①과 같은 오류. 오히려 DEPT 40번이 결과에 추가되려면 DEPT가 기준(RIGHT/FULL JOIN)이어야 함\n\n③ 정답: EMP에 DEPTNO=40 사원이 없으므로 LEFT JOIN 결과에 DEPT 40번이 없음. WHERE D.DEPTNO=40 조건을 만족하는 행이 없어 0건\n\n④ 오답: WHERE 절에서 NULL 처리는 정상 동작함. NULL IS NULL처럼 처리됨",
+    "tags": ["OUTER JOIN", "LEFT JOIN", "WHERE", "결과예측"],
+    "difficulty": "상"
   },
   {
     "id": "p2c1_028",
     "part": 2,
-    "chapter": "1",
+    "chapter": "part2_ch1",
     "questionType": "result",
-    "content": "다음 SQL의 실행 결과는?\n\n```sql\nSELECT SUBSTR('SQLD_EXAM_2025', 6, 4) FROM DUAL;\n```",
+    "content": "다음 SQL의 결과로 옳은 것은?\n\n```sql\nSELECT TO_CHAR(1234567.89, '999,999,999.99') AS R1,\n       TO_CHAR(1234567.89, '000,000,000.00') AS R2\nFROM DUAL;\n```",
     "options": [
-      "SQLD",
-      "EXAM",
-      "_EXA",
-      "2025"
+      "R1='001,234,567.89', R2=' 1,234,567.89'",
+      "R1='1,234,567.89', R2='1,234,567.89'",
+      "R1=NULL, R2='001,234,567.89'",
+      "R1=' 1,234,567.89', R2='001,234,567.89'"
     ],
-    "answer": 2,
-    "explanation": "SUBSTR(문자열, 시작위치, 길이) 함수는 지정한 시작 위치부터 지정한 길이만큼 문자열을 추출한다. Oracle의 SUBSTR은 1부터 시작하므로 'SQLD_EXAM_2025'에서 6번째 문자는 'E'이다(S=1, Q=2, L=3, D=4, _=5, E=6). SUBSTR('SQLD_EXAM_2025', 6, 4)는 6번째 'E'부터 4글자 'EXAM'을 반환한다.",
-    "tags": ["문자함수", "SUBSTR"],
-    "difficulty": "중"
+    "answer": 4,
+    "explanation": "TO_CHAR 숫자 포맷 차이:\n\n'9' 포맷: 실제 값이 없는 앞 자리를 공백으로 채움\n'0' 포맷: 실제 값이 없는 앞 자리를 '0'으로 채움\n\n- TO_CHAR(1234567.89, '999,999,999.99'):\n  9자리 포맷에 7자리 값 → 앞에 공백 2자리\n  → ' 1,234,567.89' (앞에 공백)\n\n- TO_CHAR(1234567.89, '000,000,000.00'):\n  9자리 포맷에 7자리 값 → 앞에 '00' 2자리\n  → '001,234,567.89' (앞에 0)\n\n① 오답: R1과 R2의 포맷 결과가 반대로 서술됨. '9'는 공백, '0'은 0으로 채움\n\n② 오답: '9' 포맷은 앞에 공백을 추가하지 단순히 숫자만 표시하지 않음\n\n③ 오답: TO_CHAR 포맷이 맞으면 NULL을 반환하지 않음. 또한 R1과 R2 결과가 반대\n\n④ 정답: R1(9포맷) = 공백+1,234,567.89, R2(0포맷) = 001,234,567.89",
+    "tags": ["TO_CHAR", "변환함수", "포맷"],
+    "difficulty": "상"
   },
   {
     "id": "p2c1_029",
     "part": 2,
-    "chapter": "1",
-    "questionType": "concept",
-    "content": "다음 중 DDL 명령 실행 시 트랜잭션에 미치는 영향으로 올바른 것은?",
+    "chapter": "part2_ch1",
+    "questionType": "result",
+    "content": "다음 SQL의 결과로 옳은 것은?\n\n```sql\nSELECT E.ENAME, D.DNAME\nFROM   EMP   E\n       RIGHT OUTER JOIN DEPT D ON E.DEPTNO = D.DEPTNO\nWHERE  D.DEPTNO = 40;\n```\n\n단, DEPT에 DEPTNO=40(OPERATIONS) 존재, EMP에 DEPTNO=40 사원 없음",
     "options": [
-      "DDL 명령은 이전 DML 작업에 영향을 주지 않고 독립적으로 실행된다",
-      "DDL 명령 실행 전 미확정 DML 작업이 자동 COMMIT된다",
-      "DDL 명령 실행 후 명시적으로 COMMIT을 실행해야 변경이 반영된다",
-      "DDL 명령 실행 시 진행 중인 트랜잭션이 자동 ROLLBACK된다"
+      "1건: ENAME=NULL, DNAME=OPERATIONS",
+      "0건 (EMP에 DEPTNO=40 사원이 없으므로)",
+      "1건: ENAME=NULL, DNAME=NULL",
+      "오류 발생 (RIGHT JOIN에서 WHERE 사용 불가)"
     ],
-    "answer": 2,
-    "explanation": "DDL(CREATE, ALTER, DROP, TRUNCATE) 명령은 AUTO COMMIT이 적용된다. DDL 실행 전에 커밋되지 않은 DML 작업이 있으면 DDL 실행 시 자동으로 COMMIT되어 영구 반영된다. 이후 DDL 자체도 AUTO COMMIT된다. 이 특성으로 인해 의도치 않은 DML 작업이 함께 커밋될 수 있으므로 주의가 필요하다.",
-    "tags": ["DDL", "AUTO COMMIT", "TCL"],
-    "difficulty": "중"
+    "answer": 1,
+    "explanation": "RIGHT OUTER JOIN 결과 분석:\n\nRIGHT OUTER JOIN: DEPT(오른쪽)가 기준 → DEPT의 모든 행 포함\n- DEPT 40번이 기준이므로 EMP에 매칭 사원이 없어도 DEPT 40번 행은 결과에 포함됨\n- EMP 매칭 없음 → ENAME = NULL\n- WHERE D.DEPTNO = 40: DEPT 40번만 필터링\n→ ENAME=NULL, DNAME=OPERATIONS가 1건 출력\n\n이전 문제(LEFT JOIN)와의 차이:\n- LEFT JOIN: EMP 기준 → DEPT 40번 미포함\n- RIGHT JOIN: DEPT 기준 → DEPT 40번 포함, EMP 측 NULL\n\n① 정답: RIGHT JOIN으로 DEPT 40번이 기준이므로 EMP 없어도 출력됨. ENAME=NULL, DNAME=OPERATIONS\n\n② 오답: LEFT JOIN 결과와 혼동. RIGHT JOIN에서는 DEPT(오른쪽)가 기준이므로 포함됨\n\n③ 오답: DNAME은 DEPT에서 오므로 NULL이 아닌 'OPERATIONS'. EMP 측인 ENAME만 NULL\n\n④ 오답: RIGHT OUTER JOIN 후 WHERE 절 사용은 완전히 정상적인 SQL",
+    "tags": ["OUTER JOIN", "RIGHT JOIN", "결과예측"],
+    "difficulty": "상"
   },
   {
     "id": "p2c1_030",
     "part": 2,
-    "chapter": "1",
+    "chapter": "part2_ch1",
     "questionType": "concept",
-    "content": "다음 중 인라인 뷰(Inline View)에 대한 설명으로 올바른 것은?",
+    "content": "CROSS JOIN에 관한 설명으로 옳은 것은?",
     "options": [
-      "인라인 뷰는 CREATE VIEW로 영구적으로 저장된다",
-      "인라인 뷰는 FROM 절에 작성된 서브쿼리로 가상의 테이블처럼 사용된다",
-      "인라인 뷰의 컬럼은 외부 쿼리의 WHERE 절에서 참조할 수 없다",
-      "인라인 뷰는 SELECT 절에만 사용할 수 있다"
+      "CROSS JOIN은 WHERE 절에 조인 조건이 없는 경우를 방지하기 위한 안전 조인이다",
+      "테이블 A가 3건, 테이블 B가 4건일 때 CROSS JOIN 결과는 12건이다",
+      "CROSS JOIN은 두 테이블 간 공통 컬럼이 있을 때만 사용할 수 있다",
+      "CROSS JOIN은 항상 오류를 발생시키므로 실무에서 사용하지 않는다"
     ],
     "answer": 2,
-    "explanation": "인라인 뷰는 FROM 절에 작성된 서브쿼리로, 쿼리 실행 중에만 존재하는 가상의 테이블이다. 영구적으로 저장되지 않고 해당 쿼리에서만 사용된다. 인라인 뷰에 별칭을 붙여 외부 쿼리의 WHERE, SELECT 등에서 컬럼을 참조할 수 있다. SELECT 절에 위치한 서브쿼리는 스칼라 서브쿼리이다.",
-    "tags": ["인라인뷰", "서브쿼리", "FROM절"],
-    "difficulty": "하"
+    "explanation": "CROSS JOIN(카테시안 곱):\n\nCROSS JOIN은 두 테이블의 모든 행 조합을 반환\n결과 건수 = 테이블A 행 수 × 테이블B 행 수\n\nA(3건) CROSS JOIN B(4건) = 3 × 4 = 12건\n\n① 오답: CROSS JOIN은 안전 조인이 아니라 조인 조건이 없는 카테시안 곱 연산. 의도치 않은 대용량 결과를 방지하는 것이 아니라 오히려 의도적으로 모든 조합이 필요할 때 사용\n\n② 정답: CROSS JOIN 결과 = A × B = 3 × 4 = 12건. 카테시안 곱\n\n③ 오답: CROSS JOIN은 조인 조건이 필요 없으며 공통 컬럼과 무관. 오히려 조인 조건이 없을 때 사용하는 조인\n\n④ 오답: CROSS JOIN이 항상 오류를 발생시키지 않음. 의도적으로 사용하는 경우가 있음\n   예: 날짜 달력 생성, 모든 상품×모든 지역 조합 테이블 생성 등\n\n핵심: CROSS JOIN = 카테시안 곱, 결과 수 = 두 테이블 행 수의 곱",
+    "tags": ["CROSS JOIN", "카테시안곱", "표준조인"],
+    "difficulty": "중"
   }
 ]

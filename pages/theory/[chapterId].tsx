@@ -26,7 +26,7 @@ export default function TheoryPage({
   return (
     <>
       <Head>
-        <title>{chapter.title} | SQLD 합격길잡이</title>
+        <title>{chapter.title} | SQLP 합격길잡이</title>
       </Head>
 
       <div className="p-4 md:p-6 max-w-7xl mx-auto">

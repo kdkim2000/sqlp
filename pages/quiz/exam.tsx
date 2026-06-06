@@ -5,27 +5,27 @@ import QuestionCard from '@/components/quiz/QuestionCard'
 import QuizNavigator from '@/components/quiz/QuizNavigator'
 import ExamTimer from '@/components/quiz/ExamTimer'
 import { useProgress } from '@/context/ProgressContext'
-import { saveExamResult } from '@/lib/progress'
+import { saveExamResult, isExamPassed } from '@/lib/progress'
 import { sampleExamQuestions, sampleMixedExam, getMockExamQuestions } from '@/lib/questions'
 import type { Question, AnswerResult, ExamResult } from '@/types'
 
-const EXAM_DURATION = 90 * 60
+const EXAM_DURATION = 180 * 60  // SQLP: 180분
 
 type ExamPhase = 'ready' | 'ongoing' | 'result'
 type ExamSource = 'mixed' | 'chapter' | 'exam1' | 'exam2'
 
 const SOURCE_OPTIONS: { value: ExamSource; label: string; desc: string }[] = [
-  { value: 'mixed',   label: '혼합 랜덤',   desc: '챕터+모의고사 전체 ~215문에서 무작위' },
-  { value: 'chapter', label: '챕터 문제',   desc: '단원별 학습 문제만 (115문 풀)' },
-  { value: 'exam1',   label: '모의고사 1회', desc: '출제예상 1회 50문 순서대로' },
-  { value: 'exam2',   label: '모의고사 2회', desc: '출제예상 2회 50문 순서대로' },
+  { value: 'mixed',   label: '혼합 랜덤',   desc: '챕터+모의고사 전체에서 무작위 출제' },
+  { value: 'chapter', label: '챕터 문제',   desc: '단원별 학습 문제 (1과목 10 + 2과목 20 + 3과목 40)' },
+  { value: 'exam1',   label: '모의고사 1회', desc: '출제예상 1회 순서대로' },
+  { value: 'exam2',   label: '모의고사 2회', desc: '출제예상 2회 순서대로' },
 ]
 
 export default function ExamPage() {
   const { markAnswer, toggleBookmark, isBookmarked } = useProgress()
 
   const [phase, setPhase]                 = useState<ExamPhase>('ready')
-  const [selectedSource, setSelectedSource] = useState<ExamSource>('mixed')
+  const [selectedSource, setSelectedSource] = useState<ExamSource>('chapter')
   const [questions, setQuestions]         = useState<Question[]>([])
   const [currentIndex, setCurrentIndex]   = useState(0)
   const [selectedOptions, setSelectedOptions] = useState<number[]>([])
@@ -61,7 +61,8 @@ export default function ExamPage() {
     if (questions.length === 0) return
     const part1Qs = questions.filter((q) => q.part === 1)
     const part2Qs = questions.filter((q) => q.part === 2)
-    let p1correct = 0, p2correct = 0
+    const part3Qs = questions.filter((q) => q.part === 3)
+    let p1correct = 0, p2correct = 0, p3correct = 0
     const answersRecord: Record<string, number> = {}
     const newSessionAnswers: AnswerResult[] = []
 
@@ -71,17 +72,28 @@ export default function ExamPage() {
       const res: AnswerResult = selected === q.answer ? 'correct' : selected === 0 ? 'skipped' : 'wrong'
       newSessionAnswers.push(res)
       markAnswer(q.id, res)
-      if (res === 'correct') { if (q.part === 1) p1correct++; else p2correct++ }
+      if (res === 'correct') {
+        if (q.part === 1) p1correct++
+        else if (q.part === 2) p2correct++
+        else if (q.part === 3) p3correct++
+      }
     })
 
     setSessionAnswers(newSessionAnswers)
-    const part1Score = part1Qs.length > 0 ? Math.round((p1correct / part1Qs.length) * 100) : 0
-    const part2Score = part2Qs.length > 0 ? Math.round((p2correct / part2Qs.length) * 100) : 0
-    const totalScore = Math.round(((p1correct + p2correct) / questions.length) * 100)
+
+    // SQLP 배점: 1과목(10점 만점), 2과목(20점 만점), 3과목(40점 만점), 총 70점
+    const part1Score = part1Qs.length > 0 ? Math.round((p1correct / part1Qs.length) * 10) : 0
+    const part2Score = part2Qs.length > 0 ? Math.round((p2correct / part2Qs.length) * 20) : 0
+    const part3Score = part3Qs.length > 0 ? Math.round((p3correct / part3Qs.length) * 40) : 0
+    const totalScore = part1Score + part2Score + part3Score
 
     const result: ExamResult = {
       date: new Date().toISOString(),
-      score: totalScore, part1Score, part2Score, totalTime: timeTaken,
+      score: totalScore,
+      part1Score,
+      part2Score,
+      part3Score,
+      totalTime: timeTaken,
       answers: answersRecord,
     }
     saveExamResult(result)
@@ -96,7 +108,7 @@ export default function ExamPage() {
   if (phase === 'ready') {
     return (
       <>
-        <Head><title>모의고사 | SQLD Quest</title></Head>
+        <Head><title>모의고사 | SQLP Quest</title></Head>
         <div className="p-4 md:p-6 max-w-lg mx-auto">
           <div className="q-card p-8">
             {/* 헤더 */}
@@ -106,8 +118,8 @@ export default function ExamPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
-              <h1 className="font-display font-bold text-2xl mb-1" style={{ color: 'var(--q-ink)' }}>SQLD 모의고사</h1>
-              <p className="text-sm" style={{ color: 'var(--q-ink-2)' }}>1과목 10문항 + 2과목 40문항 · 90분</p>
+              <h1 className="font-display font-bold text-2xl mb-1" style={{ color: 'var(--q-ink)' }}>SQLP 모의고사</h1>
+              <p className="text-sm" style={{ color: 'var(--q-ink-2)' }}>1과목 10문항 + 2과목 20문항 + 3과목 40문항 · 180분</p>
             </div>
 
             {/* 출제 방식 선택 */}
@@ -143,11 +155,12 @@ export default function ExamPage() {
 
             {/* 합격 기준 */}
             <div className="rounded-2xl p-4 mb-5 text-left bg-primary-50">
-              <h2 className="font-semibold text-primary-800 mb-2 text-sm">합격 기준</h2>
+              <h2 className="font-semibold text-primary-800 mb-2 text-sm">합격 기준 (SQLP)</h2>
               <ul className="text-sm text-primary-700 space-y-1">
-                <li>• 총점 60점 이상</li>
-                <li>• 1과목 40점 이상 (과락 없어야 함)</li>
-                <li>• 2과목 40점 이상 (과락 없어야 함)</li>
+                <li>• 총점 60점 이상 (100점 만점)</li>
+                <li>• 1과목 4점 이상 (10점 만점 × 40%)</li>
+                <li>• 2과목 8점 이상 (20점 만점 × 40%)</li>
+                <li>• 3과목 16점 이상 (40점 만점 × 40%)</li>
               </ul>
             </div>
 
@@ -168,7 +181,7 @@ export default function ExamPage() {
 
   /* ── 결과 화면 ── */
   if (phase === 'result' && examResult) {
-    const passed = examResult.score >= 60 && examResult.part1Score >= 40 && examResult.part2Score >= 40
+    const passed = isExamPassed(examResult)
     const mins   = Math.floor(examResult.totalTime / 60)
     const secs   = examResult.totalTime % 60
     const correctCount  = sessionAnswers.filter((a) => a === 'correct').length
@@ -177,7 +190,7 @@ export default function ExamPage() {
 
     return (
       <>
-        <Head><title>모의고사 결과 | SQLD Quest</title></Head>
+        <Head><title>모의고사 결과 | SQLP Quest</title></Head>
         <div className="p-4 md:p-6 max-w-2xl mx-auto space-y-4">
           {/* 합격/불합격 헤더 */}
           <div
@@ -194,19 +207,22 @@ export default function ExamPage() {
             <p className="text-sm" style={{ color: 'var(--q-ink-3)' }}>소요 시간: {mins}분 {secs}초</p>
           </div>
 
-          {/* 과목별 점수 */}
+          {/* 과목별 점수 (3과목) */}
           <div className="q-card">
             <h2 className="text-sm font-semibold mb-4" style={{ color: 'var(--q-ink)' }}>과목별 점수</h2>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-3">
               {[
-                { label: '1과목 (데이터 모델링)', score: examResult.part1Score },
-                { label: '2과목 (SQL 기본·활용)',  score: examResult.part2Score },
-              ].map(({ label, score }) => (
+                { label: '1과목', sub: '데이터 모델링', score: examResult.part1Score, max: 10, pass: 4 },
+                { label: '2과목', sub: 'SQL 기본·활용', score: examResult.part2Score, max: 20, pass: 8 },
+                { label: '3과목', sub: 'SQL 고급·튜닝', score: examResult.part3Score, max: 40, pass: 16 },
+              ].map(({ label, sub, score, max, pass }) => (
                 <div key={label} className="text-center p-4 rounded-2xl" style={{ backgroundColor: 'var(--q-surface-soft)' }}>
-                  <p className="text-xs mb-2" style={{ color: 'var(--q-ink-3)' }}>{label}</p>
-                  <p className={`text-3xl font-bold ${score >= 40 ? 'text-mint-500' : 'text-coral'}`}>{score}점</p>
-                  <p className="text-xs mt-1" style={{ color: 'var(--q-ink-3)' }}>
-                    {score >= 40 ? '✓ 과락 없음' : '✗ 과락'}
+                  <p className="text-xs font-semibold mb-0.5" style={{ color: 'var(--q-ink-2)' }}>{label}</p>
+                  <p className="text-xs mb-2" style={{ color: 'var(--q-ink-3)' }}>{sub}</p>
+                  <p className={`text-2xl font-bold ${score >= pass ? 'text-mint-500' : 'text-coral'}`}>{score}점</p>
+                  <p className="text-xs mt-1" style={{ color: 'var(--q-ink-3)' }}>/ {max}점</p>
+                  <p className="text-xs mt-1" style={{ color: score >= pass ? '#039855' : '#BE123C' }}>
+                    {score >= pass ? '✓ 통과' : '✗ 과락'}
                   </p>
                 </div>
               ))}
@@ -236,7 +252,7 @@ export default function ExamPage() {
                     key={q.id}
                     className="h-8 w-full rounded-lg text-xs font-bold flex items-center justify-center"
                     style={{ backgroundColor: bg ?? 'var(--q-surface-soft)', color: fg ?? 'var(--q-ink-3)' }}
-                    title={`Q${i + 1}: ${res ?? '미응답'}`}
+                    title={`Q${i + 1}: ${res ?? '미응답'} (${q.part}과목)`}
                   >
                     {i + 1}
                   </div>
@@ -278,12 +294,12 @@ export default function ExamPage() {
 
   return (
     <>
-      <Head><title>모의고사 진행 중 | SQLD Quest</title></Head>
+      <Head><title>모의고사 진행 중 | SQLP Quest</title></Head>
       <div className="p-4 md:p-6 max-w-4xl mx-auto">
         {/* 헤더 */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="font-display font-bold text-xl" style={{ color: 'var(--q-ink)' }}>SQLD 모의고사</h1>
+            <h1 className="font-display font-bold text-xl" style={{ color: 'var(--q-ink)' }}>SQLP 모의고사</h1>
             <p className="text-xs mt-0.5" style={{ color: 'var(--q-ink-3)' }}>
               {answeredCount}/{questions.length} 문항 응답 완료
             </p>
@@ -346,6 +362,7 @@ export default function ExamPage() {
             <QuizNavigator
               total={questions.length}
               current={currentIndex}
+              // 시험 진행 중: 정답/오답 미판별 상태 — 응답(s>0)이면 'skipped'색(회색→파랑)으로 표시
               answers={selectedOptions.map((s) => s > 0 ? ('skipped' as AnswerResult) : null)}
               bookmarked={questions.map((q) => isBookmarked(q.id))}
               onJump={setCurrentIndex}

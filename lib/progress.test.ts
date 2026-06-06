@@ -44,6 +44,7 @@ describe('progress: localStorage round-trip', () => {
         score: i,
         part1Score: 0,
         part2Score: 0,
+        part3Score: 0,
         totalTime: 0,
         answers: {},
       })
@@ -53,9 +54,9 @@ describe('progress: localStorage round-trip', () => {
 
   it('resetProgress clears storage', () => {
     markAnswer('p1c1_001', 'correct')
-    expect(localStorage.getItem('sqld_progress')).not.toBeNull()
+    expect(localStorage.getItem('sqlp_progress')).not.toBeNull()
     resetProgress()
-    const raw = localStorage.getItem('sqld_progress')
+    const raw = localStorage.getItem('sqlp_progress')
     expect(raw, `raw after reset: ${raw}`).toBeNull()
     expect(loadProgress().answers).toEqual({})
   })
@@ -66,6 +67,7 @@ describe('progress: localStorage round-trip', () => {
       bookmarks: ['p1c1_002'],
       lastVisited: { type: 'theory' as const, id: 'part1_ch1' },
       examHistory: [],
+      practicalAnswers: [],
     }
     saveProgress(store)
     expect(loadProgress()).toEqual(store)

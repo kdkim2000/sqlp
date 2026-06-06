@@ -11,27 +11,37 @@
 
 `docs/ai-dlc/README.md` 의 스킬 계획을 기반으로 한다.
 
-```
-Phase A ────────────────── [Foundation Builder (3)]
-  types/index.ts, lib/chapters.ts, lib/progress.ts, lib/questions.ts
+```mermaid
+flowchart TD
+    A["**Phase A** — Foundation Builder 3번\ntypes/index.ts\nlib/chapters.ts · lib/progress.ts · lib/questions.ts\ncontext/ProgressContext.tsx"]
 
-Phase B ────────────────── [Content Writer (2) / PDF Extractor (9)]
-  data/theory/part3_ch*.md   data/questions/part3_ch*.json
-  data/practical/questions.json   data/mockexam/exam*.json
+    B["**Phase B** — Content Writer 2번 / PDF Extractor 9번\ndata/theory/part3_ch1~ch7.md\ndata/questions/part3_ch1~ch7.json\ndata/practical/questions.json · data/mockexam/exam*.json"]
 
-Phase C ─────────┬──────────── [Quiz Builder (5)]      ─ 병렬 가능
-                 └──────────── [Theory Builder (6)]
-  ExamTimer(180분)   QuizNavigator(70문항)   exam.tsx   result.tsx
-  theory/index.tsx   theory/[chapterId].tsx
+    C1["**Phase C** ─ 병렬 ─ Quiz Builder 5번\nExamTimer.tsx 90분→180분\nQuizNavigator.tsx 50→70문항\nquiz/exam.tsx · quiz/result.tsx"]
 
-Phase D ────────────────── [Quiz Builder (5)]
-  PracticalQuestion.tsx   pages/quiz/practical.tsx
+    C2["**Phase C** ─ 병렬 ─ Theory Builder 6번\ntheory/index.tsx 12챕터 그룹핑\ntheory/chapterId.tsx SSG 경로 확장"]
 
-Phase E ────────────────── [Dashboard Builder (7)]
-  LearningPath.tsx(12챕터)   ProgressChart.tsx(3과목)
+    D["**Phase D** — Quiz Builder 5번\nPracticalQuestion.tsx 신규\nquiz/practical.tsx · practical/practiceId.tsx"]
 
-QA ─────────────────────── [QA (8)]
-  tsc → lint → build → validate-data → 배포 승인
+    E["**Phase E** — Dashboard Builder 7번\nLearningPath.tsx 5→12챕터\nProgressChart.tsx 2→3과목\npages/index.tsx 과목3 진도율"]
+
+    QA["**QA** — QA Agent 8번\ntsc --noEmit → lint → build\nvalidate-data → 브라우저 확인 → 배포"]
+
+    A --> B
+    B --> C1
+    B --> C2
+    C1 --> D
+    C2 --> D
+    D --> E
+    E --> QA
+
+    style A fill:#7c3aed,color:#fff,stroke:#5b21b6
+    style B fill:#2563eb,color:#fff,stroke:#1d4ed8
+    style C1 fill:#059669,color:#fff,stroke:#047857
+    style C2 fill:#059669,color:#fff,stroke:#047857
+    style D fill:#d97706,color:#fff,stroke:#b45309
+    style E fill:#db2777,color:#fff,stroke:#be185d
+    style QA fill:#374151,color:#fff,stroke:#1f2937
 ```
 
 ---

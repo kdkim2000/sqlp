@@ -8,19 +8,21 @@ interface TheoryIndexProps {
   chapters: ChapterMeta[]
 }
 
-const PART_META: Record<number, { label: string; icon: string; color: string }> = {
-  1: { label: '1과목 데이터 모델링의 이해', icon: '🗂️', color: 'text-primary-600' },
-  2: { label: '2과목 SQL 기본 및 활용',    icon: '🛢️', color: 'text-mint-500' },
+const PART_META: Record<number, { label: string; icon: string; color: string; bg: string }> = {
+  1: { label: '1과목 데이터 모델링의 이해', icon: '🗂️', color: 'text-primary-600',   bg: 'bg-primary-50' },
+  2: { label: '2과목 SQL 기본 및 활용',    icon: '🛢️', color: 'text-mint-500',      bg: 'bg-mint-50'    },
+  3: { label: '3과목 SQL 고급활용 및 튜닝', icon: '⚡', color: 'text-amber-600',     bg: 'bg-amber-50'   },
 }
 
 export default function TheoryIndex({ chapters }: TheoryIndexProps) {
   const part1 = chapters.filter((c) => c.part === 1)
   const part2 = chapters.filter((c) => c.part === 2)
+  const part3 = chapters.filter((c) => c.part === 3)
 
   return (
     <>
       <Head>
-        <title>이론 학습 | SQLD Quest</title>
+        <title>이론 학습 | SQLP Quest</title>
       </Head>
 
       <div className="p-4 md:p-6 max-w-4xl mx-auto">
@@ -30,20 +32,28 @@ export default function TheoryIndex({ chapters }: TheoryIndexProps) {
             이론 학습
           </h1>
           <p className="text-sm" style={{ color: 'var(--q-ink-3)' }}>
-            챕터를 선택해 개념을 학습하세요
+            3과목 12챕터 — 챕터를 선택해 개념을 학습하세요
           </p>
         </div>
 
         {/* 과목별 섹션 */}
-        {[{ part: 1, items: part1 }, { part: 2, items: part2 }].map(({ part, items }) => {
+        {[
+          { part: 1, items: part1 },
+          { part: 2, items: part2 },
+          { part: 3, items: part3 },
+        ].map(({ part, items }) => {
           const meta = PART_META[part]
+          if (items.length === 0) return null
           return (
             <section key={part} className="mb-10">
-              <div className="flex items-center gap-2 mb-4">
+              <div className={`flex items-center gap-2 mb-4 px-3 py-2 rounded-xl ${meta.bg}`}>
                 <span className="text-xl">{meta.icon}</span>
-                <h2 className="font-display font-bold text-base md:text-lg" style={{ color: 'var(--q-ink)' }}>
+                <h2 className={`font-display font-bold text-base md:text-lg ${meta.color}`}>
                   {meta.label}
                 </h2>
+                <span className="ml-auto text-xs font-medium" style={{ color: 'var(--q-ink-3)' }}>
+                  {items.length}챕터
+                </span>
               </div>
 
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -60,7 +70,7 @@ export default function TheoryIndex({ chapters }: TheoryIndexProps) {
                       {chapter.title}
                     </p>
                     <p className="text-xs mt-2" style={{ color: 'var(--q-ink-3)' }}>
-                      문제 {chapter.questionCount}개 →
+                      {chapter.questionCount > 0 ? `문제 ${chapter.questionCount}개 →` : '학습하기 →'}
                     </p>
                   </Link>
                 ))}

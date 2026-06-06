@@ -1,369 +1,319 @@
-# 2과목 3장: SQL 최적화 기본 원리
+# 2과목 3장: 관리 구문
 
-## 1. 옵티마이저 (Optimizer)
+## 1. DML (Data Manipulation Language)
 
-### 옵티마이저의 개념
-SQL을 가장 **효율적으로 실행**할 수 있도록 최적의 실행 계획(Execution Plan)을 선택하는 DBMS의 핵심 엔진
+### DML이란
 
-> **핵심**: 옵티마이저는 SQL 개발자가 작성한 SQL을 분석하여 어떤 방식으로 데이터에 접근할지 결정한다. 좋은 실행 계획은 쿼리 성능에 결정적인 영향을 미친다.
+데이터를 **조작**하는 명령어. 테이블의 행을 삽입·수정·삭제하며, **트랜잭션의 대상**이 된다.
 
-### 옵티마이저 종류
-
-| 구분 | 규칙기반 옵티마이저(RBO) | 비용기반 옵티마이저(CBO) |
-|------|--------------------------|--------------------------|
-| 영문 | Rule Based Optimizer | Cost Based Optimizer |
-| 기반 | 미리 정해진 우선순위 규칙 | 통계 정보 기반 비용 계산 |
-| 통계 정보 | 불필요 | 필요 |
-| 특징 | 단순하지만 비효율적일 수 있음 | 복잡하지만 현실적 성능 최적화 |
-| 현재 사용 | 거의 사용하지 않음 | 현재 DBMS 표준 |
-
-### 규칙기반 옵티마이저의 우선순위 (높을수록 우선)
-
-| 순위 | 접근 방법 |
-|------|-----------|
-| 1 | ROWID를 통한 단일 행 접근 |
-| 2 | 클러스터 조인 |
-| 3 | UNIQUE 또는 PK에 의한 단일 행 |
-| 4 | UNIQUE 인덱스 범위 스캔 |
-| 5 | 클러스터 인덱스 스캔 |
-| 6 | 비유일 인덱스 범위 스캔 |
-| 7 | 인덱스가 있는 최소/최대 스캔 |
-| 8 | 정렬된 전체 인덱스 스캔 |
-| 9 | 전체 테이블 스캔 |
-
-### 비용기반 옵티마이저 구성요소
-
-| 구성요소 | 설명 |
-|----------|------|
-| **Query Transformer** | SQL을 동등한 의미의 다른 형태로 변환 |
-| **Estimator** | 실행 계획의 총 비용 계산 |
-| **Plan Generator** | 다양한 실행 계획 생성 및 최적 계획 선택 |
+| 명령어 | 기능 |
+|--------|------|
+| INSERT | 새로운 행 삽입 |
+| UPDATE | 기존 행의 컬럼 값 수정 |
+| DELETE | 기존 행 삭제 |
+| MERGE | 조건에 따라 INSERT·UPDATE·DELETE 통합 처리 |
 
 ---
 
-## 2. 실행 계획 (Execution Plan)
-
-### 실행 계획의 개념
-SQL 처리를 위해 옵티마이저가 선택한 **데이터 접근 방법의 단계적 절차**
-
-### 실행 계획 읽기
+### INSERT
 
 ```sql
--- Oracle 실행 계획 확인
-EXPLAIN PLAN FOR
-SELECT * FROM 직원 WHERE 부서코드 = 'A001';
+-- 단건 삽입
+INSERT INTO emp (empno, ename, deptno)
+VALUES (9999, '홍길동', 10);
 
-SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY());
+-- 서브쿼리를 이용한 다건 삽입 (SELECT 결과 전체 삽입)
+INSERT INTO emp_copy
+SELECT * FROM emp WHERE deptno = 20;
+
+-- 멀티 테이블 INSERT (조건별 삽입)
+INSERT ALL
+  WHEN sal > 3000 THEN INTO high_sal_emp VALUES (empno, ename, sal)
+  WHEN sal <= 3000 THEN INTO low_sal_emp VALUES (empno, ename, sal)
+SELECT empno, ename, sal FROM emp;
 ```
 
+> **주의**: `INSERT INTO emp VALUES (...)` — VALUES 없이 컬럼 순서 생략 시 테이블 정의 순서와 일치해야 함
+
+---
+
+### UPDATE
+
+```sql
+-- 단순 수정
+UPDATE emp
+SET    sal = sal * 1.1,
+       comm = 500
+WHERE  deptno = 10;
+
+-- 서브쿼리를 이용한 수정
+UPDATE emp e
+SET    sal = (SELECT MAX(sal) FROM emp WHERE deptno = e.deptno)
+WHERE  empno = 7788;
 ```
-실행 계획 예시:
----------------------------------------------------
-| Id | Operation          | Name     | Rows | Cost |
----------------------------------------------------
-|  0 | SELECT STATEMENT   |          |   5  |   3  |
-|  1 |  TABLE ACCESS FULL | 직원     |   5  |   3  |
----------------------------------------------------
+
+> **주의**: WHERE 절 없으면 전체 행 수정됨. `WHERE empno = :empno` 형태로 특정 행 지정 필수
+
+---
+
+### DELETE
+
+```sql
+-- 단순 삭제
+DELETE FROM emp WHERE deptno = 30;
+
+-- 전체 행 삭제 (ROLLBACK 가능, 로그 기록)
+DELETE FROM emp;
 ```
 
-> **핵심**: 실행 계획은 **들여쓰기가 많을수록 먼저 실행**되며, 같은 레벨에서는 **위에서 아래로** 실행된다.
+### DELETE vs TRUNCATE 비교
 
-### 실행 계획 분석 요소
+| 항목 | DELETE | TRUNCATE |
+|------|--------|---------|
+| 분류 | DML | DDL |
+| ROLLBACK | 가능 | 불가능 |
+| 실행 속도 | 느림 (행 단위) | 빠름 (세그먼트 단위) |
+| WHERE 절 | 사용 가능 | 사용 불가 |
+| 트리거 발동 | 발동 | 발동 안 함 |
+| AUTO COMMIT | 아님 | 자동 COMMIT |
 
-| 요소 | 설명 |
+---
+
+### MERGE
+
+하나의 SQL로 INSERT/UPDATE/DELETE를 조건에 따라 처리.
+
+```sql
+MERGE INTO target t
+USING source s
+ON (t.id = s.id)
+WHEN MATCHED THEN
+  UPDATE SET t.val = s.val,
+             t.upd_dt = SYSDATE
+  DELETE WHERE s.del_yn = 'Y'   -- 선택적
+WHEN NOT MATCHED THEN
+  INSERT (id, val, ins_dt)
+  VALUES (s.id, s.val, SYSDATE);
+```
+
+> **활용**: 배치 처리 시 조건부 INSERT/UPDATE를 하나의 SQL로 처리 → 성능 향상
+
+---
+
+## 2. TCL (Transaction Control Language)
+
+### 트랜잭션이란
+
+**논리적인 작업 단위**. ACID 특성을 가진다.
+
+| 특성 | 설명 |
 |------|------|
-| **Operation** | 실행되는 작업 유형 |
-| **Name** | 접근하는 테이블/인덱스명 |
-| **Rows (Cardinality)** | 예상 반환 행 수 |
-| **Bytes** | 예상 반환 데이터 크기 |
-| **Cost** | 예상 비용 (낮을수록 효율적) |
+| **원자성(Atomicity)** | 모두 성공 또는 모두 실패 (All or Nothing) |
+| **일관성(Consistency)** | 트랜잭션 전후 데이터 무결성 유지 |
+| **격리성(Isolation)** | 동시 실행 트랜잭션이 서로 영향 없음 |
+| **지속성(Durability)** | COMMIT된 데이터는 영구 저장 |
 
----
-
-## 3. 인덱스 스캔 방식
-
-### 인덱스 구조 (B-Tree)
-인덱스는 **루트 블록 → 브랜치 블록 → 리프 블록** 구조의 B-Tree로 구성
-
-```
-           [루트 블록]
-          /            \
-   [브랜치]           [브랜치]
-   /     \           /     \
-[리프] [리프]    [리프] [리프]
-  ↓       ↓       ↓       ↓
-[테이블 행] [테이블 행] ...
-```
-
-### 인덱스 스캔 유형
-
-| 스캔 유형 | 설명 | 사용 조건 |
-|-----------|------|-----------|
-| **Index Unique Scan** | 유일 인덱스에서 단일 값 검색 | `=` 조건, UNIQUE/PK 인덱스 |
-| **Index Range Scan** | 인덱스 범위 검색 | `BETWEEN`, `LIKE`, `>`, `<` 조건 |
-| **Index Full Scan** | 인덱스 전체 검색 | 인덱스 모든 컬럼 사용 불가 시 |
-| **Index Fast Full Scan** | 인덱스 전체 빠른 스캔 | 멀티블록 I/O 활용 |
-| **Index Skip Scan** | 선두 컬럼 없이 스캔 | 복합 인덱스에서 선두 컬럼 조건 없을 때 |
-
-### 인덱스 사용 불가 조건
+### TCL 명령어
 
 ```sql
--- 인덱스가 직원명 컬럼에 설정된 경우
+-- COMMIT: 변경 영구 반영 + Lock 해제
+COMMIT;
 
--- 인덱스 사용 불가 (컬럼 변형)
-WHERE SUBSTR(직원명, 1, 2) = '홍길'       -- 함수 적용
-WHERE 급여 * 1.1 > 3000000               -- 산술 연산
-WHERE TO_CHAR(입사일자, 'YYYY') = '2024' -- 형변환 함수
+-- ROLLBACK: 변경 취소 (최근 COMMIT 시점 또는 SAVEPOINT로 복귀)
+ROLLBACK;
 
--- 인덱스 사용 불가 (묵시적 형변환)
-WHERE 직원번호 = 123456  -- 직원번호가 VARCHAR2인데 숫자로 비교
+-- SAVEPOINT: 중간 저장점 설정
+SAVEPOINT sp1;
+UPDATE emp SET sal = 5000 WHERE empno = 7788;
+SAVEPOINT sp2;
+UPDATE emp SET sal = 6000 WHERE empno = 7369;
 
--- 인덱스 사용 불가 (부정형/IS NOT NULL)
-WHERE 직원명 IS NOT NULL
-WHERE 직원명 NOT LIKE '김%'
-
--- 인덱스 사용 가능
-WHERE 직원명 = '홍길동'
-WHERE 직원명 LIKE '홍%'      -- 앞쪽 LIKE는 사용 가능
-WHERE 직원명 BETWEEN '가' AND '나'
+-- sp2 이후만 롤백 (7369 UPDATE 취소, 7788 UPDATE는 유지)
+ROLLBACK TO SAVEPOINT sp2;
+COMMIT;
 ```
 
-> **핵심**: 인덱스 컬럼에 함수, 산술연산, 묵시적 형변환이 적용되면 인덱스를 사용할 수 없다.
+### Oracle 트랜잭션 시작 시점
 
----
+- Oracle: **첫 번째 DML 실행 시** 자동 시작 (명시적 `BEGIN TRANSACTION` 불필요)
+- COMMIT 또는 ROLLBACK으로 트랜잭션 종료
 
-## 4. 조인 수행 원리
-
-### Nested Loop Join (중첩 루프 조인)
-
-**원리**: 외부 테이블(Driving Table)의 각 행에 대해 내부 테이블(Inner Table)을 반복 스캔
-
-```
-FOR EACH ROW in 외부테이블:
-    SCAN 내부테이블 WHERE 조인조건 = 외부테이블.컬럼;
-```
-
-| 항목 | 내용 |
-|------|------|
-| **적합 상황** | 소량 데이터, 인덱스 사용 가능한 경우, OLTP |
-| **장점** | 부분 범위 처리 가능, 메모리 사용 적음 |
-| **단점** | 대용량 처리 시 비효율 |
-| **중요 포인트** | 내부 테이블 조인 컬럼에 인덱스 필요 |
-
-### Sort Merge Join (정렬 병합 조인)
-
-**원리**: 두 테이블을 각각 조인 컬럼으로 정렬한 후 병합
-
-```
-1. 테이블A를 조인컬럼으로 정렬
-2. 테이블B를 조인컬럼으로 정렬
-3. 정렬된 두 결과를 순서대로 병합
-```
-
-| 항목 | 내용 |
-|------|------|
-| **적합 상황** | 범위 조건 조인, 이미 정렬된 데이터, 인덱스 없는 경우 |
-| **장점** | 정렬만 완료되면 빠른 처리 |
-| **단점** | 정렬을 위한 메모리/디스크 사용 |
-
-### Hash Join (해시 조인)
-
-**원리**: 작은 테이블(Build Input)로 해시 테이블 생성 후, 큰 테이블(Probe Input)을 해시 값으로 매핑
-
-```
-1. 작은 테이블로 해시 테이블 생성 (메모리에 로드)
-2. 큰 테이블의 각 행을 해시 함수로 변환하여 해시 테이블 조회
-```
-
-| 항목 | 내용 |
-|------|------|
-| **적합 상황** | 대용량 데이터, 동등 조인(=), 인덱스 없는 경우, OLAP |
-| **장점** | 대용량 처리 시 효율적 |
-| **단점** | 메모리 사용 많음, 등호 조건만 가능 |
-
-### 조인 방식 비교
-
-| 구분 | Nested Loop | Sort Merge | Hash |
-|------|-------------|------------|------|
-| 적합 데이터량 | 소량 | 중대량 | 대량 |
-| 인덱스 필요 | 내부 테이블 | 불필요 | 불필요 |
-| 범위 조인 | 가능 | 가능 | 불가 |
-| 등호 조인 | 가능 | 가능 | 가능 |
-| 메모리 사용 | 적음 | 중간 | 많음 |
-
----
-
-## 5. 조인 순서와 성능
-
-### 조인 순서의 중요성
-Nested Loop Join에서 **Driving Table 선택**이 성능에 직접 영향
+### DDL 실행과 AUTO COMMIT
 
 ```sql
--- 직원(100만 행) ← 조회 결과(10행) 부서코드로 연결
--- 올바른 순서: 조건 많은(결과 작은) 테이블이 Driving
-SELECT /*+ LEADING(D E) */ E.직원명, D.부서명
-  FROM 직원 E, 부서 D
- WHERE E.부서코드 = D.부서코드
-   AND D.지역 = '서울';
--- 부서 테이블로 먼저 '서울' 필터 후 직원과 조인 → 효율적
+UPDATE emp SET sal = 9000 WHERE empno = 7788;  -- DML (미COMMIT)
+CREATE TABLE temp_table (id NUMBER);              -- DDL → AUTO COMMIT!
+-- UPDATE가 자동 COMMIT됨 → ROLLBACK 불가
 ```
 
-> **핵심**: Driving Table은 조건에 의해 **결과 행 수가 적은 테이블**이 유리하다. 내부 테이블(내부 루프)은 반드시 **인덱스**가 있어야 효율적이다.
+> **핵심**: Oracle에서 DDL 실행 시 이전 DML이 자동 COMMIT됨
 
 ---
 
-## 6. 힌트 (Hint)
+## 3. DDL (Data Definition Language)
 
-### 힌트의 개념
-옵티마이저의 실행 계획에 **개발자가 직접 개입**하여 특정 방식으로 실행하도록 지시하는 것
+데이터베이스 **객체를 정의·수정·삭제**하는 명령어. **AUTO COMMIT** 특성.
+
+| 명령어 | 기능 |
+|--------|------|
+| CREATE | 객체(테이블, 인덱스, 뷰 등) 생성 |
+| ALTER | 객체 구조 변경 |
+| DROP | 객체 삭제 |
+| TRUNCATE | 테이블 데이터 전체 삭제 |
+| RENAME | 객체 이름 변경 |
+| COMMENT | 설명 추가 |
+
+---
+
+### CREATE TABLE
 
 ```sql
--- 힌트 사용 형태 (Oracle)
-SELECT /*+ 힌트명(인수) */ 컬럼
-  FROM 테이블
- WHERE 조건;
+CREATE TABLE orders (
+  order_no     VARCHAR2(20)  NOT NULL,
+  customer_id  VARCHAR2(10)  NOT NULL,
+  order_dt     DATE          DEFAULT SYSDATE,
+  order_amt    NUMBER(15, 2),
+  status_cd    VARCHAR2(2)   DEFAULT 'P',
+  CONSTRAINT pk_orders PRIMARY KEY (order_no),
+  CONSTRAINT fk_orders_cust FOREIGN KEY (customer_id)
+    REFERENCES customers (customer_id),
+  CONSTRAINT chk_status CHECK (status_cd IN ('P', 'C', 'X'))
+);
+
+-- 서브쿼리로 복사 (구조 + 데이터)
+CREATE TABLE emp_copy AS SELECT * FROM emp WHERE deptno = 10;
+
+-- 구조만 복사 (데이터 없음)
+CREATE TABLE emp_empty AS SELECT * FROM emp WHERE 1 = 2;
 ```
 
-### 주요 힌트 목록
+### 제약 조건 종류
 
-| 힌트 | 설명 |
-|------|------|
-| `FULL(테이블)` | 전체 테이블 스캔 강제 |
-| `INDEX(테이블 인덱스)` | 특정 인덱스 사용 강제 |
-| `NO_INDEX(테이블 인덱스)` | 특정 인덱스 사용 금지 |
-| `USE_NL(테이블)` | Nested Loop Join 강제 |
-| `USE_MERGE(테이블)` | Sort Merge Join 강제 |
-| `USE_HASH(테이블)` | Hash Join 강제 |
-| `LEADING(테이블)` | 특정 테이블을 Driving 테이블로 강제 |
-| `ORDERED` | FROM 절 순서대로 조인 강제 |
-| `ALL_ROWS` | 전체 결과 최적화 (CBO 기본) |
-| `FIRST_ROWS(n)` | 처음 n개 행 빠른 반환 최적화 |
+| 제약 조건 | 설명 |
+|---------|------|
+| PRIMARY KEY | 유일성 + NOT NULL (테이블당 1개) |
+| UNIQUE | 유일성 (NULL 허용) |
+| NOT NULL | NULL 불허 |
+| FOREIGN KEY | 참조 무결성 (다른 테이블 PK 참조) |
+| CHECK | 컬럼값 범위·규칙 제한 |
+| DEFAULT | 값 미입력 시 기본값 |
+
+---
+
+### ALTER TABLE
 
 ```sql
--- 힌트 사용 예시
-SELECT /*+ USE_NL(E D) LEADING(D) INDEX(E IDX_직원_부서코드) */
-       E.직원명, D.부서명
-  FROM 직원 E, 부서 D
- WHERE E.부서코드 = D.부서코드
-   AND D.지역 = '서울';
+-- 컬럼 추가
+ALTER TABLE emp ADD (email VARCHAR2(100));
+
+-- 컬럼 수정 (크기·타입·기본값)
+ALTER TABLE emp MODIFY (ename VARCHAR2(60) NOT NULL);
+
+-- 컬럼 삭제
+ALTER TABLE emp DROP COLUMN email;
+
+-- 컬럼 이름 변경
+ALTER TABLE emp RENAME COLUMN ename TO emp_name;
+
+-- 제약 조건 추가
+ALTER TABLE emp ADD CONSTRAINT uk_emp_email UNIQUE (email);
+
+-- 제약 조건 삭제
+ALTER TABLE emp DROP CONSTRAINT uk_emp_email;
+
+-- 제약 조건 비활성화/활성화
+ALTER TABLE emp DISABLE CONSTRAINT fk_emp_dept;
+ALTER TABLE emp ENABLE  CONSTRAINT fk_emp_dept;
 ```
 
 ---
 
-## 7. 통계 정보
-
-### 통계 정보의 역할
-CBO가 최적의 실행 계획을 선택하기 위한 데이터 분포 정보
-
-| 통계 유형 | 포함 정보 |
-|-----------|-----------|
-| **테이블 통계** | 전체 행 수, 블록 수, 평균 행 길이 |
-| **컬럼 통계** | 유일값 수, NULL 수, 최소/최대값, 히스토그램 |
-| **인덱스 통계** | 인덱스 레벨, 리프 블록 수, 클러스터링 팩터 |
+### DROP vs TRUNCATE
 
 ```sql
--- Oracle 통계 수집
-EXEC DBMS_STATS.GATHER_TABLE_STATS('스키마명', '테이블명');
-EXEC DBMS_STATS.GATHER_INDEX_STATS('스키마명', '인덱스명');
+-- DROP: 테이블 구조 + 데이터 모두 삭제 (복구 불가)
+DROP TABLE emp;
+DROP TABLE emp CASCADE CONSTRAINTS;  -- 참조 제약까지 삭제
+
+-- TRUNCATE: 구조 유지, 데이터만 삭제 (빠르고 복구 불가)
+TRUNCATE TABLE emp;
 ```
 
-> **핵심**: 통계 정보가 오래되면 옵티마이저가 잘못된 실행 계획을 선택할 수 있다. 대량 데이터 변경 후에는 통계 정보를 갱신해야 한다.
+### 뷰 (VIEW)
+
+```sql
+-- 뷰 생성
+CREATE OR REPLACE VIEW v_emp_dept AS
+SELECT e.empno, e.ename, d.dname
+FROM   emp e JOIN dept d ON e.deptno = d.deptno;
+
+-- 뷰 삭제
+DROP VIEW v_emp_dept;
+```
+
+> **뷰의 특징**:
+> - 실제 데이터 미저장 (논리적 가상 테이블)
+> - SELECT에는 항상 사용 가능
+> - 단순 뷰(단일 테이블, 집계 없음): DML 가능
+> - 복잡 뷰(조인, 집계, DISTINCT): DML 대부분 불가
 
 ---
 
-## 8. 쿼리 변환
+## 4. DCL (Data Control Language)
 
-### 옵티마이저의 쿼리 변환 유형
+데이터베이스 **권한을 관리**하는 명령어.
 
-| 변환 유형 | 설명 |
-|-----------|------|
-| **뷰 병합** (View Merging) | 인라인 뷰를 외부 쿼리와 병합하여 최적화 |
-| **서브쿼리 Unnesting** | 중첩 서브쿼리를 조인으로 변환 |
-| **조건절 이행** (Transitive Predicate) | A=B, B=C이면 A=C 조건 자동 추가 |
-| **OR-Expansion** | OR 조건을 UNION ALL로 변환 |
+| 명령어 | 기능 |
+|--------|------|
+| GRANT | 권한 부여 |
+| REVOKE | 권한 회수 |
 
----
-
-## 9. SQL 파싱과 최적화 과정
-
-### SQL 처리 단계
-
-```
-SQL 입력
-    ↓
-[파싱(Parsing)]
- - SQL 문법 검사
- - 오브젝트 존재 여부 확인
- - 권한 확인
- - 파싱 트리 생성
-    ↓
-[최적화(Optimization)]
- - 실행 계획 후보 생성
- - 비용 계산 (통계 정보 활용)
- - 최적 실행 계획 선택
-    ↓
-[실행(Execution)]
- - 실행 계획에 따라 데이터 접근
- - 결과 반환
-```
-
-### Soft Parsing vs Hard Parsing
-
-| 구분 | Soft Parsing | Hard Parsing |
-|------|--------------|--------------|
-| 설명 | 공유 풀에 동일 SQL 존재 → 재사용 | 새로운 SQL → 처음부터 파싱/최적화 |
-| 성능 | 빠름 | 느림 |
-| 바인드 변수 | 활용 가능 | - |
+### GRANT
 
 ```sql
--- Hard Parsing (매번 새로운 SQL로 인식)
-SELECT * FROM 직원 WHERE 직원번호 = '001';
-SELECT * FROM 직원 WHERE 직원번호 = '002';  -- 다른 SQL로 인식!
+-- 객체 권한 부여
+GRANT SELECT, INSERT, UPDATE ON emp TO user1;
+GRANT SELECT ON emp TO PUBLIC;           -- 모든 사용자
+GRANT SELECT ON emp TO user1 WITH GRANT OPTION;  -- 재부여 권한 포함
 
--- Soft Parsing (같은 SQL로 인식하여 재사용)
-SELECT * FROM 직원 WHERE 직원번호 = :직원번호;  -- 바인드 변수 사용
+-- 시스템 권한 부여
+GRANT CREATE TABLE TO user1;
+GRANT CREATE SESSION TO user1;
+
+-- 롤(Role)에 권한 부여 후 사용자에게 롤 부여
+GRANT SELECT ON emp TO app_role;
+GRANT app_role TO user1;
 ```
 
-> **핵심**: 바인드 변수를 사용하면 동일한 SQL 구조로 인식하여 Soft Parsing이 가능하다. 리터럴 값 사용은 Hard Parsing을 유발하여 성능 저하를 초래한다.
-
----
-
-## 10. 인덱스 설계
-
-### 인덱스 설계 원칙
+### REVOKE
 
 ```sql
--- 복합 인덱스의 선두 컬럼이 중요
--- 인덱스: (부서코드, 직급, 입사연도)
+-- 객체 권한 회수
+REVOKE SELECT, INSERT ON emp FROM user1;
 
--- 인덱스 사용 (선두 컬럼 부서코드 사용)
-WHERE 부서코드 = 'A001'
-WHERE 부서코드 = 'A001' AND 직급 = '과장'
-WHERE 부서코드 = 'A001' AND 직급 = '과장' AND 입사연도 = 2020
-
--- 인덱스 부분 사용 또는 미사용
-WHERE 직급 = '과장'          -- 선두 컬럼 미사용 → Index Skip Scan
-WHERE 입사연도 = 2020         -- 선두 컬럼 미사용 → 인덱스 미사용 가능
-WHERE 부서코드 = 'A001' AND 입사연도 = 2020  -- 부서코드만 인덱스 활용
+-- WITH GRANT OPTION으로 부여한 권한 회수 시 연쇄 회수
+REVOKE SELECT ON emp FROM user1;  -- user1이 재부여한 권한도 모두 회수
 ```
 
-### 클러스터링 팩터 (Clustering Factor)
+### 권한 종류 비교
 
-테이블 데이터가 인덱스 순서와 얼마나 비슷하게 정렬되어 있는지 나타내는 값
-- 낮을수록 인덱스 효율이 높음 (데이터와 인덱스 순서 일치)
-- 높을수록 인덱스를 사용해도 랜덤 I/O 증가
+| 구분 | 시스템 권한 | 객체 권한 |
+|------|---------|---------|
+| 대상 | 데이터베이스 작업 권한 | 특정 객체 접근 권한 |
+| 예시 | CREATE TABLE, CREATE SESSION | SELECT, INSERT, UPDATE, DELETE |
+| 부여 대상 | 사용자, 롤 | 사용자, 롤, PUBLIC |
 
 ---
 
 ## 출제 포인트
 
-1. **RBO vs CBO**: RBO는 규칙 기반, CBO는 통계 정보 기반 (현재는 CBO 주로 사용)
-2. **실행 계획 읽기**: 들여쓰기 많을수록 먼저 실행, 같은 레벨은 위→아래
-3. **인덱스 미사용 조건**: 컬럼에 함수 적용, 산술 연산, 묵시적 형변환, IS NOT NULL
-4. **NL Join**: 소량+인덱스 존재, Driving 테이블 선택 중요
-5. **Hash Join**: 대용량+등호 조인, 메모리 활용
-6. **Sort Merge Join**: 범위 조인, 이미 정렬된 데이터
-7. **힌트**: FULL, INDEX, USE_NL, USE_HASH, LEADING 등으로 실행 계획 제어
-8. **바인드 변수**: Soft Parsing 가능하여 Hard Parsing 방지
-9. **통계 정보**: CBO의 정확한 실행 계획을 위해 최신 상태 유지 필요
-10. **복합 인덱스**: 선두 컬럼이 조건에 포함되어야 효율적으로 활용 가능
+- **DML vs DDL**: DML(INSERT/UPDATE/DELETE/MERGE)은 ROLLBACK 가능, DDL(CREATE/ALTER/DROP/TRUNCATE)은 AUTO COMMIT
+- **DELETE vs TRUNCATE**: DELETE는 DML(ROLLBACK 가능·느림), TRUNCATE는 DDL(ROLLBACK 불가·빠름)
+- **MERGE 문**: WHEN MATCHED(UPDATE/DELETE), WHEN NOT MATCHED(INSERT) — 조건부 통합 DML
+- **SAVEPOINT**: 트랜잭션 중간 저장점 설정 → `ROLLBACK TO SAVEPOINT` 이름으로 부분 롤백
+- **Oracle DDL AUTO COMMIT**: DDL 실행 시 이전 미COMMIT DML 자동 COMMIT → 주의 필요
+- **ACID**: Atomicity·Consistency·Isolation·Durability — 트랜잭션 4대 특성
+- **GRANT WITH GRANT OPTION**: 권한을 받은 사용자가 타인에게 재부여 가능
+- **CASCADE CONSTRAINTS**: DROP TABLE 시 다른 테이블의 FK 참조도 함께 삭제
+- **CREATE TABLE AS SELECT**: 서브쿼리 결과로 테이블 복사 (WHERE 1=2이면 구조만)
+- **뷰 DML 제한**: 조인·집계·DISTINCT 포함 복잡 뷰는 UPDATE/DELETE/INSERT 불가

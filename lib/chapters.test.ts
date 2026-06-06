@@ -11,10 +11,11 @@ import {
 } from './chapters'
 
 describe('CHAPTERS metadata', () => {
-  it('exposes 5 chapters covering both parts', () => {
-    expect(CHAPTERS).toHaveLength(5)
+  it('exposes 12 chapters covering all 3 parts', () => {
+    expect(CHAPTERS).toHaveLength(12)
     expect(CHAPTERS.filter((c) => c.part === 1)).toHaveLength(2)
     expect(CHAPTERS.filter((c) => c.part === 2)).toHaveLength(3)
+    expect(CHAPTERS.filter((c) => c.part === 3)).toHaveLength(7)
   })
 
   it('every chapter id has a matching JSON and MD data file', () => {
@@ -36,7 +37,8 @@ describe('CHAPTERS metadata', () => {
 
   it('full label includes part·chapter·title', () => {
     expect(getChapterFullLabel('part1_ch1')).toBe('1과목 1장 - 데이터 모델링의 이해')
-    expect(getChapterFullLabel('part2_ch3')).toBe('2과목 3장 - SQL 최적화 기본 원리')
+    expect(getChapterFullLabel('part2_ch3')).toBe('2과목 3장 - 관리 구문')
+    expect(getChapterFullLabel('part3_ch3')).toBe('3과목 3장 - 인덱스 튜닝')
     expect(getChapterFullLabel('unknown')).toBe('unknown')
   })
 

@@ -91,8 +91,8 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>SQLD Quest — 대시보드</title>
-        <meta name="description" content="SQLD 자격증 시험 이론 학습 및 예상문제 풀이" />
+        <title>SQLP Quest — 대시보드</title>
+        <meta name="description" content="SQLP 자격증 시험 이론 학습 및 예상문제 풀이" />
       </Head>
 
       <div className="p-4 md:p-6 max-w-7xl mx-auto space-y-6">

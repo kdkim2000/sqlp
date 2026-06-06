@@ -16,6 +16,13 @@ CLAUDE.md의 "AI-DLC 산출물 저장 필수 규칙"에 의해 강제 관리된�
 |:---:|:---|:---:|:---|:---:|
 | 1 | `ai-dlc-requirements` | 분석 | [요구사항정의서_SQLP_20260604.md](요구사항정의서_SQLP_20260604.md) — FR 23건·PR 3건·SR 1건·QR 2건·IR 2건·DR 4건·CR 4건, 총 39건 | ✅ |
 | 2 | `ai-dlc-screen-list` | 분석 | [화면목록_SQLP_20260604.md](화면목록_SQLP_20260604.md) — SCR 11건, FR 23건 100% 커버리지 | ✅ |
+| 3 | `ai-dlc-biz-rules-create` | 분석 | [비즈니스규칙_SQLP_20260604.md](비즈니스규칙_SQLP_20260604.md) — BR 22건 (높음 18·중간 3·낮음 1), 5개 도메인 | ✅ |
+| 4 | `ai-dlc-usecase-create` | 분석 | [유즈케이스_SQLP_20260604.md](유즈케이스_SQLP_20260604.md) — UC 8건, FR 23건 100% 커버리지, Mermaid 다이어그램 | ✅ |
+| 5 | `ai-dlc-class-design` | 설계 | [클래스설계서_SQLP_20260604.md](클래스설계서_SQLP_20260604.md) — CLS 11건 (Interface 7 + Lib 3 + Context 1), Mermaid classDiagram | ✅ |
+| 5-r | `ai-dlc-class-revise` | 설계 | [클래스설계서_SQLP_20260604_v0.2.md](클래스설계서_SQLP_20260604_v0.2.md) — v0.2: isExamPassed() 추가, ChapterDef(CLS-012) 신규, 타입 별칭 섹션 | ✅ |
+| 6 | `ai-dlc-nxt-impl-plan` | 설계 | [구현계획서_SQLP_20260604.md](구현계획서_SQLP_20260604.md) — Phase A~E + QA, 파일 변경 16개·신규 17개 | ✅ |
+| 7 | `ai-dlc-data-design` | 설계/데이터 | [데이터설계서_SQLP_20260604.md](데이터설계서_SQLP_20260604.md) — 파일 4종 스키마 (이론MD·객관식JSON·실기JSON·모의고사JSON), 실기 12문제·Part3 220문항 목표 | ✅ |
+| 8 | `ai-dlc-screen-spec` | 설계 | [화면명세서_SQLP_20260604.md](화면명세서_SQLP_20260604.md) — SCR-012(실기 목록) · SCR-013(실기 풀이) 상세 명세, 4단계 상태 전환표 | ✅ |
 
 ---
 
@@ -245,7 +252,8 @@ flowchart TD
 
 | 항목 | 값 |
 |:---|:---|
-| 완료 스킬 수 | 2 / 24 |
-| 현재 단계 | 화면목록 완료 → 비즈니스 규칙 작성 예정 |
-| 다음 스킬 | `ai-dlc-biz-rules-create` — 비즈니스 규칙 정의 |
+| 완료 스킬 수 | 22 / 24 |
+| 현재 단계 | Phase 5 검증 진행 중 — TypeScript 검사 완료 |
+| 최근 완료 | `ai-dlc-fe-ts-check` → [TypeScript검사결과_SQLP_20260606.md](TypeScript검사결과_SQLP_20260606.md) (낮음 9건, 높음 0건) |
+| 미완성 | ESLint 검사, npm build 확인, 추적성 검증, 납품 체크리스트 |
 | 참조 플랜 | `docs/plans/002_sqlp_full_overhaul.md`, `docs/plans/003_requirements-doc.md` |
