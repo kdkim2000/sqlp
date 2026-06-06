@@ -25,13 +25,13 @@ const CHAPTER_DATA: Record<string, Question[]> = {
   part2_ch2: part2ch2 as Question[],
   part2_ch3: part2ch3 as Question[],
   // Part 3
-  part3_ch1: part3ch1,
-  part3_ch2: part3ch2,
-  part3_ch3: part3ch3,
-  part3_ch4: part3ch4,
-  part3_ch5: part3ch5,
-  part3_ch6: part3ch6,
-  part3_ch7: part3ch7,
+  part3_ch1: part3ch1 as Question[],
+  part3_ch2: part3ch2 as Question[],
+  part3_ch3: part3ch3 as Question[],
+  part3_ch4: part3ch4 as Question[],
+  part3_ch5: part3ch5 as Question[],
+  part3_ch6: part3ch6 as Question[],
+  part3_ch7: part3ch7 as Question[],
 }
 
 const shuffle = <T>(arr: T[]): T[] => [...arr].sort(() => Math.random() - 0.5)

@@ -252,7 +252,8 @@ flowchart TD
 
 | 항목 | 값 |
 |:---|:---|
-| 완료 스킬 수 | 21 / 24 |
-| 현재 단계 | 납품 가능 상태 (콘텐츠 데이터 별도 납품 예정) |
-| 미완성 | Phase E 대시보드, Part 3 문제 JSON 220문항, npm build 확인 |
+| 완료 스킬 수 | 22 / 24 |
+| 현재 단계 | Phase 5 검증 진행 중 — TypeScript 검사 완료 |
+| 최근 완료 | `ai-dlc-fe-ts-check` → [TypeScript검사결과_SQLP_20260606.md](TypeScript검사결과_SQLP_20260606.md) (낮음 9건, 높음 0건) |
+| 미완성 | ESLint 검사, npm build 확인, 추적성 검증, 납품 체크리스트 |
 | 참조 플랜 | `docs/plans/002_sqlp_full_overhaul.md`, `docs/plans/003_requirements-doc.md` |
