@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import QuestionCard from '@/components/quiz/QuestionCard'
 import QuizNavigator from '@/components/quiz/QuizNavigator'
 import ExamTimer from '@/components/quiz/ExamTimer'
@@ -23,9 +24,17 @@ const SOURCE_OPTIONS: { value: ExamSource; label: string; desc: string }[] = [
 
 export default function ExamPage() {
   const { markAnswer, toggleBookmark, isBookmarked } = useProgress()
+  const router = useRouter()
 
   const [phase, setPhase]                 = useState<ExamPhase>('ready')
   const [selectedSource, setSelectedSource] = useState<ExamSource>('chapter')
+
+  // ?n=1 → exam1, ?n=2 → exam2 자동 선택
+  useEffect(() => {
+    const n = router.query.n
+    if (n === '1') setSelectedSource('exam1')
+    else if (n === '2') setSelectedSource('exam2')
+  }, [router.query.n])
   const [questions, setQuestions]         = useState<Question[]>([])
   const [currentIndex, setCurrentIndex]   = useState(0)
   const [selectedOptions, setSelectedOptions] = useState<number[]>([])
