@@ -252,7 +252,7 @@ flowchart TD
 
 | 항목 | 값 |
 |:---|:---|
-| 완료 스킬 수 | 8 / 24 |
-| 현재 단계 | 설계 단계 완료 (분석 4 + 설계 4) → Phase A 구현 진입 |
-| 다음 스킬 | Foundation Builder (Agent 3) 직접 구현 — `types/index.ts` 부터 |
+| 완료 스킬 수 | 21 / 24 |
+| 현재 단계 | 납품 가능 상태 (콘텐츠 데이터 별도 납품 예정) |
+| 미완성 | Phase E 대시보드, Part 3 문제 JSON 220문항, npm build 확인 |
 | 참조 플랜 | `docs/plans/002_sqlp_full_overhaul.md`, `docs/plans/003_requirements-doc.md` |

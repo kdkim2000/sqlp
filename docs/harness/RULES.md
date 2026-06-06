@@ -151,7 +151,7 @@ interface PracticalAnswer {
 ```
 
 - `options` 배열: 4개 고정
-- `answer`: 0-based index
+- `answer`: **1-based index (1~4)**. 1=첫 번째 보기, 4=네 번째 보기 (코드와 데이터 모두 1-based 일관)
 - `difficulty`: `하` 20%, `중` 55%, `상` 25% 권장 비율
 
 ### 실기 문제 JSON (`data/practical/questions.json`)
