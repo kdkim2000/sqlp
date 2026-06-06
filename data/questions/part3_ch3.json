@@ -1,0 +1,444 @@
+[
+  {
+    "id": "p3c2_001",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "오라클에서 실제 SQL을 구동하여 데이터를 추출하지 않고, 옵티마이저가 수립한 논리적인 엑세스 경로만을 딕셔너리 테이블(PLAN_TABLE)에 저장하여 확인할 수 있게 해주는 SQL 분석 구문은 무엇입니까?",
+    "options": [
+      "EXPLAIN PLAN FOR",
+      "ALTER SESSION SET SQL_TRACE",
+      "SET AUTOTRACE TRACEONLY",
+      "TKPROF"
+    ],
+    "answer": 1,
+    "explanation": "EXPLAIN PLAN 구문은 SQL을 실제로 수행하지 않은 상태에서 옵티마이저가 예상하는 실행계획(Execution Plan)만을 생성하여 PLAN_TABLE에 저장하는 전통적인 정적 분석 도구입니다.",
+    "tags": ["SQL 분석 도구", "예상 실행계획", "EXPLAIN PLAN"],
+    "difficulty": "하"
+  },
+  {
+    "id": "p3c2_002",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "PLAN_TABLE에 저장된 예상 실행계획 구조를 트리 형태로 가독성 있게 포맷팅하여 표준 화면에 뿌려주는 오라클 내장 패키지 함수 호출문은?",
+    "options": [
+      "DBMS_OUTPUT.PUT_LINE",
+      "DBMS_XPLAN.DISPLAY",
+      "DBMS_SQLTUNE.REPORT_TUNING_TASK",
+      "DBMS_SHARED_POOL.KEEP"
+    ],
+    "answer": 2,
+    "explanation": "EXPLAIN PLAN 명령어를 수행한 직후 'SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);'를 실행하면 PLAN_TABLE에 적재된 예상 실행계획을 오퍼레이션, 옵션, 오브젝트명과 함께 계층 구조로 깔끔하게 확인할 수 있습니다.",
+    "tags": ["SQL 분석 도구", "예상 실행계획", "DBMS_XPLAN"],
+    "difficulty": "중"
+  },
+  {
+    "id": "p3c2_003",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "다음 중 '예상 실행계획(Explain Plan)'의 명확한 한계점으로 올바른 것은?",
+    "options": [
+      "SQL 문법 검증(Syntax Check)을 전혀 수행하지 못한다",
+      "조건절에 바인드 변수를 사용했을 때 옵티마이저가 변수 조건에 대해 가동하는 변수 피킹(Bind Peeking) 결과가 실제 수행 계획과 일치하지 않거나 누락될 수 있다",
+      "수행 시 무조건 해당 대상 테이블에 타이트한 배타적 락(X-Lock)을 획득하므로 운영 중에 쓸 수 없다",
+      "실행 계획을 저장하기 위한 PLAN_TABLE은 반드시 시스템 관리자(SYS) 계정으로만 생성 가능하다"
+    ],
+    "answer": 2,
+    "explanation": "EXPLAIN PLAN은 SQL을 직접 던져보지 않는 정적 모델이므로, 런타임 시점에 바인드 변수가 바인딩되면서 최적화되는 동적 특성(바인드 변수 피킹 등)을 완벽히 짚어내지 못해 실제 실행 계획과 차이가 발생할 수 있다는 치명적인 한계가 있습니다.",
+    "tags": ["SQL 분석 도구", "예상 실행계획", "바인드 변수"],
+    "difficulty": "상"
+  },
+  {
+    "id": "p3c2_004",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "오라클에서 메모리에 캐싱되어 현재 실시간으로 수행 중이거나 최근에 수행되었던 SQL의 '실제 컴파일된 실행계획'을 공유 풀(Shared Pool)의 dynamic 뷰를 통해 정밀 조회하고자 할 때 매핑하는 딕셔너리 뷰는?",
+    "options": [
+      "V$PLAN_TABLE",
+      "V$SQL_PLAN",
+      "V$DICTIONARY",
+      "V$PARAMETER"
+    ],
+    "answer": 2,
+    "explanation": "V$SQL_PLAN 뷰는 현재 Shared Pool 라이브러리 캐시에 로드되어 있는 SQL의 실제 실행 계획 정보를 실시간 보관하므로 정적 도구인 PLAN_TABLE보다 정확한 분석이 가능합니다.",
+    "tags": ["SQL 분석 도구", "실시간 실행계획", "V$SQL_PLAN"],
+    "difficulty": "중"
+  },
+  {
+    "id": "p3c2_005",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "동적 뷰인 V$SQL_PLAN 등 메모리 캐시로부터 컴파일된 실행계획안을 정밀 추출하여 포맷팅해 주는 DBMS_XPLAN 패키지의 전용 함수 명칭은?",
+    "options": [
+      "DBMS_XPLAN.DISPLAY",
+      "DBMS_XPLAN.DISPLAY_CURSOR",
+      "DBMS_XPLAN.DISPLAY_AWR",
+      "DBMS_XPLAN.DISPLAY_SQLSET"
+    ],
+    "answer": 2,
+    "explanation": "캐시 메모리 상의 실제 컴파일 본을 가져올 때는 DISPLAY_CURSOR 함수를 씁니다. (DISPLAY 함수는 정적인 PLAN_TABLE을 조회할 때 매핑됨)",
+    "tags": ["SQL 분석 도구", "DISPLAY_CURSOR", "DBMS_XPLAN"],
+    "difficulty": "중"
+  },
+  {
+    "id": "p3c2_006",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "다음 중 SQL 분석 도구인 'AUTOTRACE'의 기능적 장점으로 보기 어려운 것은?",
+    "options": [
+      "SQL*Plus 툴 등에서 간단한 명령어 셋 지정으로 실행 계획과 자원 지표를 동시에 편리하게 보여준다",
+      "실제 실행 단계별 CPU 타임 및 I/O 대기 이벤트의 타임라인을 원인별 마이크로초 단위로 분할하여 추적 파일로 저장한다",
+      "디스크 물리적 읽기 수(Physical Reads)와 버퍼 논리적 읽기 수(Consistent Gets) 통계를 통합 출력해 준다",
+      "서버 프로세스에 심각한 부하를 주지 않고 캐주얼하게 SQL 튜닝 진척도를 비교하기에 가장 쾌적하다"
+    ],
+    "answer": 2,
+    "explanation": "상세한 CPU 타임라인이나 세부 대기 이벤트를 마이크로초 단위로 수집하여 로우 파일로 남기는 기능은 AUTOTRACE가 아닌 'SQL 트레이스(SQL Trace)' 고유의 스펙입니다.",
+    "tags": ["SQL 분석 도구", "AUTOTRACE", "제약사항"],
+    "difficulty": "중"
+  },
+  {
+    "id": "p3c2_007",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "오라클 AUTOTRACE 기능 제어 옵션 중, SQL 결과 데이터와 실행 계획은 노출하되, 통계 리포트(Statistics)만 화면에서 감추고자 할 때 할당하는 올바른 명령어는?",
+    "options": [
+      "SET AUTOTRACE ON",
+      "SET AUTOTRACE ON EXPLAIN",
+      "SET AUTOTRACE ON STATISTICS",
+      "SET AUTOTRACE TRACEONLY"
+    ],
+    "answer": 2,
+    "explanation": "SET AUTOTRACE ON EXPLAIN 옵션은 결과 집합과 실행 계획 화면만 활성화하고 하단의 리소스 사용 통계 리포트 블록은 숨기는 명령어 세팅입니다.",
+    "tags": ["SQL 분석 도구", "AUTOTRACE", "명령어"],
+    "difficulty": "하"
+  },
+  {
+    "id": "p3c2_008",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "오라클 AUTOTRACE 통계 리포트 화면에서 출력되는 항목 중, 데이터 버퍼 캐시 내에서 블록 엑세스를 일으킨 '총 논리적 I/O' 양을 대변하는 가장 핵심적인 성능 카운터 명칭은?",
+    "options": [
+      "db block gets",
+      "consistent gets",
+      "physical reads",
+      "SQL*Net rws from client"
+    ],
+    "answer": 2,
+    "explanation": "Consistent Gets 항목은 SQL이 읽기 일관성 모드로 버퍼 캐시 메모리에서 참조해 간 총 블록 스캔 횟수(논리적 I/O)를 지칭하므로 튜닝 시 가장 중요하게 모니터링해야 하는 코어 지표입니다.",
+    "tags": ["SQL 분석 도구", "AUTOTRACE", "consistent gets"],
+    "difficulty": "중"
+  },
+  {
+    "id": "p3c2_009",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "AUTOTRACE 성능 카운터 지표 중 'physical reads'가 의미하는 물리적 현상은 무엇입니까?",
+    "options": [
+      "PGA 메모리 소트 영역에 할당된 버퍼 크기 수치",
+      "원하는 데이터 블록이 메모리 버퍼 캐시에 존재하지 않아 하드웨어 디스크 디바이스로부터 직접 긁어 올린 블록 총합",
+      "네트워크 전송 프로토콜 패킷의 총 바이트 수",
+      "하드 파싱 처리를 완료한 해시 밸류 체인의 개수"
+    ],
+    "answer": 2,
+    "explanation": "Physical Reads는 버퍼 캐시 미스(Cache Miss)로 인해 물리적인 스토리지 디스크 드라이브 파일 시스템에 직접 I/O Call을 가해 읽어 들인 물리 블록 개수를 나타냅니다.",
+    "tags": ["SQL 분석 도구", "AUTOTRACE", "physical reads"],
+    "difficulty": "하"
+  },
+  {
+    "id": "p3c2_0010",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "가장 정밀하게 SQL 가동 내부 통계를 추출할 수 있는 'SQL 트레이스(SQL Trace)'를 현재 세션 단위에서 즉시 가동 및 활성화하기 위해 실행하는 세션 변경 명령 표준문은?",
+    "options": [
+      "ALTER SESSION SET SQL_TRACE = TRUE;",
+      "ALTER SYSTEM SET COMPATIBILITY = '12.1.0';",
+      "SET AUTOTRACE TRACEONLY STATS;",
+      "EXPLAIN PLAN FOR TRACE;"
+    ],
+    "answer": 1,
+    "explanation": "현재 접속 중인 세션 환경 내에서 일련의 주동적 SQL 추적 파일을 생성하려면 ALTER SESSION SET SQL_TRACE = TRUE; 구문을 실행해 세션 트레이스를 깨워야 합니다.",
+    "tags": ["SQL 분석 도구", "SQL Trace", "세션 활성화"],
+    "difficulty": "하"
+  },
+  {
+    "id": "p3c2_011",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "오라클 내부에서 10046 이벤트 드라이버를 통해 SQL 트레이스를 가동할 때, 대기 이벤트 정보와 바인드 변수 바인딩 상수 정보까지 추적 파일에 가장 상세하게 모두 기록하도록 지정하는 Level은?",
+    "options": [
+      "Level 1",
+      "Level 4",
+      "Level 8",
+      "Level 12"
+    ],
+    "answer": 4,
+    "explanation": "10046 진단 이벤트 레벨 종류: Level 1(기본 트레이스), Level 4(바인드 변수 추가), Level 8(대기 이벤트 추가), Level 12(바인드 변수 + 대기 이벤트 모두 추가)이므로 최고 레벨은 12입니다.",
+    "tags": ["SQL 분석 도구", "SQL Trace", "10046 이벤트"],
+    "difficulty": "상"
+  },
+  {
+    "id": "p3c2_012",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "SQL Trace 기능으로 인해 백그라운드 서버에 생성된 가독성이 떨어지는 로우 텍스트 파일(.trc)을 입력 값으로 받아, 사람이 분석할 수 있는 완벽한 리포트 포맷으로 다듬어 가공해 주는 오라클 OS 유틸리티의 명칭은?",
+    "options": [
+      "sqlplus",
+      "tkprof",
+      "expdp",
+      "impdp"
+    ],
+    "answer": 2,
+    "explanation": "tkprof(Transient Kernel Profile) 유틸리티는 바이너리 속성을 띤 복잡한 .trc 추적 로그를 정돈하여Parse, Execute, Fetch 자원 수치 테이블로 정렬해 주는 필수 트레이스 번역 도구입니다.",
+    "tags": ["SQL 분석 도구", "tkprof", "추적 파일 변환"],
+    "difficulty": "하"
+  },
+  {
+    "id": "p3c2_013",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "tkprof 리포트의 자원 사용 통계 테이블에서 좌측 행(Row) 단위로 분류되는 SQL 3대 처리 라이프사이클 단계에 포함되지 않는 것은?",
+    "options": [
+      "Parse (파싱 단계)",
+      "Execute (실행 단계)",
+      "Fetch (인출 단계)",
+      "Commit (완료 단계)"
+    ],
+    "answer": 4,
+    "explanation": "tkprof 통계의 핵심 3대 단계 영역은 Parse(구문 분석 컴파일), Execute(물리적 실행), Fetch(결과 행을 클라이언트로 전송·인출)로 구성됩니다.",
+    "tags": ["SQL 분석 도구", "tkprof", "3대 단계"],
+    "difficulty": "하"
+  },
+  {
+    "id": "p3c2_014",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "tkprof 리포트의 컬럼 헤더 항목 중, 해당 단계를 완료하기 위해 CPU 프로세서가 순수하게 연산에 소모한 초 단위 가동 시간을 나타내는 명칭은?",
+    "options": [
+      "count",
+      "cpu",
+      "elapsed",
+      "disk"
+    ],
+    "answer": 2,
+    "explanation": "cpu 컬럼은 대기 상태 시간을 차감하고 서버 CPU가 순수 쿼리 파싱 및 연산 래치 경합 처리에 투입한 작업 가동 시간을 의미합니다.",
+    "tags": ["SQL 분석 도구", "tkprof", "cpu타임"],
+    "difficulty": "이하"
+  },
+  {
+    "id": "p3c2_015",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "tkprof 리포트 컬럼 중 CPU 타임에 대기 이벤트(I/O 지연, 래치 락 대기 등)로 인해 프로세스가 sleep 하거나 블로킹되었던 지연 시간까지 모두 누적 합산한 '실제 사용자가 체감한 총 실행 소요 시간' 매핑 컬럼은?",
+    "options": [
+      "count",
+      "elapsed",
+      "disk",
+      "query"
+    ],
+    "answer": 2,
+    "explanation": "elapsed 컬럼은 CPU 연산 시간과 모든 대기 현상(Wait Event 지연)을 총망라한 물리적인 총 벽시계 시간(Wall-clock Time)을 가리킵니다.",
+    "tags": ["SQL 분석 도구", "tkprof", "elapsed"],
+    "difficulty": "하"
+  },
+  {
+    "id": "p3c2_016",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "tkprof 성능 테이블 지표 중, 디스크 I/O Call을 통해 물리적 파일 세그먼트에서 읽어 들인 총 블록 수를 나타내는 컬럼 항목 명칭은?",
+    "options": [
+      "disk",
+      "query",
+      "current",
+      "rows"
+    ],
+    "answer": 1,
+    "explanation": "disk 컬럼이 바로 물리적 디스크 블록 reads 카운터에 해당하며, 이 수치가 총 논리적 스캔량 대비 지나치게 높다면 메모리 버퍼 부족 혹은 대량 스캔이 유발되었음을 추론할 수 있습니다.",
+    "tags": ["SQL 분석 도구", "tkprof", "disk reads"],
+    "difficulty": "이하"
+  },
+  {
+    "id": "p3c2_017",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "tkprof 리포트 통계 테이블에서 'query' 컬럼과 'current' 컬럼 수치의 합(query + current)이 의미하는 데이터베이스 코어 지표는 무엇입니까?",
+    "options": [
+      "물리적 디스크 스크롤 횟수",
+      "총 논리적 I/O 블록 수 (메모리 엑세스 블록 수)",
+      "하드 파싱을 유발한 바인드 변수 개수",
+      "클라이언트로 인출 완료된 Rows 수"
+    ],
+    "answer": 2,
+    "explanation": "오라클 트레이스 리포트에서 query(Consistent mode 읽기 블록 수)와 current(Current mode 변경 목적 읽기 블록 수)의 합산 지표는 메모리 버퍼 캐시를 탐색한 '총 논리적 I/O' 블록 카운트와 같습니다.",
+    "tags": ["SQL 분석 도구", "tkprof", "논리적 I/O"],
+    "difficulty": "상"
+  },
+  {
+    "id": "p3c2_018",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "다음 tkprof 결과 리포트 정보 중, Parse 단계의 'count' 수치가 100회이고 'misses in library cache during parse' 지표 카운터가 오직 1회로 기록되어 있을 때, 이에 대한 올바른 해석은?",
+    "options": [
+      "전체 100회 중 99회는 하드 파싱으로 중증 처리되었다",
+      "라이브러리 캐시 락 경합으로 인해 99번의 트랜잭션 에러가 났다",
+      "최초 1회만 하드 파싱(Compiling)을 겪었고, 나머지 99회는 라이브러리 캐시에 로드된 플랜을 완벽히 재사용하는 소프트 파싱(Soft Parse)에 성공했다",
+      "해당 SQL은 바인드 변수를 적용하지 않아 100번 전부 하드 파싱되었다"
+    ],
+    "answer": 3,
+    "explanation": "misses in library cache 항목이 바로 하드 파싱 발생 횟수입니다. Parse count가 100인데 miss가 1이라는 것은 1번만 디스크급 하드 파싱을 거쳤고 나머지 99번은 메모리 적재본을 그대로 유용(소프트 파싱 히트)했음을 나타내는 이상적인 지표입니다.",
+    "tags": ["SQL 분석 도구", "tkprof", "library cache miss"],
+    "difficulty": "상"
+  },
+  {
+    "id": "p3c2_019",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "다음 중 SELECT 구문을 수행할 때 tkprof 성능 서식 테이블 상에서 'Fetch' 단계의 count(수행 횟수)를 결정짓는 핵심적인 아키텍처 아티팩트는 무엇입니까?",
+    "options": [
+      "서브쿼리의 네스팅 깊이 개수",
+      "어플리케이션에 설정된 어레이 크기 (Array Size / Fetch Size)",
+      "인덱스 리프 노드의 수평 분할 개수",
+      "Shared Pool에 바인딩된 프로세스 ID"
+    ],
+    "answer": 2,
+    "explanation": "Fetch 단계의 호출 횟수는 한 번에 서버로부터 넘겨받을 데이터 행 묶음 단위 크기인 Array Size에 의해 결정됩니다. 추출 결과가 1,000건이고 Array Size가 Mappings 상 100으로 설정되어 있다면 통상 10여 회 내외의 Fetch Call 카운트가 집계됩니다.",
+    "tags": ["SQL 분석 도구", "tkprof", "Array Size"],
+    "difficulty": "상"
+  },
+  {
+    "id": "p3c2_020",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "다음 tkprof 리포트의 세부 파트 중, 쿼리문 가동 시 내부적으로 유발된 시스템 전용 SQL(재귀적 쿼리, Recursive SQL)의 실행 횟수나 부하를 제외하고, 사용자가 직접 던진 '오리지널 최상위 SQL'의 순수 통계 영역만을 필터링하는 파트 명칭은?",
+    "options": [
+      "OVERALL TOTALS",
+      "NON-RECURSIVE STATISTICS",
+      "STATISTICS OF USER STATEMENT",
+      "AWR REPORT GENERATOR"
+    ],
+    "answer": 2,
+    "explanation": "tkprof 하단 요약부나 개별 구문 영역을 보면 사용자가 수동 작성하여 밀어 넣은 최상위 쿼리문 자체의 순수 데이터 수치만을 분리 보고하는 블록이 존재하는데, 이를 Non-Recursive 통계 영역 파트라고 지칭합니다.",
+    "tags": ["SQL 분석 도구", "tkprof", "Non-Recursive"],
+    "difficulty": "상"
+  },
+  {
+    "id": "p3c2_021",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "오라클의 실행계획 하단 정보나 tkprof 리포트의 'Row Source Operation' 트리 뷰 구조에서 각 단계별 오퍼레이션 우측에 할당되어 출력되는 숫자로, 해당 오퍼레이션 라인 단계가 후행 단계로 '실제 반환 처리 완료한 로우(행)의 절대 건수'를 대변하는 핵심 카운터 값의 이름은?",
+    "options": [
+      "Starts",
+      "Rows (또는 갯수)",
+      "Cr",
+      "Pw"
+    ],
+    "answer": 2,
+    "explanation": "Row Source Operation 세부 내역에 찍히는 Rows 지표 수치는 옵티마이저가 지레짐작한 가상의 카디널리티가 아니라, 실제 가동 루프 서브 트리 과정에서 최종 상위 단계로 토해낸 '실제 처리 로우 건수'를 정확하게 고지합니다.",
+    "tags": ["SQL 분석 도구", "Row Source Operation", "실제 Rows"],
+    "difficulty": "상"
+  },
+  {
+    "id": "p3c2_022",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "tkprof 리포트 분석 가이드 중, Parse 래치 부하가 심각한 '하드 파싱 병목 SQL'을 선별해 내기 위해 튜닝 엔지니어가 리포트 텍스트 내에서 검색 가이드 기준으로 삼아야 하는 단어는?",
+    "options": [
+      "table fetch by rowid",
+      "misses in library cache during parse",
+      "direct path write",
+      "sort order by stopkey"
+    ],
+    "answer": 2,
+    "explanation": "하드 파싱의 정확한 계측 명칭은 'misses in library cache during parse' 카운터입니다. 이 값이 실행 횟수(count)와 비례하여 계속 높은 수치를 유지한다면 리터럴 상수 매핑으로 인한 중증 하드 파싱 장애 상태임을 확진할 수 있습니다.",
+    "tags": ["SQL 분석 도구", "tkprof", "하드 파싱 식별"],
+    "difficulty": "중"
+  },
+  {
+    "id": "p3c2_023",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "다음 중 tkprof 리포트 내의 'Row Source Operation' 단계 트리 정보에서 특정 인덱스 엑세스 라인(예: INDEX RANGE SCAN)의 실제 가동 비효율 유무를 정밀 판정하고자 할 때 교차 검증해야 하는 두 지표의 조합으로 가장 올바른 것은?",
+    "options": [
+      "Count 와 Rows 수치",
+      "해당 오퍼레이션의 실제 출력 Rows 수와 부모/자식 간에 가동된 누적 블록 I/O(cr, pr) 수치의 격차 비대화 여부",
+      "Commit 횟수와 SQL 텍스트 문자열 길이",
+      "Recursive Call 수치와 유저 세션 ID"
+    ],
+    "answer": 2,
+    "explanation": "인덱스 범위 스캔을 처리하는 라인에서 최종 반환된 Rows는 단 1건에 불과한데, 그 단계에 소모된 cr(Consistent Read 블록 수) 지표가 수만~수십만 건에 달한다면, 인덱스 매핑 선두 컬럼 설계가 비효율적이어서 불필요하게 넓은 나뭇잎 블록 영역을 헛되이 훑었음을 완벽하게 진단해 낼 수 있습니다.",
+    "tags": ["SQL 분석 도구", "tkprof", "비효율 진단"],
+    "difficulty": "상"
+  },
+  {
+    "id": "p3c2_024",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "오라클 9i 버전 이후부터 지원하며 tkprof 리포트를 별도 파일 파일링하지 않고도, 바인드 변수 실시간 조건 및 실행 단계별 런타임 통계를 SQL*Plus 화면에서 계층 구조(Starts, E-Rows, A-Rows 등)로 즉시 덤프해 보고자 할 때 기재하는 핵심 튜닝용 옵션 힌트는?",
+    "options": [
+      "/*+ GATHER_PLAN_STATISTICS */",
+      "/*+ RULE */",
+      "/*+ CURSOR_SHARING_EXACT */",
+      "/*+ APPEND */"
+    ],
+    "answer": 1,
+    "explanation": "/*+ GATHER_PLAN_STATISTICS */ 힌트를 SQL 문장에 삽입하여 가동하면 옵티마이저의 예상치(Estimated Rows)와 실제 런타임 결과물(Actual Rows) 수치 테이블을 메모리에 실시간 수집하므로, DBMS_XPLAN.DISPLAY_CURSOR(format=>'ALLSTATS LAST') 함수 호출을 통해 초정밀 동적 대비 분석이 가능해집니다.",
+    "tags": ["SQL 분석 도구", "GATHER_PLAN_STATISTICS", "분석 힌트"],
+    "difficulty": "상"
+  },
+  {
+    "id": "p3c2_025",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "GATHER_PLAN_STATISTICS 힌트를 가동한 후 DISPLAY_CURSOR를 통해 출력된 리포트 칼럼 중, 해당 오퍼레이션 단계가 실제 물리적으로 반복 기동된 '총 내부 루프 횟수'를 정확하게 지시해 주는 지표명은 무엇인가?",
+    "options": [
+      "Starts",
+      "A-Rows",
+      "E-Rows",
+      "Buffers"
+    ],
+    "answer": 1,
+    "explanation": "Starts 컬럼은 해당 실행 계획 라인의 조인 오퍼레이션 구조나 인덱스 스캔 단계가 중첩 루프(NL) 조인 등 후행부에서 총 몇 번 반복 실행(호출)되었는지를 명확히 짚어주어 반복 비효율을 진단하는 이정표 역할을 합니다.",
+    "tags": ["SQL 분석 도구", "DISPLAY_CURSOR", "Starts"],
+    "difficulty": "중"
+  },
+  {
+    "id": "p3c2_026",
+    "part": 3,
+    "chapter": "part3_ch2",
+    "questionType": "concept",
+    "content": "GATHER_PLAN_STATISTICS 기반 분석 화면에서 'A-Rows' 항목과 'E-Rows' 항목의 편차가 기하급수적으로 벌어져 심각한 미스매칭이 목격될 경우, 데이터베이스 튜닝 엔지니어가 가장 우선적으로 조치해야 하는 개선 방안은?",
+    "options": [
+      "바인드 변수를 과감히 삭제하고 하드코딩 텍스트로 전환한다",
+      "해당 엑세스 대상 테이블 및 인덱스의 오브젝트 통계 정보가 너무 오래되어 왜곡되었을 확률이 높으므로, DBMS_STATS 패키지를 통해 통계 데이터를 최신으로 갱신(Analyze)해 준다",
+      "서버 인스턴스를 즉시 재부팅하여 SGA 영역을 강제 포맷한다",
+      "데이터베이스 데이터 파일 크기를 물리적으로 절반 축소한다"
+    ],
+    "answer": 2,
+    "explanation": "E-Rows(옵티마이저의 예상 행 수)와 A-Rows(실제 처리된 행 수)의 격차가 크다는 것은 옵티마이저가 낡은 통계 정보를 쥐고 엉터리 경로 계산 비용을 냈다는 증거입니다. 따라서 즉시 통계 정보를 리프레시해 주는 것이 올바른 대응 가이드라인입니다.",
+    "tags": ["SQL 분석 도구", "통계 정보 불일치", "DBMS_STATS"],
+    "difficulty": "상"
+  }
+]

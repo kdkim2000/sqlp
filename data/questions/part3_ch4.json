@@ -1,0 +1,478 @@
+[
+  {
+    "id": "p3c4_001",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "Nested Loops(NL) 조인의 기본 메커니즘과 특징에 대한 설명으로 가장 올바르지 않은 것은?",
+    "options": [
+      "Outer(Driving) 테이블의 처리 범위가 전체 조인 성능을 규정하는 가장 주요한 요인이다.",
+      "인덱스를 이용한 조인 방식이므로 대용량 데이터 전체를 처리할 때 항상 가장 효율적이다.",
+      "Outer 테이블의 한 레코드마다 Inner 테이블의 인덱스를 탐색하는 방식으로 작동한다.",
+      "OLTP성 환경에서 초기에 응답 속도를 극대화하는 부분범위 처리에 매우 유용하다."
+    ],
+    "answer": 2,
+    "explanation": "NL 조인은 대량 데이터 처리 시 Inner 테이블 인덱스 탐색 및 테이블 액세스 과정에서 대량의 랜덤 I/O 부하가 발생하므로, 대용량 전체 데이터 처리 시에는 해시 조인이나 소트 머지 조인이 더 효율적입니다.",
+    "tags": ["조인 튜닝", "NL 조인", "랜덤 I/O"],
+    "difficulty": "하"
+  },
+  {
+    "id": "p3c4_002",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "오라클 힌트를 사용하여 NL 조인의 순서와 조인 방식을 명시적으로 제어하려고 한다. 아래 중 힌트 사용법이 가장 올바른 것은?",
+    "options": [
+      "/*+ ORDERED USE_NL(A B) */",
+      "/*+ LEADING(A) USE_NL(B) */",
+      "/*+ USE_NL(A, B) LEADING(A B) */",
+      "/*+ ORDERED USE_NL(B) */"
+    ],
+    "answer": 2,
+    "explanation": "USE_NL 힌트의 인자로는 Inner 테이블로 지정할 대상(또는 Alias)을 기술해야 합니다. LEADING(A)를 통해 A를 Outer로 지정했다면 B가 Inner가 되므로 USE_NL(B)로 작성하는 것이 정석입니다.",
+    "tags": ["조인 튜닝", "NL 조인", "옵티마이저 힌트"],
+    "difficulty": "중"
+  },
+  {
+    "id": "p3c4_003",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "NL 조인 수행 과정에서 발생하는 비효율을 줄이기 위한 튜닝 포인트로 가장 적절하지 않은 것은?",
+    "options": [
+      "Outer 테이블의 조건절을 최적화하여 Inner 테이블로 진입하는 로우(Row) 수를 최소화한다.",
+      "Inner 테이블의 조인 컬럼 인덱스가 없다면 인덱스를 신규 생성하거나 기존 인덱스를 수정한다.",
+      "Inner 테이블 인덱스의 스캔 범위가 넓다면 조인 조건 외에 다른 필터 조건을 인덱스에 추가하는 방안을 검토한다.",
+      "Inner 테이블에서 테이블 액세스가 많이 발생하므로 무조건 Inner 테이블을 Full Table Scan으로 유도한다."
+    ],
+    "answer": 4,
+    "explanation": "NL 조인의 Inner 테이블은 Outer 로우 수만큼 반복 탐색되므로 Full Table Scan을 유도하면 성능이 심각하게 저하됩니다. 반드시 적절한 인덱스를 활용해야 합니다.",
+    "tags": ["조인 튜닝", "NL 조인", "인덱스 설계"],
+    "difficulty": "중"
+  },
+  {
+    "id": "p3c4_004",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "오라클 9i 이후 도입된 NL 조인 확장 메커니즘 중 하나로, Inner 테이블의 데이터 블록을 읽을 때 디스크 I/O Call을 줄이기 위해 여러 블록에 대한 Prefetch Call을 일으켜 성능을 개선하는 기능은 무엇인가?",
+    "options": [
+      "Index Lookahead Prefetch",
+      "Table Lookup Prefetch",
+      "NL Join Batching",
+      "Block-Level Fast Purge"
+    ],
+    "answer": 2,
+    "explanation": "오라클은 NL 조인 성능 향상을 위해 Inner 테이블 로우를 읽는 과정에서 디스크 I/O 대기 시간을 줄이고자 Table Lookup Prefetch 메커니즘을 작동시켜 대량의 블록을 한 번에 캐싱합니다.",
+    "tags": ["조인 튜닝", "NL 조인", "Prefetch"],
+    "difficulty": "상"
+  },
+  {
+    "id": "p3c4_005",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "오라클 11g 이상에서 실행계획을 확인할 때, NL 조인 작동 방식이 과거와 달리 'NESTED LOOPS' 오퍼레이션이 2단계 계층 구조로 나타나며 내부적으로 로우 카운트를 일괄 처리하는 최적화 메커니즘은 무엇인가?",
+    "options": [
+      "NL Join Batching",
+      "Multi-Block Read Join",
+      "Asynchronous Block Prefetch",
+      "Vectorized Join Conversion"
+    ],
+    "answer": 1,
+    "explanation": "11g부터 도입된 NL Join Batching은 Inner 테이블의 엑세스가 디스크 Read를 유발할 가능성이 높을 때, ROWID를 소트하거나 모아서 다중 블록 I/O 형식으로 요청하여 디스크 대기 시간을 최소화하는 기법입니다.",
+    "tags": ["조인 튜닝", "NL 조인", "NL Join Batching"],
+    "difficulty": "상"
+  },
+  {
+    "id": "p3c4_006",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "소트 머지 조인(Sort Merge Join)의 기본 작동 원리에 대한 설명으로 가장 올바르지 않은 것은?",
+    "options": [
+      "양쪽 테이블을 각각 조인 컬럼 기준으로 정렬(Sort)한 후 머지(Merge) 단계를 수행한다.",
+      "인덱스가 없는 상황에서도 수행 가능하며, 조인 조건이 등치(=) 조건이 아닌 비교(>, <, BETWEEN) 조건일 때도 사용할 수 있다.",
+      "양쪽 테이블의 대상 집합을 메모리의 SGA 영역 내 Shared Pool에 직접 올려 동시 정렬을 수행하므로 언제나 래치 경합이 전혀 없다.",
+      "대량의 정렬 작업이 필요할 경우 PGA 영역의 Sort Area를 활용하며 부족하면 Temp 테이블스페이스를 사용한다."
+    ],
+    "answer": 3,
+    "explanation": "소트 작업은 프로세스 전용 메모리 영역인 PGA(Process Global Area) 내의 Sort Area에서 수행됩니다. SGA 구조가 아닙니다.",
+    "tags": ["조인 튜닝", "소트 머지 조인", "PGA"],
+    "difficulty": "중"
+  },
+  {
+    "id": "p3c4_007",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "소트 머지 조인이 해시 조인에 비해 가지는 상대적인 장점이자 주요 용도로 가장 적합한 것은?",
+    "options": [
+      "조인 조건이 등치(=) 조건이 아닐 때(Non-Equi Join)도 정상적으로 사용 가능하다.",
+      "정렬 작업이 전혀 발생하지 않으므로 CPU 사용량이 매우 낮다.",
+      "메모리(PGA) 소비가 항상 해시 조인보다 훨씬 적다.",
+      "대량의 디스크 I/O를 수반하므로 버퍼 캐시 효율성이 극대화된다."
+    ],
+    "answer": 1,
+    "explanation": "해시 조인은 등치(=) 조건에서만 사용 가능한 반면, 소트 머지 조인은 BETWEEN, 대소 비교 등 Non-Equi Join 조건에서도 정렬을 거쳐 결합을 수행할 수 있습니다.",
+    "tags": ["조인 튜닝", "소트 머지 조인", "Non-Equi Join"],
+    "difficulty": "중"
+  },
+  {
+    "id": "p3c4_008",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "해시 조인(Hash Join) 메커니즘에 대한 설명으로 가장 올바르지 않은 것은?",
+    "options": [
+      "두 테이블 중 크기가 상대적으로 작은 집합을 Build Input으로 선택하여 해시 테이블을 생성한다.",
+      "큰 집합인 Probe Input을 스캔하면서 해시 함수를 통해 해시 테이블을 탐색하며 조인한다.",
+      "해시 조인은 동치(=) 조인문뿐만 아니라 값의 범위를 비교하는 BETWEEN 조인문에서도 완벽하게 작동한다.",
+      "Build Input 집합이 너무 커서 PGA 메모리에 적재되지 않으면 디스크(Temp)를 사용하는 Grace 해시 조인으로 전환된다."
+    ],
+    "answer": 3,
+    "explanation": "해시 조인은 해시 함수와 해시 맵 버킷을 기반으로 결합 대상을 찾기 때문에, 대소 비교나 BETWEEN 같은 범위 조건 조인(Non-Equi Join)에는 원리적으로 사용할 수 없습니다.",
+    "tags": ["조인 튜닝", "해시 조인", "해시 메커니즘"],
+    "difficulty": "하"
+  },
+  {
+    "id": "p3c4_009",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "해시 조인 시 메모리(PGA) 공간을 초과하는 대용량 Build Input을 처리할 때, 오라클이 내부적으로 조인 대상 집합을 해시 함수 기준으로 분할하여 디스크 Temp 영역에 쓴 뒤 분할 단위별로 조인하는 메커니즘을 무엇이라 하는가?",
+    "options": [
+      "In-Memory Hash Join",
+      "Grace (or Hybrid) Hash Join",
+      "Nested Hash Optimization",
+      "Parallel Bitmap Merge Join"
+    ],
+    "answer": 2,
+    "explanation": "PGA의 Hash Area 크기를 초과하는 대용량 데이터 셋의 해시 조인을 처리할 때 디스크 덤프 및 파티셔닝 단계를 거치는 방식을 Grace 또는 Hybrid 해시 조인이라고 부릅니다.",
+    "tags": ["조인 튜닝", "해시 조인", "Grace 해시 조인"],
+    "difficulty": "상"
+  },
+  {
+    "id": "p3c4_010",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "해시 조인을 수행할 때 성능 극대화를 위해 개발자가 강제로 Build Input 대상을 지정하고자 사용하는 힌트 조합으로 가장 적절한 것은?",
+    "options": [
+      "/*+ LEADING(A B) USE_HASH(B) */ -> B를 Build Input으로 생성",
+      "/*+ LEADING(A B) USE_HASH(B) SWAP_JOIN_INPUTS(B) */ -> B를 Build Input으로 생성",
+      "/*+ LEADING(A B) USE_HASH(B) SWAP_JOIN_INPUTS(A) */ -> A를 Build Input으로 생성",
+      "/*+ LEADING(B A) USE_HASH(A) SWAP_JOIN_INPUTS(A) */ -> B를 Build Input으로 생성"
+    ],
+    "answer": 3,
+    "explanation": "LEADING(A B)와 USE_HASH(B)를 주면 기본적으로 먼저 읽힌 A가 Build Input, 나중인 B가 Probe Input이 됩니다. 여기서 SWAP_JOIN_INPUTS(A)를 주는 것은 기본값과 일치하며 A를 Build Input으로 강제하는 올바른 명시 방법입니다. (만약 B를 Build Input으로 바꾸고 싶다면 SWAP_JOIN_INPUTS(B)를 지정해야 반전됩니다.)",
+    "tags": ["조인 튜닝", "해시 조인", "SWAP_JOIN_INPUTS"],
+    "difficulty": "상"
+  },
+  {
+    "id": "p3c4_011",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "스칼라 서브쿼리(Scalar Subquery)의 특징과 최적화 원리에 대한 설명으로 가장 올바르지 않은 것은?",
+    "options": [
+      "스칼라 서브쿼리는 원칙적으로 한 레코드당 하나의 값만 반환하는 서브쿼리 형태를 의미한다.",
+      "내부적으로 서브쿼리 입력 값과 출력 값을 메모리에 캐싱(Caching)하는 기능을 제공하여 반복 수행을 줄인다.",
+      "메인쿼리의 결과 건수가 수천만 건에 달하고 입력 값의 종류(수량)가 매우 다양해 캐시 히트율이 극도로 낮아도 항상 일반 조인문보다 유리하다.",
+      "캐싱 효과가 미미하고 비효율이 클 경우, 힌트 등을 사용하여 일반 조인문 형태로 변환(Unnesting)하는 튜닝이 필요하다."
+    ],
+    "answer": 3,
+    "explanation": "메인쿼리 로우 수가 매우 많고 서브쿼리로 들어오는 입력 값의 종류(NDV)가 아주 많으면 서브쿼리 캐시 적중률이 떨어지고 매번 서브쿼리가 실행되어 심각한 성능 저하(Filter 부하)를 초과합니다.",
+    "tags": ["조인 튜닝", "스칼라 서브쿼리", "서브쿼리 캐싱"],
+    "difficulty": "중"
+  },
+  {
+    "id": "p3c4_012",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "오라클에서 스칼라 서브쿼리의 캐싱 효과를 수동으로 제어하기 위해 11g 이후 도입되거나 활용되는 힌트 및 파라미터 제어 방식으로 가장 올바른 것은?",
+    "options": [
+      "/*+ SCALAR_CACHE_FORCE */ 힌트로 캐시 용량을 강제 증대한다.",
+      "/*+ OB_PARALLEL */ 힌트를 주어 분산 처리한다.",
+      "_with_subquery_predicates 파라미터를 완전 비활성화한다.",
+      "/*+ NO_UNNEST */ 힌트를 사용하여 서브쿼리로 유지하고 캐싱 메커니즘을 적용받게 하거나, 반대로 UNNEST로 조인 전환한다."
+    ],
+    "answer": 4,
+    "explanation": "오라클은 서브쿼리를 그대로 둘 때 기본 캐싱을 적용하므로, NO_UNNEST는 서브쿼리 형태로 캐싱 메커니즘을 유지하게 만들고 UNNEST는 이를 해체하여 일반 조인 오퍼레이션으로 쿼리를 변환시킵니다.",
+    "tags": ["조인 튜닝", "스칼라 서브쿼리", "UNNEST"],
+    "difficulty": "상"
+  },
+  {
+    "id": "p3c4_013",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "고급 조인 기법 중 '세미 조인(Semi Join)'에 대한 설명으로 가장 올바른 것은?",
+    "options": [
+      "두 테이블을 무조건 Full Table Scan하여 데이터의 절반만 추출하는 특수 조인이다.",
+      "EXISTS 또는 IN 서브쿼리를 사용하여 메인 테이블의 한 로우가 서브쿼리 테이블의 한 로우라도 일치하면 탐색을 멈추고 메인 로우를 반환하는 방식이다.",
+      "결과 집합에 조인 대상인 두 테이블의 모든 컬럼이 카테시안 곱 형태로 결합되어 출력된다.",
+      "주로 NOT IN이나 NOT EXISTS 절을 구현할 때 내부적으로 사용되는 역결합 형태이다."
+    ],
+    "answer": 2,
+    "explanation": "세미 조인은 주로 IN 또는 EXISTS 문을 최적화할 때 발동하며, 조건을 만족하는 첫 번째 일치 레코드를 찾는 즉시 더 이상 서브쿼리를 루프 돌지 않고 반환하므로 성능이 매우 뛰어납니다.",
+    "tags": ["조인 튜닝", "고급 조인 기법", "세미 조인"],
+    "difficulty": "하"
+  },
+  {
+    "id": "p3c4_014",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "고급 조인 기법 중 '안티 조인(Anti Join)'과 관련하여, NOT IN 서브쿼리를 처리할 때 서브쿼리 추출 컬럼에 NULL 값이 포함되어 있으면 데이터가 단 한 건도 조회되지 않는 현상이 발생한다. 이를 방지하고 안티 조인을 정상 유도하기 위한 방법으로 가장 옳지 않은 것은?",
+    "options": [
+      "서브쿼리 조건절에 해당 컬럼 IS NOT NULL 조건을 명시적으로 추가한다.",
+      "메인쿼리를 NOT EXISTS 문으로 변경하여 NULL값의 논리적 오류를 회피한다.",
+      "서브쿼리 컬럼을 NVL 함수 처리하더라도 인덱스나 조인 구조에 NULL 처리를 명확히 통제한다.",
+      "안티 조인을 강제하기 위해 아무 제약 없이 해시 안티조인 힌트(/*+ HASH_AJ */)만 붙이면 오라클이 논리 오류를 무시하고 무조건 처리해 준다."
+    ],
+    "answer": 4,
+    "explanation": "NOT IN 내에 NULL이 존재할 수 있는 상태에서는 HASH_AJ 힌트를 주어도 옵티마이저가 결과 왜곡을 막기 위해 힌트를 거부하고 일반 FILTER 방식으로 수행하여 느려집니다. 반드시 IS NOT NULL이나 정밀 조건을 주어야 합니다.",
+    "tags": ["조인 튜닝", "고급 조인 기법", "안티 조인"],
+    "difficulty": "상"
+  },
+  {
+    "id": "p3c4_015",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "서브쿼리 Unnesting과 관련하여, 옵티마이저가 서브쿼리를 풀어서 메인쿼리와 조인문 형태로 변환하되 조인 시 메인 테이블의 로우가 중복 생성되지 않도록 서브쿼리 집합을 고유하게 정렬 및 그룹화 오퍼레이션을 수행한 후 조인하게 만드는 결합 기법은 무엇인가?",
+    "options": [
+      "Sort Merge Anti Join",
+      "Semi-Join Inversion",
+      "Sort Unique (or Hash Unique) 후 조인 수행",
+      "Full Outer View Merging"
+    ],
+    "answer": 3,
+    "explanation": "서브쿼리를 Unnesting하여 조인할 때 서브쿼리가 M쪽 집합이거나 고유성이 보장되지 않으면 오라클은 Sort Unique 또는 Hash Unique 연산을 수행하여 집합을 1쪽으로 바꾼 후 조인을 진행합니다.",
+    "tags": ["조인 튜닝", "고급 조인 기법", "Unnesting"],
+    "difficulty": "중"
+  },
+  {
+    "id": "p3c4_016",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "인라인 뷰(Inline View) 혹은 일반 뷰를 최적화할 때, 뷰 안의 쿼리를 메인쿼리와 병합하여 하나의 플랫한 형태로 쿼리를 가공해 조인하는 옵티마이저의 동작을 무엇이라 하는가?",
+    "options": [
+      "View Merging",
+      "Predicate Pushing",
+      "Query Rewriting",
+      "Inline Expansion"
+    ],
+    "answer": 1,
+    "explanation": "뷰 머징(View Merging)은 옵티마이저가 뷰 내의 독립적인 집합 구조를 깨뜨려 메인쿼리의 테이블들과 같은 레벨에서 최적의 조인 순서 및 방식을 결정할 수 있도록 돕는 쿼리 변환 기술입니다.",
+    "tags": ["조인 튜닝", "고급 조인 기법", "View Merging"],
+    "difficulty": "하"
+  },
+  {
+    "id": "p3c4_017",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "뷰 머징(View Merging)이 불가능하거나 실패하는 쿼리 구조적 제약 조건(예: GROUP BY, ROWNUM 등 포함)이 있을 때, 옵티마이저가 메인쿼리의 조건절을 뷰 내부 안쪽으로 밀어 넣어(Push) 뷰 전체를 스캔하지 않고 인덱스 범위를 줄이도록 유도하는 최적화 기법은 무엇인가?",
+    "options": [
+      "Condition Injection",
+      "Predicate Pushing (조건절 푸싱)",
+      "Index Skip Migration",
+      "View Key Isolation"
+    ],
+    "answer": 2,
+    "explanation": "조건절 푸싱(Predicate Pushing)은 뷰 머징이 안 되는 집계성 뷰나 복잡한 인라인 뷰에 대해 메인쿼리의 결합/조회 조건을 내부로 주입시켜 데이터의 조기 필터링 및 인덱스 스캔 효율화를 달성하는 튜닝 기술입니다.",
+    "tags": ["조인 튜닝", "고급 조인 기법", "Predicate Pushing"],
+    "difficulty": "중"
+  },
+  {
+    "id": "p3c4_018",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "아래 조인 방식 중 메모리 영역(PGA의 Area)을 대량으로 사용하지 않고 데이터베이스 버퍼 캐시(SGA)의 적중률 및 효율성, 그리고 부분범위 처리를 통한 초고속 초기 응답에 가장 특화된 조인 방식은 무엇인가?",
+    "options": [
+      "Nested Loops Join",
+      "Sort Merge Join",
+      "Hash Join",
+      "Full Cartesian Product Join"
+    ],
+    "answer": 1,
+    "explanation": "NL 조인은 메모리에 별도의 대형 정렬이나 해시 맵 공간을 잡지 않고, 한 건씩 조건이 맞는 대로 순차 처리하므로 OLTP성 부분범위 처리에 절대적인 강점을 가집니다.",
+    "tags": ["조인 튜닝", "조인 방식 비교", "NL 조인"],
+    "difficulty": "하"
+  },
+  {
+    "id": "p3c4_019",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "동치 조인(=) 조건이 대량 데이터에 결합될 때 최적의 성능을 내며, 두 집합 중 작고 고유한 집합을 메모리에 적재한 후 대용량 테이블을 순차 스캔하여 랜덤 I/O와 소트 부하를 동시에 회피하는 조인 방식은?",
+    "options": [
+      "소트 머지 조인",
+      "해시 조인",
+      "인덱스 전체 스캔 조인",
+      "클러스터 NL 조인"
+    ],
+    "answer": 2,
+    "explanation": "해시 조인은 소트 머지 조인처럼 정렬 부하가 없고, NL 조인처럼 대량 랜덤 I/O를 유발하지 않으므로 대용량 동치 조인 최적의 솔루션입니다.",
+    "tags": ["조인 튜닝", "조인 방식 비교", "해시 조인"],
+    "difficulty": "하"
+  },
+  {
+    "id": "p3c4_020",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "스칼라 서브쿼리는 내부적으로 수행 횟수를 줄이기 위해 입력 파라미터 값 대비 출력 결과 값을 캐싱합니다. 이때 오라클 내부적으로 사용되는 해시 기반의 간이 캐시 메모리 구조 명칭은 무엇인가?",
+    "options": [
+      "Filter Cache",
+      "Subquery Cache (or Filter Cache Container)",
+      "Result Cache",
+      "SGA Library Cache Buffer"
+    ],
+    "answer": 2,
+    "explanation": "스칼라 서브쿼리는 실행 시 PGA/UGA 영역에 서브쿼리 캐시(Subquery Cache)를 형성하여 메인쿼리 로우의 동일한 입력 파라미터 요청이 들어왔을 때 쿼리 재수행 없이 즉시 값을 제공합니다.",
+    "tags": ["조인 튜닝", "스칼라 서브쿼리", "서브쿼리 캐시"],
+    "difficulty": "상"
+  },
+  {
+    "id": "p3c4_021",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "Outer 조인을 수행할 때 성능 병목이 발생하여 해시 조인으로 변경하고자 한다. 오라클에서 Outer 해시 조인을 명시적으로 제어하기 위해 사용하는 올바른 조인 방식 힌트는 무엇인가?",
+    "options": [
+      "USE_HASH_OUTER",
+      "USE_HASH",
+      "HASH_RIGHT_OUTER",
+      "MERGE_AJ"
+    ],
+    "answer": 2,
+    "explanation": "Outer 조인이든 Inner 조인이든 해시 조인을 유도하기 위한 메커니즘 제어 힌트는 동일하게 `USE_HASH(테이블)` 형식을 사용하며 옵티마이저가 쿼리 속성을 판별해 처리합니다.",
+    "tags": ["조인 튜닝", "해시 조인", "Outer 조인"],
+    "difficulty": "중"
+  },
+  {
+    "id": "p3c4_022",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "아래 SQL과 인덱스 상황을 보고, NL 조인 발생 시 가장 극심한 병목(비효율)이 예상되는 지점은 어디인가?\n\n[조건]\n- 메인(Outer): 주문 테이블 (1,000,000건)\n- 서브(Inner): 고객 테이블 (5,000,000건)\n- 주문 조건절: 주문일자 = '20260310' (만족 로우 100,000건)\n- 고객 테이블 인덱스: 없음 (Full Table Scan)",
+    "options": [
+      "주문 테이블에서 주문일자 조건을 조회하는 부분",
+      "주문 테이블의 만족 로우 100,000건마다 고객 테이블 전체(5,000,000건)를 Full Scan 조인하는 부분",
+      "고객 테이블의 데이터 건수가 주문 테이블보다 많은 현상 자체",
+      "결과를 화면에 페이징 처리하는 출력 엔진"
+    ],
+    "answer": 2,
+    "explanation": "NL 조인의 Inner 테이블에 조인용 인덱스가 없으면, Outer 로우 수(100,000번)만큼 Inner 테이블을 매번 Full Table Scan하게 되어 데이터베이스 시스템이 정지 상태에 이를 만큼 극심한 I/O 병목이 터집니다.",
+    "tags": ["조인 튜닝", "NL 조인", "성능 트러블슈팅"],
+    "difficulty": "중"
+  },
+  {
+    "id": "p3c4_023",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "해시 조인 시 두 테이블의 데이터 분포가 비대칭적일 때, 성능 향상을 위해 옵티마이저가 디스크 쓰기를 최소화하고자 선택해야 하는 올바른 Build Input 전략은 무엇인가?",
+    "options": [
+      "무조건 데이터 건수가 가장 많은 대형 테이블을 Build Input으로 선택한다.",
+      "PGA 메모리 공간(Hash Area)에 한 번에 다 올라갈 수 있는 크기의 작은 테이블을 Build Input으로 선택한다.",
+      "인덱스가 가장 많이 생성되어 있는 테이블을 선택한다.",
+      "두 테이블을 임의로 무시하고 시스템 Temp 공간이 큰 테이블을 선택한다."
+    ],
+    "answer": 2,
+    "explanation": "Build Input 집합이 PGA의 Hash Area 메모리 내에 모두 상주할 수 있을 만큼 작아야 디스크 분할 처리(Grace Hash) 없이 100% 인메모리 해시 조인(In-Memory Hash Join)으로 끝나 속도가 극대화됩니다.",
+    "tags": ["조인 튜닝", "해시 조인", "Build Input"],
+    "difficulty": "중"
+  },
+  {
+    "id": "p3c4_024",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "스칼라 서브쿼리를 다중으로 사용하거나 성능 최적화를 위해 오라클 11g 이후 도입된 '결과 캐시(Result Cache)' 기능과 스칼라 서브쿼리의 관계에 대한 설명으로 옳은 것은?",
+    "options": [
+      "스칼라 서브쿼리는 무조건 SGA Result Cache 영역만 강제로 점유한다.",
+      "RESULT_CACHE 힌트를 명시하면 서브쿼리 레벨뿐만 아니라 전체 함수/결과 집합의 캐싱이 SGA 공용 메모리 영역에서 관리 및 재사용될 수 있다.",
+      "결과 캐시를 쓰면 DML이 발생해도 절대로 캐시가 지워지지 않는 치명적 단점이 있다.",
+      "스칼라 서브쿼리 캐시와 Result Cache는 명칭과 구조가 완전히 일치하는 동일한 메모리 칩이다."
+    ],
+    "answer": 2,
+    "explanation": "SGA 영역의 Result Cache는 세션 간 공용이 가능하여, 잘 변하지 않는 대형 코드성 스칼라 서브쿼리나 조회 결과 집합을 캐싱해 두면 전체 시스템의 물리 I/O 및 CPU 부하를 획기적으로 낮춥니다.",
+    "tags": ["조인 튜닝", "스칼라 서브쿼리", "Result Cache"],
+    "difficulty": "상"
+  },
+  {
+    "id": "p3c4_025",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "두 테이블을 조인할 때, 한쪽 테이블의 인덱스 구성이 '조인 컬럼 + 정렬 대상 컬럼' 순서로 정렬되어 설계되어 있다. 이 상태에서 정렬 작업을 스킵(Skip)하면서 조인과 동시에 최종 ORDER BY 효과를 그대로 승계할 수 있는 조인 방식은 무엇인가?",
+    "options": [
+      "Hash Join",
+      "Nested Loops Join",
+      "Grace Sort Merge Join",
+      "Full Table Hybrid Join"
+    ],
+    "answer": 2,
+    "explanation": "NL 조인은 Outer에서 나온 순서가 Inner 인덱스를 타고 그대로 흘러 내려가므로, 인덱스 배열 순서가 정합하다면 소트 오퍼레이션(SORT ORDER BY)을 수행하지 않고도 완벽한 정렬 결과 집합을 바로 출력(부분범위 처리)할 수 있습니다.",
+    "tags": ["조인 튜닝", "조인 방식 비교", "소트 생략"],
+    "difficulty": "상"
+  },
+  {
+    "id": "p3c4_026",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "소트 머지 조인을 유도하기 위한 오라클 표준 힌트로 올바르게 짝지어진 것은?",
+    "options": [
+      "USE_MERGE",
+      "USE_SORT",
+      "MERGE_JOIN",
+      "NL_SJ"
+    ],
+    "answer": 1,
+    "explanation": "오라클에서 소트 머지 조인을 명시적으로 지정하여 옵티마이저에게 전달하는 조인 메소드 제어 힌트는 `USE_MERGE(테이블)`입니다.",
+    "tags": ["조인 튜닝", "소트 머지 조인", "USE_MERGE"],
+    "difficulty": "하"
+  },
+  {
+    "id": "p3c4_027",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "서브쿼리 안티 조인을 수행할 때, 주로 대용량 데이터 셋의 결합 최적화를 위해 NOT IN 문을 해시 기반 안티 조인 구조로 재구성하도록 옵티마이저에 명령하는 힌트는 무엇인가?",
+    "options": [
+      "HASH_SJ",
+      "HASH_AJ",
+      "ANTI_HASH",
+      "MERGE_AJ"
+    ],
+    "answer": 2,
+    "explanation": "안티 조인(Anti Join) 유도 힌트는 `_AJ` 접미사를 가지며, 해시 방식을 선택하므로 `HASH_AJ`가 정답입니다. (참고: 세미 조인은 `_SJ`를 씁니다.)",
+    "tags": ["조인 튜닝", "고급 조인 기법", "HASH_AJ"],
+    "difficulty": "중"
+  },
+  {
+    "id": "p3c4_028",
+    "part": 3,
+    "chapter": "part3_ch4",
+    "questionType": "concept",
+    "content": "스칼라 서브쿼리의 성능 비효율(캐시 미스 및 반복 수행 부하)을 극복하기 위한 수동 대안 튜닝 기법으로 가장 적절하지 않은 것은?",
+    "options": [
+      "서브쿼리를 중첩 풀어내어 일반 Left Outer 조인문으로 변경한다.",
+      "서브쿼리 내부에 인라인 뷰를 적용하고 메인 테이블 조건절 푸싱을 차단하여 무조건 매번 전체 다 읽게 만든다.",
+      "오라클의 뷰 기능이나 MATERIALIZE 힌트를 동반한 임시 세션 테이블 설계를 활용한다.",
+      "조인 대상 컬럼들을 묶어 결합 인덱스를 Inner 테이블 쪽에 정밀하게 배치한다."
+    ],
+    "answer": 2,
+    "explanation": "조건절 푸싱을 차단하고 서브쿼리가 매번 전체 집합을 읽게 유도하는 것은 성능을 악화시키는 방향이므로 올바른 튜닝 기법이 아닙니다.",
+    "tags": ["조인 튜닝", "스칼라 서브쿼리", "대안 최적화"],
+    "difficulty": "중"
+  }
+]
