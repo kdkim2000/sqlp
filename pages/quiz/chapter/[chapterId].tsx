@@ -119,7 +119,7 @@ export default function ChapterQuiz({ chapterId, questions }: Props) {
 
     return (
       <>
-        <Head><title>{chapterLabel} 결과 | SQLD Quest</title></Head>
+        <Head><title>{chapterLabel} 결과 | SQLP Quest</title></Head>
         <div className="p-4 md:p-6 max-w-2xl mx-auto space-y-4">
           {/* 점수 카드 */}
           <div className="q-card p-8 text-center">
@@ -190,7 +190,7 @@ export default function ChapterQuiz({ chapterId, questions }: Props) {
   if (filteredQuestions.length === 0) {
     return (
       <>
-        <Head><title>{chapterLabel} | SQLD Quest</title></Head>
+        <Head><title>{chapterLabel} | SQLP Quest</title></Head>
         <div className="p-4 md:p-6 max-w-4xl mx-auto">
           <div className="flex items-start justify-between mb-4">
             <Link href="/quiz" className="text-xs font-medium text-primary-600 hover:text-primary-700">
@@ -211,7 +211,7 @@ export default function ChapterQuiz({ chapterId, questions }: Props) {
 
   return (
     <>
-      <Head><title>{chapterLabel} | SQLD Quest</title></Head>
+      <Head><title>{chapterLabel} | SQLP Quest</title></Head>
       <div className="p-4 md:p-6 max-w-4xl mx-auto">
         {/* 헤더 */}
         <div className="flex items-start justify-between mb-4">

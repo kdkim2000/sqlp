@@ -296,7 +296,67 @@ DROP VIEW 서울직원뷰;
 
 ---
 
-## 7. 피벗(PIVOT)과 언피벗(UNPIVOT)
+## 7. Top N 쿼리
+
+상위 N건만 조회하는 쿼리 패턴.
+
+### ROWNUM을 이용한 Top N (Oracle)
+
+```sql
+-- 주의: ROWNUM은 ORDER BY 전에 적용됨 → 인라인뷰로 감싸야 함
+
+-- ❌ 잘못된 방법: 정렬 전에 ROWNUM 필터링
+SELECT * FROM emp WHERE ROWNUM <= 5 ORDER BY sal DESC;
+-- → sal 기준 상위 5건이 아닌, 임의 5건을 정렬한 것
+
+-- ✅ 올바른 방법: 인라인뷰로 감싸기
+SELECT *
+FROM   (SELECT * FROM emp ORDER BY sal DESC)
+WHERE  ROWNUM <= 5;
+```
+
+### FETCH FIRST (SQL:2008 표준, Oracle 12c+)
+
+```sql
+-- 상위 5건
+SELECT * FROM emp ORDER BY sal DESC FETCH FIRST 5 ROWS ONLY;
+
+-- 상위 10% 비율
+SELECT * FROM emp ORDER BY sal DESC FETCH FIRST 10 PERCENT ROWS ONLY;
+
+-- 페이징 처리 (11~20건)
+SELECT * FROM emp ORDER BY sal DESC
+OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY;
+```
+
+### ROW_NUMBER()를 이용한 Top N
+
+```sql
+SELECT empno, ename, sal, rn
+FROM (
+  SELECT empno, ename, sal,
+         ROW_NUMBER() OVER (ORDER BY sal DESC) AS rn
+  FROM   emp
+)
+WHERE rn BETWEEN 1 AND 5;
+```
+
+### 부서별 Top N (PARTITION BY)
+
+```sql
+-- 각 부서에서 급여 상위 2명
+SELECT deptno, ename, sal
+FROM (
+  SELECT deptno, ename, sal,
+         RANK() OVER (PARTITION BY deptno ORDER BY sal DESC) AS rnk
+  FROM   emp
+)
+WHERE rnk <= 2;
+```
+
+---
+
+## 9. 피벗(PIVOT)과 언피벗(UNPIVOT)
 
 ### PIVOT: 행을 열로 변환
 
@@ -318,7 +378,7 @@ SELECT *
 
 ---
 
-## 8. 정규식 함수 (Regular Expression)
+## 10. 정규식 함수 (Regular Expression)
 
 | 함수 | 설명 |
 |------|------|
@@ -336,7 +396,7 @@ SELECT 직원명, 이메일
 
 ---
 
-## 9. 성능 관련 SQL 작성 기법
+## 11. 성능 관련 SQL 작성 기법
 
 ### EXISTS vs IN
 
@@ -370,7 +430,7 @@ SELECT * FROM 직원 E
 
 ---
 
-## 10. MERGE 문 (Oracle)
+## 12. MERGE 문 (Oracle)
 
 여러 테이블의 데이터를 비교하여 INSERT/UPDATE/DELETE를 한 번에 처리
 

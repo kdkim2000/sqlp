@@ -74,7 +74,7 @@ export default function QuizResultPage() {
     return (
       <>
         <Head>
-          <title>결과 | SQLD 합격길잡이</title>
+          <title>결과 | SQLP 합격길잡이</title>
         </Head>
         <div
           className="min-h-[calc(100vh-56px)] flex items-center justify-center"
@@ -103,7 +103,7 @@ export default function QuizResultPage() {
   return (
     <>
       <Head>
-        <title>퀴즈 결과 | SQLD 합격길잡이</title>
+        <title>퀴즈 결과 | SQLP 합격길잡이</title>
       </Head>
 
       {/* 배경: 퍼플 그래디언트 */}

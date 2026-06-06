@@ -7,6 +7,7 @@ const NAV_ITEMS = [
   { label: '홈', href: '/' },
   { label: '이론', href: '/theory' },
   { label: '문제풀기', href: '/quiz' },
+  { label: '실기', href: '/quiz/practical' },
 ]
 
 export default function TopBar() {
@@ -44,7 +45,7 @@ export default function TopBar() {
     >
       {/* 브랜드 */}
       <Link href="/" className="font-display font-bold text-primary-600 text-lg shrink-0 tracking-tight">
-        SQLD Quest
+        SQLP Quest
       </Link>
 
       {/* PC 네비게이션 */}

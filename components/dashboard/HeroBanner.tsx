@@ -55,7 +55,7 @@ export default function HeroBanner({ correctPct, currentChapterHref, theoryHref 
           <p className="text-sm font-semibold text-purple-200 mb-1">오늘의 퀘스트</p>
           <h1 className="text-xl sm:text-2xl font-bold text-white mb-4 leading-tight">
             {correctPct === 0
-              ? 'SQLD 정복을 시작하세요!'
+              ? 'SQLP 정복을 시작하세요!'
               : correctPct >= 80
               ? '훌륭해요! 마스터에 가까워지고 있어요'
               : 'SQL 실력을 계속 키워나가요'}
