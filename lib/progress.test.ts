@@ -67,6 +67,7 @@ describe('progress: localStorage round-trip', () => {
       bookmarks: ['p1c1_002'],
       lastVisited: { type: 'theory' as const, id: 'part1_ch1' },
       examHistory: [],
+      practicalAnswers: [],
     }
     saveProgress(store)
     expect(loadProgress()).toEqual(store)

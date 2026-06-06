@@ -1,8 +1,8 @@
 [
   {
-    "id": "p3c2_001",
+    "id": "p3c3_001",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "오라클에서 실제 SQL을 구동하여 데이터를 추출하지 않고, 옵티마이저가 수립한 논리적인 엑세스 경로만을 딕셔너리 테이블(PLAN_TABLE)에 저장하여 확인할 수 있게 해주는 SQL 분석 구문은 무엇입니까?",
     "options": [
@@ -17,9 +17,9 @@
     "difficulty": "하"
   },
   {
-    "id": "p3c2_002",
+    "id": "p3c3_002",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "PLAN_TABLE에 저장된 예상 실행계획 구조를 트리 형태로 가독성 있게 포맷팅하여 표준 화면에 뿌려주는 오라클 내장 패키지 함수 호출문은?",
     "options": [
@@ -34,9 +34,9 @@
     "difficulty": "중"
   },
   {
-    "id": "p3c2_003",
+    "id": "p3c3_003",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "다음 중 '예상 실행계획(Explain Plan)'의 명확한 한계점으로 올바른 것은?",
     "options": [
@@ -51,9 +51,9 @@
     "difficulty": "상"
   },
   {
-    "id": "p3c2_004",
+    "id": "p3c3_004",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "오라클에서 메모리에 캐싱되어 현재 실시간으로 수행 중이거나 최근에 수행되었던 SQL의 '실제 컴파일된 실행계획'을 공유 풀(Shared Pool)의 dynamic 뷰를 통해 정밀 조회하고자 할 때 매핑하는 딕셔너리 뷰는?",
     "options": [
@@ -68,9 +68,9 @@
     "difficulty": "중"
   },
   {
-    "id": "p3c2_005",
+    "id": "p3c3_005",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "동적 뷰인 V$SQL_PLAN 등 메모리 캐시로부터 컴파일된 실행계획안을 정밀 추출하여 포맷팅해 주는 DBMS_XPLAN 패키지의 전용 함수 명칭은?",
     "options": [
@@ -85,9 +85,9 @@
     "difficulty": "중"
   },
   {
-    "id": "p3c2_006",
+    "id": "p3c3_006",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "다음 중 SQL 분석 도구인 'AUTOTRACE'의 기능적 장점으로 보기 어려운 것은?",
     "options": [
@@ -102,9 +102,9 @@
     "difficulty": "중"
   },
   {
-    "id": "p3c2_007",
+    "id": "p3c3_007",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "오라클 AUTOTRACE 기능 제어 옵션 중, SQL 결과 데이터와 실행 계획은 노출하되, 통계 리포트(Statistics)만 화면에서 감추고자 할 때 할당하는 올바른 명령어는?",
     "options": [
@@ -119,9 +119,9 @@
     "difficulty": "하"
   },
   {
-    "id": "p3c2_008",
+    "id": "p3c3_008",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "오라클 AUTOTRACE 통계 리포트 화면에서 출력되는 항목 중, 데이터 버퍼 캐시 내에서 블록 엑세스를 일으킨 '총 논리적 I/O' 양을 대변하는 가장 핵심적인 성능 카운터 명칭은?",
     "options": [
@@ -136,9 +136,9 @@
     "difficulty": "중"
   },
   {
-    "id": "p3c2_009",
+    "id": "p3c3_009",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "AUTOTRACE 성능 카운터 지표 중 'physical reads'가 의미하는 물리적 현상은 무엇입니까?",
     "options": [
@@ -153,9 +153,9 @@
     "difficulty": "하"
   },
   {
-    "id": "p3c2_0010",
+    "id": "p3c3_0010",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "가장 정밀하게 SQL 가동 내부 통계를 추출할 수 있는 'SQL 트레이스(SQL Trace)'를 현재 세션 단위에서 즉시 가동 및 활성화하기 위해 실행하는 세션 변경 명령 표준문은?",
     "options": [
@@ -170,9 +170,9 @@
     "difficulty": "하"
   },
   {
-    "id": "p3c2_011",
+    "id": "p3c3_011",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "오라클 내부에서 10046 이벤트 드라이버를 통해 SQL 트레이스를 가동할 때, 대기 이벤트 정보와 바인드 변수 바인딩 상수 정보까지 추적 파일에 가장 상세하게 모두 기록하도록 지정하는 Level은?",
     "options": [
@@ -187,9 +187,9 @@
     "difficulty": "상"
   },
   {
-    "id": "p3c2_012",
+    "id": "p3c3_012",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "SQL Trace 기능으로 인해 백그라운드 서버에 생성된 가독성이 떨어지는 로우 텍스트 파일(.trc)을 입력 값으로 받아, 사람이 분석할 수 있는 완벽한 리포트 포맷으로 다듬어 가공해 주는 오라클 OS 유틸리티의 명칭은?",
     "options": [
@@ -204,9 +204,9 @@
     "difficulty": "하"
   },
   {
-    "id": "p3c2_013",
+    "id": "p3c3_013",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "tkprof 리포트의 자원 사용 통계 테이블에서 좌측 행(Row) 단위로 분류되는 SQL 3대 처리 라이프사이클 단계에 포함되지 않는 것은?",
     "options": [
@@ -221,9 +221,9 @@
     "difficulty": "하"
   },
   {
-    "id": "p3c2_014",
+    "id": "p3c3_014",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "tkprof 리포트의 컬럼 헤더 항목 중, 해당 단계를 완료하기 위해 CPU 프로세서가 순수하게 연산에 소모한 초 단위 가동 시간을 나타내는 명칭은?",
     "options": [
@@ -238,9 +238,9 @@
     "difficulty": "이하"
   },
   {
-    "id": "p3c2_015",
+    "id": "p3c3_015",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "tkprof 리포트 컬럼 중 CPU 타임에 대기 이벤트(I/O 지연, 래치 락 대기 등)로 인해 프로세스가 sleep 하거나 블로킹되었던 지연 시간까지 모두 누적 합산한 '실제 사용자가 체감한 총 실행 소요 시간' 매핑 컬럼은?",
     "options": [
@@ -255,9 +255,9 @@
     "difficulty": "하"
   },
   {
-    "id": "p3c2_016",
+    "id": "p3c3_016",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "tkprof 성능 테이블 지표 중, 디스크 I/O Call을 통해 물리적 파일 세그먼트에서 읽어 들인 총 블록 수를 나타내는 컬럼 항목 명칭은?",
     "options": [
@@ -272,9 +272,9 @@
     "difficulty": "이하"
   },
   {
-    "id": "p3c2_017",
+    "id": "p3c3_017",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "tkprof 리포트 통계 테이블에서 'query' 컬럼과 'current' 컬럼 수치의 합(query + current)이 의미하는 데이터베이스 코어 지표는 무엇입니까?",
     "options": [
@@ -289,9 +289,9 @@
     "difficulty": "상"
   },
   {
-    "id": "p3c2_018",
+    "id": "p3c3_018",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "다음 tkprof 결과 리포트 정보 중, Parse 단계의 'count' 수치가 100회이고 'misses in library cache during parse' 지표 카운터가 오직 1회로 기록되어 있을 때, 이에 대한 올바른 해석은?",
     "options": [
@@ -306,9 +306,9 @@
     "difficulty": "상"
   },
   {
-    "id": "p3c2_019",
+    "id": "p3c3_019",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "다음 중 SELECT 구문을 수행할 때 tkprof 성능 서식 테이블 상에서 'Fetch' 단계의 count(수행 횟수)를 결정짓는 핵심적인 아키텍처 아티팩트는 무엇입니까?",
     "options": [
@@ -323,9 +323,9 @@
     "difficulty": "상"
   },
   {
-    "id": "p3c2_020",
+    "id": "p3c3_020",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "다음 tkprof 리포트의 세부 파트 중, 쿼리문 가동 시 내부적으로 유발된 시스템 전용 SQL(재귀적 쿼리, Recursive SQL)의 실행 횟수나 부하를 제외하고, 사용자가 직접 던진 '오리지널 최상위 SQL'의 순수 통계 영역만을 필터링하는 파트 명칭은?",
     "options": [
@@ -340,9 +340,9 @@
     "difficulty": "상"
   },
   {
-    "id": "p3c2_021",
+    "id": "p3c3_021",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "오라클의 실행계획 하단 정보나 tkprof 리포트의 'Row Source Operation' 트리 뷰 구조에서 각 단계별 오퍼레이션 우측에 할당되어 출력되는 숫자로, 해당 오퍼레이션 라인 단계가 후행 단계로 '실제 반환 처리 완료한 로우(행)의 절대 건수'를 대변하는 핵심 카운터 값의 이름은?",
     "options": [
@@ -357,9 +357,9 @@
     "difficulty": "상"
   },
   {
-    "id": "p3c2_022",
+    "id": "p3c3_022",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "tkprof 리포트 분석 가이드 중, Parse 래치 부하가 심각한 '하드 파싱 병목 SQL'을 선별해 내기 위해 튜닝 엔지니어가 리포트 텍스트 내에서 검색 가이드 기준으로 삼아야 하는 단어는?",
     "options": [
@@ -374,9 +374,9 @@
     "difficulty": "중"
   },
   {
-    "id": "p3c2_023",
+    "id": "p3c3_023",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "다음 중 tkprof 리포트 내의 'Row Source Operation' 단계 트리 정보에서 특정 인덱스 엑세스 라인(예: INDEX RANGE SCAN)의 실제 가동 비효율 유무를 정밀 판정하고자 할 때 교차 검증해야 하는 두 지표의 조합으로 가장 올바른 것은?",
     "options": [
@@ -391,9 +391,9 @@
     "difficulty": "상"
   },
   {
-    "id": "p3c2_024",
+    "id": "p3c3_024",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "오라클 9i 버전 이후부터 지원하며 tkprof 리포트를 별도 파일 파일링하지 않고도, 바인드 변수 실시간 조건 및 실행 단계별 런타임 통계를 SQL*Plus 화면에서 계층 구조(Starts, E-Rows, A-Rows 등)로 즉시 덤프해 보고자 할 때 기재하는 핵심 튜닝용 옵션 힌트는?",
     "options": [
@@ -408,9 +408,9 @@
     "difficulty": "상"
   },
   {
-    "id": "p3c2_025",
+    "id": "p3c3_025",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "GATHER_PLAN_STATISTICS 힌트를 가동한 후 DISPLAY_CURSOR를 통해 출력된 리포트 칼럼 중, 해당 오퍼레이션 단계가 실제 물리적으로 반복 기동된 '총 내부 루프 횟수'를 정확하게 지시해 주는 지표명은 무엇인가?",
     "options": [
@@ -425,9 +425,9 @@
     "difficulty": "중"
   },
   {
-    "id": "p3c2_026",
+    "id": "p3c3_026",
     "part": 3,
-    "chapter": "part3_ch2",
+    "chapter": "part3_ch3",
     "questionType": "concept",
     "content": "GATHER_PLAN_STATISTICS 기반 분석 화면에서 'A-Rows' 항목과 'E-Rows' 항목의 편차가 기하급수적으로 벌어져 심각한 미스매칭이 목격될 경우, 데이터베이스 튜닝 엔지니어가 가장 우선적으로 조치해야 하는 개선 방안은?",
     "options": [
