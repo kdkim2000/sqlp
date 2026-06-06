@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useProgress } from '@/context/ProgressContext'
 import { CHAPTERS } from '@/lib/chapters'
-import { isExamPassed } from '@/lib/progress'
+import { isMCQPassPredicted } from '@/lib/progress'
 
 const PART_META: Record<number, { label: string; icon: string; color: string; bg: string; hoverBorder: string }> = {
   1: { label: '1과목 데이터 모델링의 이해', icon: '🗂️', color: 'text-primary-600', bg: 'bg-primary-50',  hoverBorder: 'hover:border-primary-300' },
@@ -150,7 +150,7 @@ export default function QuizIndex() {
             </h2>
             <div className="space-y-3">
               {progress.examHistory.slice(0, 5).map((exam) => {
-                const passed = isExamPassed(exam)
+                const predicted = isMCQPassPredicted(exam)
                 return (
                   <div
                     key={exam.date}
@@ -173,9 +173,9 @@ export default function QuizIndex() {
                       </span>
                       <span
                         className="font-bold text-sm"
-                        style={{ color: passed ? '#039855' : '#BE123C' }}
+                        style={{ color: predicted ? '#039855' : '#BE123C' }}
                       >
-                        {exam.score}점 {passed ? '✓ 합격' : '✗ 불합격'}
+                        {exam.score}/70점 {predicted ? '✓ 합격예측' : '✗ 불합격예측'}
                       </span>
                     </div>
                   </div>
@@ -185,8 +185,10 @@ export default function QuizIndex() {
 
             {/* SQLP 합격 기준 안내 */}
             <div className="mt-4 rounded-xl px-4 py-3 text-xs" style={{ background: 'var(--q-surface-soft)', color: 'var(--q-ink-3)' }}>
-              <span className="font-semibold" style={{ color: 'var(--q-ink-2)' }}>SQLP 합격 기준</span>
-              &nbsp;— 총점 60점 이상 &amp; 1과목 4점↑ &amp; 2과목 8점↑ &amp; 3과목 16점↑ (각 과목 40% 이상)
+              <span className="font-semibold" style={{ color: 'var(--q-ink-2)' }}>SQLP 공식 합격 기준</span>
+              &nbsp;— 총점 <strong>75점 이상</strong> / 100점 (객관식 70 + 실기 30) &amp; 과목별 40% 이상
+              <br />
+              <span>※ 합격예측 = MCQ ≥ 45점 + 과락 없음 (실기 만점 가정)</span>
             </div>
           </section>
         )}

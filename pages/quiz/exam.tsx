@@ -6,7 +6,7 @@ import QuestionCard from '@/components/quiz/QuestionCard'
 import QuizNavigator from '@/components/quiz/QuizNavigator'
 import ExamTimer from '@/components/quiz/ExamTimer'
 import { useProgress } from '@/context/ProgressContext'
-import { saveExamResult, isExamPassed } from '@/lib/progress'
+import { saveExamResult, isExamPassed, isMCQPassPredicted } from '@/lib/progress'
 import { sampleExamQuestions, sampleMixedExam, getMockExamQuestions } from '@/lib/questions'
 import type { Question, AnswerResult, ExamResult } from '@/types'
 
@@ -164,13 +164,15 @@ export default function ExamPage() {
 
             {/* 합격 기준 */}
             <div className="rounded-2xl p-4 mb-5 text-left bg-primary-50">
-              <h2 className="font-semibold text-primary-800 mb-2 text-sm">합격 기준 (SQLP)</h2>
+              <h2 className="font-semibold text-primary-800 mb-2 text-sm">SQLP 공식 합격 기준</h2>
               <ul className="text-sm text-primary-700 space-y-1">
-                <li>• 총점 60점 이상 (100점 만점)</li>
-                <li>• 1과목 4점 이상 (10점 만점 × 40%)</li>
-                <li>• 2과목 8점 이상 (20점 만점 × 40%)</li>
-                <li>• 3과목 16점 이상 (40점 만점 × 40%)</li>
+                <li>• 총점 <strong>75점 이상</strong> (100점 기준 — 객관식 70 + 실기 30)</li>
+                <li>• 과목별 40% 미만 취득 시 과락</li>
               </ul>
+              <div className="mt-2 pt-2 border-t border-primary-200 text-xs text-primary-600 space-y-0.5">
+                <p>과락 기준: 1과목 4점↑ · 2과목 8점↑ · 3과목 16점↑</p>
+                <p className="text-primary-500">※ 모의고사는 객관식(최대 70점) 기준 — 실기 30점 별도</p>
+              </div>
             </div>
 
             <button
@@ -190,18 +192,22 @@ export default function ExamPage() {
 
   /* ── 결과 화면 ── */
   if (phase === 'result' && examResult) {
-    const passed = isExamPassed(examResult)
+    const predicted    = isMCQPassPredicted(examResult)  // 실기 만점 가정 합격 예측
+    const formalPassed = isExamPassed(examResult)         // 공식 판정 (score >= 75)
+    const passed       = formalPassed || predicted
     const mins   = Math.floor(examResult.totalTime / 60)
     const secs   = examResult.totalTime % 60
     const correctCount  = sessionAnswers.filter((a) => a === 'correct').length
     const wrongCount    = sessionAnswers.filter((a) => a === 'wrong').length
     const skippedCount  = sessionAnswers.filter((a) => a === 'skipped').length
+    const mcqScore      = examResult.score   // 최대 70점
+    const predictedTotal = mcqScore + 30     // 실기 만점 가정 총점
 
     return (
       <>
         <Head><title>모의고사 결과 | SQLP Quest</title></Head>
         <div className="p-4 md:p-6 max-w-2xl mx-auto space-y-4">
-          {/* 합격/불합격 헤더 */}
+          {/* 합격 예측 헤더 */}
           <div
             className="q-card p-8 text-center border-2"
             style={{
@@ -210,10 +216,27 @@ export default function ExamPage() {
             }}
           >
             <p className="font-display font-black text-4xl mb-1" style={{ color: passed ? '#039855' : '#BE123C' }}>
-              {passed ? '합격 🎉' : '불합격'}
+              {formalPassed ? '합격 🎉' : passed ? '합격 예측 ✓' : '불합격 예측'}
             </p>
-            <p className="font-bold text-5xl mb-2" style={{ color: 'var(--q-ink)' }}>{examResult.score}점</p>
-            <p className="text-sm" style={{ color: 'var(--q-ink-3)' }}>소요 시간: {mins}분 {secs}초</p>
+            {/* MCQ 점수 */}
+            <p className="font-bold text-5xl mb-1" style={{ color: 'var(--q-ink)' }}>
+              {mcqScore}<span className="text-2xl font-medium" style={{ color: 'var(--q-ink-3)' }}> / 70점</span>
+            </p>
+            <p className="text-xs mb-2" style={{ color: 'var(--q-ink-3)' }}>
+              객관식 점수 (실기 30점 별도) · 합격선 75점 / 100점
+            </p>
+            {/* 실기 만점 가정 총점 */}
+            <div
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold mt-1"
+              style={{
+                background: passed ? 'rgba(18,183,106,0.12)' : 'rgba(255,107,107,0.12)',
+                color: passed ? '#039855' : '#BE123C',
+              }}
+            >
+              실기 만점 가정 총점 {predictedTotal}점 →{' '}
+              {passed ? `합격 (${predictedTotal}점 ≥ 75점)` : `불합격 (${predictedTotal}점 < 75점)`}
+            </div>
+            <p className="text-xs mt-3" style={{ color: 'var(--q-ink-3)' }}>소요 시간: {mins}분 {secs}초</p>
           </div>
 
           {/* 과목별 점수 (3과목) */}
