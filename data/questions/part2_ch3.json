@@ -2,7 +2,7 @@
   {
     "id": "p2c3_001",
     "part": 2,
-    "chapter": "3",
+    "chapter": "part2_ch3",
     "questionType": "concept",
     "content": "다음 중 옵티마이저(Optimizer)에 대한 설명으로 올바르지 않은 것은?",
     "options": [
@@ -19,7 +19,7 @@
   {
     "id": "p2c3_002",
     "part": 2,
-    "chapter": "3",
+    "chapter": "part2_ch3",
     "questionType": "concept",
     "content": "다음 중 실행 계획(Execution Plan)의 구성 요소가 아닌 것은?",
     "options": [
@@ -36,7 +36,7 @@
   {
     "id": "p2c3_003",
     "part": 2,
-    "chapter": "3",
+    "chapter": "part2_ch3",
     "questionType": "concept",
     "content": "다음 중 B-TREE 인덱스의 구성 요소가 아닌 것은?",
     "options": [
@@ -53,7 +53,7 @@
   {
     "id": "p2c3_004",
     "part": 2,
-    "chapter": "3",
+    "chapter": "part2_ch3",
     "questionType": "concept",
     "content": "다음 중 Full Table Scan이 적합한 상황으로 올바르지 않은 것은?",
     "options": [
@@ -70,7 +70,7 @@
   {
     "id": "p2c3_005",
     "part": 2,
-    "chapter": "3",
+    "chapter": "part2_ch3",
     "questionType": "concept",
     "content": "다음 중 Nested Loop Join에서 연산 순서가 올바른 것은?",
     "options": [
@@ -87,7 +87,7 @@
   {
     "id": "p2c3_006",
     "part": 2,
-    "chapter": "3",
+    "chapter": "part2_ch3",
     "questionType": "concept",
     "content": "다음 중 CBO(비용기반 옵티마이저)에서 옵티마이저 모드 'ALL_ROWS'에 대한 설명으로 올바른 것은?",
     "options": [
@@ -104,7 +104,7 @@
   {
     "id": "p2c3_007",
     "part": 2,
-    "chapter": "3",
+    "chapter": "part2_ch3",
     "questionType": "concept",
     "content": "다음 중 인덱스를 가장 효율적으로 활용할 수 있는 컬럼 구성으로 올바른 것은?\n\n(조회 조건: DEPT_CD = 'A10' AND JOB_CD = 'MG' AND BIRTH_DT BETWEEN '19900101' AND '19991231')",
     "options": [
@@ -121,7 +121,7 @@
   {
     "id": "p2c3_008",
     "part": 2,
-    "chapter": "3",
+    "chapter": "part2_ch3",
     "questionType": "result",
     "content": "아래 인덱스와 SQL에서 인덱스를 access 조건으로 사용하는 컬럼으로 올바른 것은?\n\n**인덱스**: IDX_EMP (DEPT_CD, JOB_CD, BIRTH_DT)\n\n```sql\nSELECT *\n  FROM EMP\n WHERE DEPT_CD = 'A10'\n   AND JOB_CD = 'MG'\n   AND BIRTH_DT BETWEEN '19900101' AND '19991231';\n```",
     "options": [
@@ -138,7 +138,7 @@
   {
     "id": "p2c3_009",
     "part": 2,
-    "chapter": "3",
+    "chapter": "part2_ch3",
     "questionType": "concept",
     "content": "다음 중 Hash Join에 대한 설명으로 올바른 것은?",
     "options": [
@@ -155,7 +155,7 @@
   {
     "id": "p2c3_010",
     "part": 2,
-    "chapter": "3",
+    "chapter": "part2_ch3",
     "questionType": "concept",
     "content": "다음 중 Nested Loop Join의 연산 순서를 수도코드(pseudo code)로 표현한 것으로 올바른 것은?\n\n```\n(1) 선행 테이블에서 조건에 맞는 첫 번째 행 추출\n(2) 선행 테이블에서 조건에 맞는 다음 행 추출\n(3) 선행 테이블의 조인 컬럼으로 후행 테이블 인덱스 탐색\n(4) 인덱스로 후행 테이블 데이터 블록 접근\n(5) 결과를 조합하여 반환\n```",
     "options": [
@@ -172,7 +172,7 @@
   {
     "id": "p2c3_011",
     "part": 2,
-    "chapter": "3",
+    "chapter": "part2_ch3",
     "questionType": "concept",
     "content": "다음 중 Nested Loop Join의 후행 테이블에 반드시 인덱스가 필요한지에 대한 설명으로 올바른 것은?",
     "options": [
@@ -189,7 +189,7 @@
   {
     "id": "p2c3_012",
     "part": 2,
-    "chapter": "3",
+    "chapter": "part2_ch3",
     "questionType": "concept",
     "content": "다음 중 CBO(비용기반 옵티마이저) 모드 선택에 대한 설명으로 올바르지 않은 것은?",
     "options": [
@@ -206,7 +206,7 @@
   {
     "id": "p2c3_013",
     "part": 2,
-    "chapter": "3",
+    "chapter": "part2_ch3",
     "questionType": "completion",
     "content": "다음 Oracle SQL에서 특정 인덱스를 강제로 사용하도록 힌트를 작성할 때, 빈칸에 들어갈 내용으로 올바른 것은?\n\n```sql\nSELECT /*+ ______(EMP IDX_EMP_DEPTNO) */ *\n  FROM EMP\n WHERE DEPTNO = 10;\n```",
     "options": [
@@ -223,7 +223,7 @@
   {
     "id": "p2c3_014",
     "part": 2,
-    "chapter": "3",
+    "chapter": "part2_ch3",
     "questionType": "concept",
     "content": "다음 중 인덱스를 사용할 수 없게 만드는 경우로 올바른 것은?",
     "options": [
@@ -240,7 +240,7 @@
   {
     "id": "p2c3_015",
     "part": 2,
-    "chapter": "3",
+    "chapter": "part2_ch3",
     "questionType": "error",
     "content": "다음 중 Index Range Scan이 발생하지 않는(인덱스를 사용할 수 없는) 조건으로 올바른 것은?",
     "options": [
@@ -257,7 +257,7 @@
   {
     "id": "p2c3_016",
     "part": 2,
-    "chapter": "3",
+    "chapter": "part2_ch3",
     "questionType": "concept",
     "content": "다음 중 Hash Join의 연산 순서로 올바른 것은?\n\n```\n(A) 선행 테이블(Build Input)로 해시 테이블 생성\n(B) 후행 테이블(Probe Input) 스캔\n(C) 해시 함수로 해시 버킷 탐색\n(D) 조인 결과 반환\n```",
     "options": [
@@ -274,7 +274,7 @@
   {
     "id": "p2c3_017",
     "part": 2,
-    "chapter": "3",
+    "chapter": "part2_ch3",
     "questionType": "error",
     "content": "다음 중 인덱스를 사용하지 못하게 만드는 SQL 패턴이 아닌 것은?",
     "options": [
@@ -291,7 +291,7 @@
   {
     "id": "p2c3_018",
     "part": 2,
-    "chapter": "3",
+    "chapter": "part2_ch3",
     "questionType": "result",
     "content": "아래 인덱스와 SQL에서 인덱스를 통해 access되는 컬럼과 filter 처리되는 컬럼으로 올바른 것은?\n\n**인덱스**: IDX_EMP (DEPT_CD, BIRTH_DT)\n\n```sql\nSELECT *\n  FROM EMP\n WHERE BIRTH_DT BETWEEN '19900101' AND '19991231'\n   AND DEPT_CD = 'A10';\n```",
     "options": [
@@ -308,7 +308,7 @@
   {
     "id": "p2c3_019",
     "part": 2,
-    "chapter": "3",
+    "chapter": "part2_ch3",
     "questionType": "completion",
     "content": "다음 Oracle SQL에서 Nested Loop Join을 강제하는 힌트의 빈칸에 들어갈 내용으로 올바른 것은?\n\n```sql\nSELECT /*+ ______(E D) */ E.ENAME, D.DNAME\n  FROM EMP E, DEPT D\n WHERE E.DEPTNO = D.DEPTNO\n   AND E.SAL > 3000;\n```",
     "options": [
@@ -325,7 +325,7 @@
   {
     "id": "p2c3_020",
     "part": 2,
-    "chapter": "3",
+    "chapter": "part2_ch3",
     "questionType": "concept",
     "content": "다음 중 바인드 변수(Bind Variable) 사용의 장점으로 올바른 것은?",
     "options": [
