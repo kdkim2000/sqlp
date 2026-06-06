@@ -84,14 +84,31 @@ export function resetProgress(): void {
   localStorage.removeItem(STORAGE_KEY)
 }
 
-/** SQLP 합격 판정: 전체 60점 이상 + 과목별 40% 이상 */
-export function isExamPassed(result: ExamResult): boolean {
+/** SQLP 과락 없음 판정 (과목별 40% 이상) */
+function hasNoSubjectFailure(result: ExamResult): boolean {
   return (
-    result.score >= 60 &&
     result.part1Score >= 4 &&   // 1과목 10점 만점 × 40%
     result.part2Score >= 8 &&   // 2과목 20점 만점 × 40%
     result.part3Score >= 16     // 3과목 40점 만점 × 40%
   )
+}
+
+/**
+ * SQLP 공식 합격 판정 (총점 75점 이상 + 과목별 40% 이상)
+ * 모의고사는 객관식(70점) 만점이므로 정상 케이스에서 항상 false.
+ * 실기 포함 총점을 직접 넘기거나 isMCQPassPredicted를 사용할 것.
+ */
+export function isExamPassed(result: ExamResult): boolean {
+  return result.score >= 75 && hasNoSubjectFailure(result)
+}
+
+/**
+ * 객관식 점수 기반 합격 예측
+ * MCQ(최대 70점) + 실기 만점(30점) = 최대 100점 기준으로 판단.
+ * MCQ ≥ 45점 + 과락 없음 → 실기 만점 시 75점 이상 → 합격 예측.
+ */
+export function isMCQPassPredicted(result: ExamResult): boolean {
+  return result.score >= 45 && hasNoSubjectFailure(result)
 }
 
 export function getStats(): Stats {

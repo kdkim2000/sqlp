@@ -17,13 +17,13 @@ const TYPE_LABEL: Record<string, string> = {
 
 const SUBTYPE_LABEL: Record<string, Record<number, string>> = {
   'sql-tuning': {
-    1: '유형1: 성능 저하 SQL 개선',
-    2: '유형2: 실행계획 기반 SQL 작성',
-    3: '유형3: 데이터 모델 기반 최적 SQL',
+    1: '유형1: FILTER 비효율 → NL 세미조인',
+    2: '유형2: 목표 실행계획 기반 SQL 작성',
+    3: '유형3: 동적 쿼리 UNION ALL 분리',
   },
   'troubleshooting': {
-    1: '유형1: 애플리케이션 성능 개선',
-    2: '유형2: 성능 이슈 원인 분석',
+    1: '유형1: NOT IN → Hash Anti Join',
+    2: '유형2: 묵시적 형변환 원인분석 (서술형)',
   },
 }
 

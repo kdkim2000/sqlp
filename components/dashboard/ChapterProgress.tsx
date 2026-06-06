@@ -28,7 +28,9 @@ export default function ChapterProgress({ chapters, chapterStats }: ChapterProgr
                   className={`shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full ${
                     ch.part === 1
                       ? 'bg-blue-100 text-blue-700'
-                      : 'bg-green-100 text-green-700'
+                      : ch.part === 2
+                      ? 'bg-green-100 text-green-700'
+                      : 'bg-amber-50 text-amber-600'
                   }`}
                 >
                   {ch.part}과목
@@ -51,7 +53,11 @@ export default function ChapterProgress({ chapters, chapterStats }: ChapterProgr
             <div className="h-2 bg-gray-200 rounded-full overflow-hidden mb-3">
               <div
                 className={`h-full rounded-full transition-all duration-500 ${
-                  ch.part === 1 ? 'bg-blue-500' : 'bg-green-500'
+                  ch.part === 1
+                    ? 'bg-blue-500'
+                    : ch.part === 2
+                    ? 'bg-green-500'
+                    : 'bg-amber-500'
                 }`}
                 style={{ width: hasData ? `${correctPct}%` : '0%' }}
               />
